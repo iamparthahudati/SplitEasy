@@ -1,4 +1,4 @@
-package com.spliteasy
+package com.ph.spliteasy
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

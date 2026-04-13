@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useMemo, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -8,14 +10,11 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
-import { spacing, radius } from '../../theme/spacing';
-import { CustomHeader } from '../../components/ui/CustomHeader';
 import type { SettingsStackParamList } from '../../navigation/types';
+import { colors } from '../../theme/colors';
+import { radius, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 type Nav = NativeStackNavigationProp<SettingsStackParamList, 'DefaultCurrency'>;
 
@@ -29,46 +28,46 @@ interface Currency {
 }
 
 const CURRENCIES: Currency[] = [
-  { code: 'USD', name: 'US Dollar',          symbol: '$',   flag: '🇺🇸' },
-  { code: 'EUR', name: 'Euro',               symbol: '€',   flag: '🇪🇺' },
-  { code: 'GBP', name: 'British Pound',      symbol: '£',   flag: '🇬🇧' },
-  { code: 'INR', name: 'Indian Rupee',       symbol: '₹',   flag: '🇮🇳' },
-  { code: 'JPY', name: 'Japanese Yen',       symbol: '¥',   flag: '🇯🇵' },
-  { code: 'CAD', name: 'Canadian Dollar',    symbol: 'C$',  flag: '🇨🇦' },
-  { code: 'AUD', name: 'Australian Dollar',  symbol: 'A$',  flag: '🇦🇺' },
-  { code: 'CHF', name: 'Swiss Franc',        symbol: 'Fr',  flag: '🇨🇭' },
-  { code: 'CNY', name: 'Chinese Yuan',       symbol: '¥',   flag: '🇨🇳' },
-  { code: 'HKD', name: 'Hong Kong Dollar',   symbol: 'HK$', flag: '🇭🇰' },
-  { code: 'SGD', name: 'Singapore Dollar',   symbol: 'S$',  flag: '🇸🇬' },
-  { code: 'MXN', name: 'Mexican Peso',       symbol: 'MX$', flag: '🇲🇽' },
-  { code: 'BRL', name: 'Brazilian Real',     symbol: 'R$',  flag: '🇧🇷' },
-  { code: 'KRW', name: 'South Korean Won',   symbol: '₩',   flag: '🇰🇷' },
-  { code: 'SEK', name: 'Swedish Krona',      symbol: 'kr',  flag: '🇸🇪' },
-  { code: 'NOK', name: 'Norwegian Krone',    symbol: 'kr',  flag: '🇳🇴' },
-  { code: 'DKK', name: 'Danish Krone',       symbol: 'kr',  flag: '🇩🇰' },
+  { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
+  { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
+  { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
+  { code: 'JPY', name: 'Japanese Yen', symbol: '¥', flag: '🇯🇵' },
+  { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', flag: '🇨🇦' },
+  { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: '🇦🇺' },
+  { code: 'CHF', name: 'Swiss Franc', symbol: 'Fr', flag: '🇨🇭' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', flag: '🇨🇳' },
+  { code: 'HKD', name: 'Hong Kong Dollar', symbol: 'HK$', flag: '🇭🇰' },
+  { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', flag: '🇸🇬' },
+  { code: 'MXN', name: 'Mexican Peso', symbol: 'MX$', flag: '🇲🇽' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', flag: '🇧🇷' },
+  { code: 'KRW', name: 'South Korean Won', symbol: '₩', flag: '🇰🇷' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', flag: '🇸🇪' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', flag: '🇳🇴' },
+  { code: 'DKK', name: 'Danish Krone', symbol: 'kr', flag: '🇩🇰' },
   { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$', flag: '🇳🇿' },
-  { code: 'ZAR', name: 'South African Rand', symbol: 'R',   flag: '🇿🇦' },
-  { code: 'AED', name: 'UAE Dirham',         symbol: 'د.إ', flag: '🇦🇪' },
-  { code: 'SAR', name: 'Saudi Riyal',        symbol: '﷼',   flag: '🇸🇦' },
-  { code: 'THB', name: 'Thai Baht',          symbol: '฿',   flag: '🇹🇭' },
-  { code: 'MYR', name: 'Malaysian Ringgit',  symbol: 'RM',  flag: '🇲🇾' },
-  { code: 'IDR', name: 'Indonesian Rupiah',  symbol: 'Rp',  flag: '🇮🇩' },
-  { code: 'PHP', name: 'Philippine Peso',    symbol: '₱',   flag: '🇵🇭' },
-  { code: 'VND', name: 'Vietnamese Dong',    symbol: '₫',   flag: '🇻🇳' },
-  { code: 'PKR', name: 'Pakistani Rupee',    symbol: '₨',   flag: '🇵🇰' },
-  { code: 'BDT', name: 'Bangladeshi Taka',   symbol: '৳',   flag: '🇧🇩' },
-  { code: 'NGN', name: 'Nigerian Naira',     symbol: '₦',   flag: '🇳🇬' },
-  { code: 'EGP', name: 'Egyptian Pound',     symbol: 'E£',  flag: '🇪🇬' },
-  { code: 'PLN', name: 'Polish Zloty',       symbol: 'zł',  flag: '🇵🇱' },
-  { code: 'CZK', name: 'Czech Koruna',       symbol: 'Kč',  flag: '🇨🇿' },
-  { code: 'HUF', name: 'Hungarian Forint',   symbol: 'Ft',  flag: '🇭🇺' },
-  { code: 'RON', name: 'Romanian Leu',       symbol: 'lei', flag: '🇷🇴' },
-  { code: 'TRY', name: 'Turkish Lira',       symbol: '₺',   flag: '🇹🇷' },
-  { code: 'ILS', name: 'Israeli Shekel',     symbol: '₪',   flag: '🇮🇱' },
-  { code: 'CLP', name: 'Chilean Peso',       symbol: 'CL$', flag: '🇨🇱' },
-  { code: 'COP', name: 'Colombian Peso',     symbol: 'CO$', flag: '🇨🇴' },
-  { code: 'ARS', name: 'Argentine Peso',     symbol: 'AR$', flag: '🇦🇷' },
-  { code: 'PEN', name: 'Peruvian Sol',       symbol: 'S/.',  flag: '🇵🇪' },
+  { code: 'ZAR', name: 'South African Rand', symbol: 'R', flag: '🇿🇦' },
+  { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ', flag: '🇦🇪' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼', flag: '🇸🇦' },
+  { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
+  { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
+  { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', flag: '🇮🇩' },
+  { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
+  { code: 'VND', name: 'Vietnamese Dong', symbol: '₫', flag: '🇻🇳' },
+  { code: 'PKR', name: 'Pakistani Rupee', symbol: '₨', flag: '🇵🇰' },
+  { code: 'BDT', name: 'Bangladeshi Taka', symbol: '৳', flag: '🇧🇩' },
+  { code: 'NGN', name: 'Nigerian Naira', symbol: '₦', flag: '🇳🇬' },
+  { code: 'EGP', name: 'Egyptian Pound', symbol: 'E£', flag: '🇪🇬' },
+  { code: 'PLN', name: 'Polish Zloty', symbol: 'zł', flag: '🇵🇱' },
+  { code: 'CZK', name: 'Czech Koruna', symbol: 'Kč', flag: '🇨🇿' },
+  { code: 'HUF', name: 'Hungarian Forint', symbol: 'Ft', flag: '🇭🇺' },
+  { code: 'RON', name: 'Romanian Leu', symbol: 'lei', flag: '🇷🇴' },
+  { code: 'TRY', name: 'Turkish Lira', symbol: '₺', flag: '🇹🇷' },
+  { code: 'ILS', name: 'Israeli Shekel', symbol: '₪', flag: '🇮🇱' },
+  { code: 'CLP', name: 'Chilean Peso', symbol: 'CL$', flag: '🇨🇱' },
+  { code: 'COP', name: 'Colombian Peso', symbol: 'CO$', flag: '🇨🇴' },
+  { code: 'ARS', name: 'Argentine Peso', symbol: 'AR$', flag: '🇦🇷' },
+  { code: 'PEN', name: 'Peruvian Sol', symbol: 'S/.', flag: '🇵🇪' },
 ];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -97,13 +96,7 @@ export function DefaultCurrencyScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['top']}>
-      <CustomHeader
-        title="Default Currency"
-        showBack
-        onBack={() => navigation.goBack()}
-      />
-
+    <SafeAreaView style={styles.root} edges={['bottom']}>
       {/* ── Search bar ─────────────────────────────────────────────── */}
       <View style={styles.searchWrap}>
         <View style={styles.searchRow}>
@@ -150,7 +143,12 @@ export function DefaultCurrencyScreen() {
 
                   {/* Right side */}
                   <View style={styles.rowRight}>
-                    <Text style={[styles.symbol, isSelected && styles.symbolSelected]}>
+                    <Text
+                      style={[
+                        styles.symbol,
+                        isSelected && styles.symbolSelected,
+                      ]}
+                    >
                       {currency.symbol}
                     </Text>
                     {isSelected && (
@@ -167,7 +165,9 @@ export function DefaultCurrencyScreen() {
 
           {filtered.length === 0 && (
             <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>No currencies match "{query}"</Text>
+              <Text style={styles.emptyText}>
+                No currencies match "{query}"
+              </Text>
             </View>
           )}
         </View>
