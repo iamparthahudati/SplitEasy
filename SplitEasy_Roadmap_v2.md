@@ -20,23 +20,28 @@
 
 ## Current Status — Last Updated: 2026-04-13
 
-| Area                                            | Status                                           |
-| ----------------------------------------------- | ------------------------------------------------ |
-| Folder structure & theme                        | ✅ Complete                                      |
-| TypeScript types                                | ✅ Complete                                      |
-| Settlement algorithm + 10 unit tests            | ✅ Complete                                      |
-| Utility functions (formatters, splitCalculator) | ✅ Complete                                      |
-| Custom navigation system                        | ✅ Complete                                      |
-| UI components (Button, Card, Avatar, Badge)     | ✅ Complete                                      |
-| Global state store (useAppStore)                | ✅ Complete                                      |
-| Firebase service stubs                          | 🎨 Stubbed — needs real Firebase SDK             |
-| 32 placeholder screens                          | ✅ All navigable                                 |
-| Splash screen                                   | 🎨 Design done — AsyncStorage routing pending    |
-| Welcome carousel                                | 🎨 Design done — AsyncStorage write pending      |
-| Sign In screen                                  | 🎨 Design done — Firebase Auth pending           |
-| Create Group screen                             | 🎨 Design done — Firestore write pending         |
-| Notification prompt                             | 🎨 Design done — Notifications API pending       |
-| **Next action**                                 | Install dependencies (0.4) → wire Firebase (0.5) |
+| Area                                            | Status                                                                |
+| ----------------------------------------------- | --------------------------------------------------------------------- |
+| Folder structure & theme                        | ✅ Complete                                                           |
+| TypeScript types                                | ✅ Complete                                                           |
+| Settlement algorithm + 10 unit tests            | ✅ Complete                                                           |
+| Utility functions (formatters, splitCalculator) | ✅ Complete                                                           |
+| Navigation system                               | ✅ Migrated to React Navigation (native stack + bottom tabs)          |
+| Navigation type safety                          | ✅ Full param lists in `src/navigation/types.ts`                      |
+| UI components (Button, Card, Avatar, Badge)     | ✅ Complete                                                           |
+| Global state store (useAppStore)                | ✅ Complete                                                           |
+| Firebase service stubs                          | 🎨 Stubbed — needs real Firebase SDK                                  |
+| All screens navigable                           | ✅ All routes wired through React Navigation                          |
+| Splash screen                                   | 🎨 Design done — AsyncStorage routing pending                        |
+| Welcome carousel                                | 🎨 Design done — AsyncStorage write pending                          |
+| Sign In screen                                  | 🎨 Design done — Firebase Auth pending                               |
+| Create Group screen                             | 🎨 Design done — Firestore write pending                             |
+| Notification prompt                             | 🎨 Design done — Notifications API pending                           |
+| **Groups Home screen**                          | 🎨 Full UI done — search, balance banner, group cards, FAB           |
+| **Balances screen**                             | 🎨 Full UI done — hero card, per-person rows, settle buttons, filters |
+| **Activity screen**                             | 🎨 Full UI done — date-grouped feed, filters, group badges           |
+| **Settings screen**                             | 🎨 Full UI done — profile card, premium banner, grouped rows         |
+| **Next action**                                 | Install dependencies (0.4) → wire Firebase (0.5)                     |
 
 ---
 
@@ -391,11 +396,16 @@ Write these unit tests before moving on:
 
 ### 0.8 — Navigation Shell
 
-- ✅ Set up bottom tab navigator: Groups · Balances · Activity · Settings
-- ✅ Set up stack navigators inside each tab
-- ✅ Auth stack: Splash → Welcome → Sign In → Create Group
-- ✅ Create placeholder screens for all 32 screens (just `<Text>Screen Name</Text>`)
-- ✅ Confirm all navigation paths work with no broken routes
+- ✅ Migrated from custom state-based navigation to **React Navigation** (`@react-navigation/native-stack` + `@react-navigation/bottom-tabs`)
+- ✅ Full TypeScript param lists for all navigators in `src/navigation/types.ts`
+- ✅ `RootNavigator` — root stack: Splash → Onboarding → MainTabs
+- ✅ `OnboardingStack` — Welcome → SignIn → CreateGroup → NotificationPrompt
+- ✅ `GroupsStack` — GroupsHome + all 9 group sub-screens
+- ✅ `SettingsStack` — SettingsHome + Profile, Currency, Notifications, About
+- ✅ `MainTabs` — bottom tab bar with custom active indicator, emoji icons
+- ✅ `enableScreens()` called in `index.js` for native stack performance
+- ✅ All onboarding screens migrated to `@react-navigation/native` `useNavigation` hook
+- ✅ All navigation paths work with no broken routes
 - 🎨 Route logic: check AsyncStorage for `hasOnboarded` → go to home if true, welcome if false _(AsyncStorage not installed yet)_
 
 ---
@@ -499,14 +509,16 @@ Do not start Phase 2 until:
 
 #### 2.1 — Groups Home Screen
 
-- [ ] Free-plan badge: `FREE PLAN` amber pill in top-left
-- [ ] Net balance hero card: full-width indigo card showing total owed/owing
-- [ ] Group cards: emoji, name, member count, your net balance (green/red)
+- 🎨 SplitEasy wordmark header + notification bell
+- 🎨 Net balance banner: green (owed to you) / red (you owe) / indigo (settled), "Settle all" button
+- 🎨 Search bar — filters group list in real time
+- 🎨 Group cards: emoji circle, name, member count + last expense, balance chip (green/red/settled)
+- 🎨 FAB (＋) bottom-right with indigo drop shadow
+- 🎨 Empty state: icon, title, subtitle, "Create a group" CTA button
+- [ ] Free-plan badge: `FREE PLAN` amber pill
 - [ ] 3-group limit: 4th group card shows lock overlay "Upgrade to unlock"
-- [ ] "+" FAB button: top-right, creates new group (triggers paywall after 3rd)
-- [ ] AppLovin MAX banner at bottom (placeholder component for now — real ads in Phase 3)
-- [ ] Empty state: illustrated friends at dinner + "Create your first group" CTA
-- [ ] Firestore `onSnapshot` listener — updates in real time
+- [ ] AppLovin MAX banner at bottom (Phase 3)
+- [ ] Firestore `onSnapshot` listener — replace mock data with real-time updates
 
 #### 2.2 — Free Limits Screen
 
@@ -572,11 +584,14 @@ Tap 3: Tap "Save Expense"
 
 #### 2.8 — Balances Tab
 
-- [ ] Net balance hero card: total owed/owing across all groups
-- [ ] "WHO OWES YOU" section: green heading, each person with amount + group name
-- [ ] Inline buttons: "Settle Up" + "Nudge 💬" per person
-- [ ] "YOU OWE" section: red heading, same layout
+- 🎨 Net balance hero card: total owed/owing, with owed-to-me vs I-owe breakdown stats
+- 🎨 Filter pills: All / Owe me / I owe
+- 🎨 Per-person rows: avatar (initials + deterministic color), name, groups, amount (green/red), "Settle" pill button
+- 🎨 "Settled" label in slate for zero-balance people
+- 🎨 Empty state per filter
 - [ ] Cross-group attribution: "Alex owes you $47.20 from Spain Trip"
+- [ ] "Nudge 💬" button per person (Phase 2.13)
+- [ ] Wire to Firestore `onSnapshot` — replace mock data
 
 #### 2.9 — Settle Up Flow
 
@@ -600,10 +615,13 @@ Tap 3: Tap "Save Expense"
 
 #### 2.10 — Activity Feed
 
-- [ ] All expense adds and settlements across all groups, reverse chronological
-- [ ] Each event: member avatar circle, description, amount (colored), group name, time ago
-- [ ] AppLovin MAX native ad placeholder every 4th item
-- [ ] Firestore compound query: all subcollection events ordered by `createdAt`
+- 🎨 Filter pills: All / Expenses / Settlements
+- 🎨 Date-grouped sections: Today / Yesterday / date headers
+- 🎨 Each row: icon circle (emoji per category), description, group badge, meta line (who paid · total), colored amount
+- 🎨 Positive = green (+), negative = red (−), settlements = green (💸)
+- 🎨 Empty state per filter
+- [ ] AppLovin MAX native ad placeholder every 4th item (Phase 3)
+- [ ] Firestore compound query: all subcollection events ordered by `createdAt` — replace mock data
 
 #### 2.11 — Expense History
 
@@ -650,6 +668,20 @@ Tap 3: Tap "Save Expense"
 - [ ] Add/remove members (with balance warning if member has outstanding debt)
 - [ ] Archive group → confirmation modal → set `archived: true` in Firestore
 - [ ] Archived groups move to a separate "Archived" section on home screen
+
+#### 2.16b — Settings Tab (Home)
+
+- 🎨 Profile card: avatar (initials + brand color), display name, email, "Edit" button
+- 🎨 Premium upgrade banner (hidden for premium users): indigo card, "✦ PRO" badge, upgrade CTA
+- 🎨 Account section: Profile row → `ProfileScreen`, Default Currency row (shows current value)
+- 🎨 Preferences section: Notifications row
+- 🎨 App section: About, Rate the App, Send Feedback rows
+- 🎨 Sign Out row (destructive — red icon + label)
+- 🎨 Version footer: "SplitEasy v1.0.0" + Privacy / Terms links
+- [ ] Wire Sign Out to Firebase `auth.signOut()` → navigate to Onboarding
+- [ ] Wire Default Currency to AsyncStorage
+- [ ] Rate the App → `StoreReview.requestReview()` (expo-store-review)
+- [ ] Wire to real user profile from Firestore / auth state
 
 #### 2.16 — Push Notifications
 

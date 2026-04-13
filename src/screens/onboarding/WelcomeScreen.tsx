@@ -8,11 +8,15 @@ import {
   View,
   ViewToken,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights } from '../../theme/typography';
 import { spacing, radius } from '../../theme/spacing';
-import { useNavigation } from '../../navigation/NavigationContext';
+import type { OnboardingStackParamList } from '../../navigation/types';
+
+type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'Welcome'>;
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -52,7 +56,7 @@ const SLIDES: Slide[] = [
 const markOnboarded = () => {};
 
 export function WelcomeScreen() {
-  const { navigate, reset } = useNavigation();
+  const navigation = useNavigation<Nav>();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatRef = useRef<FlatList>(null);
 
@@ -69,23 +73,21 @@ export function WelcomeScreen() {
       flatRef.current?.scrollToIndex({ index: activeIndex + 1, animated: true });
     } else {
       markOnboarded();
-      reset('SignIn');
+      navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] });
     }
   };
 
   const handleSkip = () => {
     markOnboarded();
-    reset('SignIn');
+    navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] });
   };
 
   return (
     <View style={styles.container}>
-      {/* Skip */}
       <Pressable style={styles.skipBtn} onPress={handleSkip} hitSlop={12}>
         <Text style={styles.skipText}>Skip</Text>
       </Pressable>
 
-      {/* Slides */}
       <FlatList
         ref={flatRef}
         data={SLIDES}
@@ -104,7 +106,6 @@ export function WelcomeScreen() {
         )}
       />
 
-      {/* Page indicators */}
       <View style={styles.indicatorRow}>
         {SLIDES.map((s, i) => (
           <View
@@ -117,7 +118,6 @@ export function WelcomeScreen() {
         ))}
       </View>
 
-      {/* Next / Get Started */}
       <Pressable style={styles.nextBtn} onPress={handleNext}>
         <Text style={styles.nextText}>
           {activeIndex === SLIDES.length - 1 ? 'Get Started' : 'Next'}

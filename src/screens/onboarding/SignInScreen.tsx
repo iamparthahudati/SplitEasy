@@ -10,16 +10,20 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights } from '../../theme/typography';
 import { spacing, radius, sizes } from '../../theme/spacing';
-import { useNavigation } from '../../navigation/NavigationContext';
+import type { OnboardingStackParamList } from '../../navigation/types';
+
+type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'SignIn'>;
 
 type Mode = 'main' | 'email' | 'forgotPassword';
 
 export function SignInScreen() {
-  const { navigate } = useNavigation();
+  const navigation = useNavigation<Nav>();
   const [mode, setMode] = useState<Mode>('main');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,13 +33,18 @@ export function SignInScreen() {
 
   const clearError = () => setError('');
 
-  // ── Auth handlers (Firebase wired later) ────────────────────────────────
+  const goToMainTabs = () => {
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'MainTabs' as any }] }),
+    );
+  };
+
   const handleApple = async () => {
     setLoading(true);
     setError('');
     try {
       // TODO: wire Firebase Apple Sign-In
-      navigate('CreateGroup');
+      navigation.navigate('CreateGroup');
     } catch {
       setError('Apple sign-in failed. Please try again.');
     } finally {
@@ -48,7 +57,7 @@ export function SignInScreen() {
     setError('');
     try {
       // TODO: wire Firebase Google Sign-In
-      navigate('CreateGroup');
+      navigation.navigate('CreateGroup');
     } catch {
       setError('Google sign-in failed. Please try again.');
     } finally {
@@ -63,7 +72,7 @@ export function SignInScreen() {
     setError('');
     try {
       // TODO: wire Firebase email sign-in
-      navigate('Groups');
+      goToMainTabs();
     } catch {
       setError('Wrong email or password. Please try again.');
     } finally {
@@ -87,10 +96,9 @@ export function SignInScreen() {
 
   const handleNoAccount = () => {
     // TODO: store "guestMode = true" in AsyncStorage
-    navigate('CreateGroup');
+    navigation.navigate('CreateGroup');
   };
 
-  // ── Forgot password sub-view ─────────────────────────────────────────────
   if (mode === 'forgotPassword') {
     return (
       <KeyboardAvoidingView
@@ -107,9 +115,7 @@ export function SignInScreen() {
 
           {resetSent ? (
             <View style={styles.successBox}>
-              <Text style={styles.successText}>
-                ✓ Reset link sent! Check your inbox.
-              </Text>
+              <Text style={styles.successText}>✓ Reset link sent! Check your inbox.</Text>
             </View>
           ) : (
             <>
@@ -140,7 +146,6 @@ export function SignInScreen() {
     );
   }
 
-  // ── Email sub-view ───────────────────────────────────────────────────────
   if (mode === 'email') {
     return (
       <KeyboardAvoidingView
@@ -194,7 +199,6 @@ export function SignInScreen() {
     );
   }
 
-  // ── Main sign-in view ────────────────────────────────────────────────────
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -203,7 +207,6 @@ export function SignInScreen() {
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        {/* Apple — required on iOS when ANY social sign-in exists */}
         <Pressable
           style={[styles.btn, styles.btnApple, loading && styles.btnDisabled]}
           onPress={handleApple}
@@ -213,7 +216,6 @@ export function SignInScreen() {
           <Text style={styles.btnAppleText}>Sign in with Apple</Text>
         </Pressable>
 
-        {/* Google */}
         <Pressable
           style={[styles.btn, styles.btnGoogle, loading && styles.btnDisabled]}
           onPress={handleGoogle}
@@ -223,7 +225,6 @@ export function SignInScreen() {
           <Text style={styles.btnGoogleText}>Sign in with Google</Text>
         </Pressable>
 
-        {/* Email */}
         <Pressable
           style={[styles.btn, styles.btnEmail]}
           onPress={() => setMode('email')}
@@ -237,7 +238,6 @@ export function SignInScreen() {
           <View style={styles.dividerLine} />
         </View>
 
-        {/* No account mode */}
         <Pressable
           style={[styles.btn, styles.btnGuest]}
           onPress={handleNoAccount}
@@ -329,13 +329,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing[3],
     gap: spacing[2],
   },
-  btnDisabled: {
-    opacity: 0.6,
-  },
-  // Apple
-  btnApple: {
-    backgroundColor: '#000000',
-  },
+  btnDisabled: { opacity: 0.6 },
+  btnApple: { backgroundColor: '#000000' },
   appleIcon: {
     fontSize: fontSizes.xl,
     color: colors.white,
@@ -346,7 +341,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: fontWeights.semibold as any,
   },
-  // Google
   btnGoogle: {
     backgroundColor: colors.white,
     borderWidth: 1,
@@ -362,7 +356,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium as any,
   },
-  // Email
   btnEmail: {
     borderWidth: 1.5,
     borderColor: colors.brand,
@@ -373,7 +366,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: fontWeights.semibold as any,
   },
-  // Primary (email flow)
   btnPrimary: {
     backgroundColor: colors.brand,
     marginTop: spacing[2],
@@ -383,7 +375,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.md,
     fontWeight: fontWeights.semibold as any,
   },
-  // Guest
   btnGuest: {
     borderWidth: 1.5,
     borderColor: colors.borderMid,
@@ -395,7 +386,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: fontWeights.medium as any,
   },
-  // Divider
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',

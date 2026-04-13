@@ -1,88 +1,74 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { colors } from '../theme/colors';
-import { spacing, sizes } from '../theme/spacing';
-import { fontSizes, fontWeights } from '../theme/typography';
-import { useNavigation, MainTabRoute } from './NavigationContext';
-
-// Tab screens
-import { GroupsHomeScreen } from '../screens/groups/GroupsHomeScreen';
+import type { MainTabsParamList } from './types';
+import { GroupsStack } from './GroupsStack';
+import { SettingsStack } from './SettingsStack';
 import { BalancesScreen } from '../screens/balances/BalancesScreen';
 import { ActivityScreen } from '../screens/activity/ActivityScreen';
-import { SettingsHomeScreen } from '../screens/settings/SettingsHomeScreen';
+import { colors } from '../theme/colors';
+import { fontSizes, fontWeights } from '../theme/typography';
+import { sizes } from '../theme/spacing';
 
-const TABS: Array<{ route: MainTabRoute; label: string; icon: string }> = [
-  { route: 'Groups', label: 'Groups', icon: '👥' },
-  { route: 'Balances', label: 'Balances', icon: '⚖️' },
-  { route: 'Activity', label: 'Activity', icon: '📋' },
-  { route: 'Settings', label: 'Settings', icon: '⚙️' },
-];
+const Tab = createBottomTabNavigator<MainTabsParamList>();
 
-function TabScreen({ route }: { route: MainTabRoute }) {
-  switch (route) {
-    case 'Groups':   return <GroupsHomeScreen />;
-    case 'Balances': return <BalancesScreen />;
-    case 'Activity': return <ActivityScreen />;
-    case 'Settings': return <SettingsHomeScreen />;
-  }
-}
+const TAB_CONFIG: Record<keyof MainTabsParamList, { icon: string; label: string }> = {
+  GroupsTab:   { icon: '👥', label: 'Groups' },
+  Balances:    { icon: '⚖️', label: 'Balances' },
+  Activity:    { icon: '📋', label: 'Activity' },
+  SettingsTab: { icon: '⚙️', label: 'Settings' },
+};
 
 export function MainTabs() {
-  const { activeTab, setTab } = useNavigation();
-
   return (
-    <View style={styles.container}>
-      <View style={styles.screenArea}>
-        <TabScreen route={activeTab} />
-      </View>
-      <View style={styles.tabBar}>
-        {TABS.map(tab => {
-          const active = tab.route === activeTab;
-          return (
-            <Pressable
-              key={tab.route}
-              style={styles.tabItem}
-              onPress={() => setTab(tab.route)}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: active }}
-              accessibilityLabel={tab.label}
-            >
-              <Text style={styles.tabIcon}>{tab.icon}</Text>
-              <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>
-                {tab.label}
-              </Text>
-              {active && <View style={styles.activeIndicator} />}
-            </Pressable>
-          );
-        })}
-      </View>
-    </View>
+    <Tab.Navigator
+      screenOptions={({ route }) => {
+        const cfg = TAB_CONFIG[route.name as keyof MainTabsParamList];
+        return {
+          headerShown: false,
+          tabBarStyle: styles.tabBar,
+          tabBarActiveTintColor: colors.brand,
+          tabBarInactiveTintColor: colors.text4,
+          tabBarLabel: ({ color }) => (
+            <Text style={[styles.tabLabel, { color }]}>{cfg?.label}</Text>
+          ),
+          tabBarIcon: ({ focused }) => (
+            <View style={styles.iconWrapper}>
+              {focused && <View style={styles.activeBar} />}
+              <Text style={styles.tabIcon}>{cfg?.icon}</Text>
+            </View>
+          ),
+        };
+      }}
+    >
+      <Tab.Screen name="GroupsTab" component={GroupsStack} />
+      <Tab.Screen name="Balances" component={BalancesScreen} />
+      <Tab.Screen name="Activity" component={ActivityScreen} />
+      <Tab.Screen name="SettingsTab" component={SettingsStack} />
+    </Tab.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-  },
-  screenArea: {
-    flex: 1,
-  },
   tabBar: {
-    flexDirection: 'row',
     height: sizes.tabBarHeight,
     backgroundColor: colors.white,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    paddingBottom: spacing[1],
+    paddingBottom: 0,
   },
-  tabItem: {
-    flex: 1,
+  iconWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: spacing[1],
-    position: 'relative',
+    paddingTop: 4,
+  },
+  activeBar: {
+    position: 'absolute',
+    top: -8,
+    width: 24,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: colors.brand,
   },
   tabIcon: {
     fontSize: fontSizes.lg,
@@ -91,18 +77,6 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.medium as any,
-    color: colors.text4,
-  },
-  tabLabelActive: {
-    color: colors.brand,
-    fontWeight: fontWeights.semibold as any,
-  },
-  activeIndicator: {
-    position: 'absolute',
-    top: 0,
-    width: 24,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: colors.brand,
+    marginBottom: 4,
   },
 });

@@ -1,22 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights, letterSpacings } from '../../theme/typography';
-import { useNavigation } from '../../navigation/NavigationContext';
+import type { RootStackParamList } from '../../navigation/types';
+
+type Nav = NativeStackNavigationProp<RootStackParamList, 'Splash'>;
 
 // TODO: replace with AsyncStorage.getItem('hasOnboarded') once library is installed
 const checkHasOnboarded = (): Promise<boolean> => Promise.resolve(false);
 const checkHasGroups = (): Promise<boolean> => Promise.resolve(false);
 
 export function SplashScreen() {
-  const { navigate, reset } = useNavigation();
+  const navigation = useNavigation<Nav>();
   const logoScale = useRef(new Animated.Value(0.6)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const taglineOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Logo entrance animation
     Animated.parallel([
       Animated.spring(logoScale, {
         toValue: 1,
@@ -30,7 +33,6 @@ export function SplashScreen() {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Tagline fades in after logo settles
       Animated.timing(taglineOpacity, {
         toValue: 1,
         duration: 300,
@@ -39,19 +41,25 @@ export function SplashScreen() {
       }).start();
     });
 
-    // Navigate after 1.5s
     const timer = setTimeout(async () => {
       const hasOnboarded = await checkHasOnboarded();
       if (!hasOnboarded) {
-        reset('Welcome');
+        navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
         return;
       }
       const hasGroups = await checkHasGroups();
-      reset(hasGroups ? 'Groups' : 'CreateGroup');
+      if (hasGroups) {
+        navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Onboarding', params: { screen: 'CreateGroup' } }],
+        });
+      }
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [logoScale, logoOpacity, taglineOpacity, navigate, reset]);
+  }, [logoScale, logoOpacity, taglineOpacity, navigation]);
 
   return (
     <View style={styles.container}>
@@ -61,7 +69,6 @@ export function SplashScreen() {
           { opacity: logoOpacity, transform: [{ scale: logoScale }] },
         ]}
       >
-        {/* Logo mark — overlapping circles */}
         <View style={styles.logoMark}>
           <View style={[styles.circle, styles.circleLeft]} />
           <View style={[styles.circle, styles.circleRight]} />

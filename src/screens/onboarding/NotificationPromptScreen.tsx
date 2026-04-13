@@ -1,37 +1,36 @@
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights } from '../../theme/typography';
 import { spacing, radius, sizes } from '../../theme/spacing';
-import { useNavigation } from '../../navigation/NavigationContext';
 
 const NOTIFICATION_BENEFITS = [
-  { icon: '💰', text: 'Know when someone settles up' },
-  { icon: '➕', text: 'See new expenses as they\'re added' },
-  { icon: '👋', text: 'Get nudged when a balance is overdue' },
+  { icon: '💰', text: "Know when someone settles up" },
+  { icon: '➕', text: "See new expenses as they're added" },
+  { icon: '👋', text: "Get nudged when a balance is overdue" },
 ];
 
 export function NotificationPromptScreen() {
-  const { reset } = useNavigation();
+  const navigation = useNavigation();
+
+  const goToMainTabs = () => {
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'MainTabs' as any }] }),
+    );
+  };
 
   const handleEnable = async () => {
     try {
       // TODO: call Notifications.requestPermissionsAsync()
-      // const { status } = await Notifications.requestPermissionsAsync();
-      // store result to AsyncStorage
     } catch {}
-    reset('Groups');
+    goToMainTabs();
   };
 
   const handleNotNow = () => {
     // TODO: AsyncStorage.setItem('notifDismissed', 'true')
-    reset('Groups');
+    goToMainTabs();
   };
 
   return (
@@ -81,64 +80,27 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[8],
     alignItems: 'center',
   },
-  bell: {
-    fontSize: 56,
-    marginBottom: spacing[4],
-  },
+  bell: { fontSize: 56, marginBottom: spacing[4] },
   heading: {
-    fontSize: fontSizes['2xl'],
-    fontWeight: fontWeights.bold as any,
-    color: colors.text1,
-    marginBottom: spacing[2],
-    textAlign: 'center',
+    fontSize: fontSizes['2xl'], fontWeight: fontWeights.bold as any,
+    color: colors.text1, marginBottom: spacing[2], textAlign: 'center',
   },
   sub: {
-    fontSize: fontSizes.base,
-    color: colors.text3,
-    textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: spacing[6],
+    fontSize: fontSizes.base, color: colors.text3,
+    textAlign: 'center', lineHeight: 22, marginBottom: spacing[6],
   },
-  benefitsList: {
-    alignSelf: 'stretch',
-    marginBottom: spacing[6],
-    gap: spacing[4],
-  },
-  benefitRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing[3],
-  },
-  benefitIcon: {
-    fontSize: fontSizes.lg,
-    width: 28,
-    textAlign: 'center',
-  },
+  benefitsList: { alignSelf: 'stretch', marginBottom: spacing[6], gap: spacing[4] },
+  benefitRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
+  benefitIcon: { fontSize: fontSizes.lg, width: 28, textAlign: 'center' },
   benefitText: {
-    fontSize: fontSizes.base,
-    color: colors.text2,
-    fontWeight: fontWeights.medium as any,
-    flex: 1,
+    fontSize: fontSizes.base, color: colors.text2,
+    fontWeight: fontWeights.medium as any, flex: 1,
   },
   enableBtn: {
-    height: sizes.btnHeight,
-    backgroundColor: colors.brand,
-    borderRadius: radius.sm,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing[3],
+    height: sizes.btnHeight, backgroundColor: colors.brand, borderRadius: radius.sm,
+    alignSelf: 'stretch', alignItems: 'center', justifyContent: 'center', marginBottom: spacing[3],
   },
-  enableText: {
-    color: colors.white,
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.semibold as any,
-  },
-  laterBtn: {
-    paddingVertical: spacing[3],
-  },
-  laterText: {
-    fontSize: fontSizes.base,
-    color: colors.text4,
-  },
+  enableText: { color: colors.white, fontSize: fontSizes.md, fontWeight: fontWeights.semibold as any },
+  laterBtn: { paddingVertical: spacing[3] },
+  laterText: { fontSize: fontSizes.base, color: colors.text4 },
 });
