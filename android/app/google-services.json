@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "912148950644",
+    "project_id": "spliteasy-36d28",
+    "storage_bucket": "spliteasy-36d28.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912148950644:android:24d26fdfe51da9aadcab21",
+        "android_client_info": {
+          "package_name": "com.ph.spliteasy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaXLhkyFGc99FWC9TSZUXohDVU_IEx5FE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

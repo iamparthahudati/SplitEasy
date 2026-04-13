@@ -1,20 +1,18 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 
+import type { RootStackParamList } from '../../navigation/types';
+import { useUser } from '../../store/useAppStore';
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights, letterSpacings } from '../../theme/typography';
-import type { RootStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList, 'Splash'>;
 
-// TODO: replace with AsyncStorage.getItem('hasOnboarded') once library is installed
-const checkHasOnboarded = (): Promise<boolean> => Promise.resolve(false);
-const checkHasGroups = (): Promise<boolean> => Promise.resolve(false);
-
 export function SplashScreen() {
   const navigation = useNavigation<Nav>();
+  const user = useUser();
   const logoScale = useRef(new Animated.Value(0.6)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const taglineOpacity = useRef(new Animated.Value(0)).current;
@@ -41,16 +39,17 @@ export function SplashScreen() {
       }).start();
     });
 
-    const timer = setTimeout(async () => {
-      const hasOnboarded = await checkHasOnboarded();
-      if (!hasOnboarded) {
+    const timer = setTimeout(() => {
+      if (!user) {
+        // Not signed in — go to onboarding
         navigation.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
         return;
       }
-      const hasGroups = await checkHasGroups();
-      if (hasGroups) {
+      if (user.groupIds.length > 0) {
+        // Signed in with groups — go straight to main app
         navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
       } else {
+        // Signed in but no groups yet — prompt to create first group
         navigation.reset({
           index: 0,
           routes: [{ name: 'Onboarding', params: { screen: 'CreateGroup' } }],

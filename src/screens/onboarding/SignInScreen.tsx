@@ -1,3 +1,5 @@
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -10,13 +12,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useNavigation, CommonActions } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
-import { spacing, radius, sizes } from '../../theme/spacing';
 import type { OnboardingStackParamList } from '../../navigation/types';
+import {
+  sendPasswordReset,
+  signInWithApple,
+  signInWithEmail,
+  signInWithGoogle,
+} from '../../services/firebase/auth';
+import { colors } from '../../theme/colors';
+import { radius, sizes, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 type Nav = NativeStackNavigationProp<OnboardingStackParamList, 'SignIn'>;
 
@@ -43,10 +49,10 @@ export function SignInScreen() {
     setLoading(true);
     setError('');
     try {
-      // TODO: wire Firebase Apple Sign-In
+      await signInWithApple();
       navigation.navigate('CreateGroup');
-    } catch {
-      setError('Apple sign-in failed. Please try again.');
+    } catch (e: any) {
+      setError(e?.message ?? 'Apple sign-in failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -56,22 +62,28 @@ export function SignInScreen() {
     setLoading(true);
     setError('');
     try {
-      // TODO: wire Firebase Google Sign-In
+      await signInWithGoogle();
       navigation.navigate('CreateGroup');
-    } catch {
-      setError('Google sign-in failed. Please try again.');
+    } catch (e: any) {
+      setError(e?.message ?? 'Google sign-in failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleEmailSignIn = async () => {
-    if (!email.trim()) { setError('Please enter your email.'); return; }
-    if (!password) { setError('Please enter your password.'); return; }
+    if (!email.trim()) {
+      setError('Please enter your email.');
+      return;
+    }
+    if (!password) {
+      setError('Please enter your password.');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
-      // TODO: wire Firebase email sign-in
+      await signInWithEmail(email.trim(), password);
       goToMainTabs();
     } catch {
       setError('Wrong email or password. Please try again.');
@@ -81,11 +93,14 @@ export function SignInScreen() {
   };
 
   const handleForgotPassword = async () => {
-    if (!email.trim()) { setError('Enter your email address above first.'); return; }
+    if (!email.trim()) {
+      setError('Enter your email address above first.');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
-      // TODO: Firebase sendPasswordResetEmail(auth, email)
+      await sendPasswordReset(email.trim());
       setResetSent(true);
     } catch {
       setError('Could not send reset email. Check your address and try again.');
@@ -95,7 +110,6 @@ export function SignInScreen() {
   };
 
   const handleNoAccount = () => {
-    // TODO: store "guestMode = true" in AsyncStorage
     navigation.navigate('CreateGroup');
   };
 
@@ -106,7 +120,13 @@ export function SignInScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.container}>
-          <Pressable style={styles.backRow} onPress={() => { setMode('email'); setResetSent(false); }}>
+          <Pressable
+            style={styles.backRow}
+            onPress={() => {
+              setMode('email');
+              setResetSent(false);
+            }}
+          >
             <Text style={styles.backArrow}>←</Text>
             <Text style={styles.backLabel}>Back</Text>
           </Pressable>
@@ -115,7 +135,9 @@ export function SignInScreen() {
 
           {resetSent ? (
             <View style={styles.successBox}>
-              <Text style={styles.successText}>✓ Reset link sent! Check your inbox.</Text>
+              <Text style={styles.successText}>
+                ✓ Reset link sent! Check your inbox.
+              </Text>
             </View>
           ) : (
             <>
@@ -126,18 +148,26 @@ export function SignInScreen() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
-                onChangeText={t => { setEmail(t); clearError(); }}
+                onChangeText={t => {
+                  setEmail(t);
+                  clearError();
+                }}
               />
               {error ? <Text style={styles.errorText}>{error}</Text> : null}
               <Pressable
-                style={[styles.btn, styles.btnPrimary, loading && styles.btnDisabled]}
+                style={[
+                  styles.btn,
+                  styles.btnPrimary,
+                  loading && styles.btnDisabled,
+                ]}
                 onPress={handleForgotPassword}
                 disabled={loading}
               >
-                {loading
-                  ? <ActivityIndicator color={colors.white} />
-                  : <Text style={styles.btnPrimaryText}>Send reset link</Text>
-                }
+                {loading ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  <Text style={styles.btnPrimaryText}>Send reset link</Text>
+                )}
               </Pressable>
             </>
           )}
@@ -152,7 +182,10 @@ export function SignInScreen() {
         style={styles.root}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
           <Pressable style={styles.backRow} onPress={() => setMode('main')}>
             <Text style={styles.backArrow}>←</Text>
             <Text style={styles.backLabel}>Back</Text>
@@ -167,7 +200,10 @@ export function SignInScreen() {
             autoCapitalize="none"
             autoFocus
             value={email}
-            onChangeText={t => { setEmail(t); clearError(); }}
+            onChangeText={t => {
+              setEmail(t);
+              clearError();
+            }}
           />
           <TextInput
             style={styles.input}
@@ -175,20 +211,28 @@ export function SignInScreen() {
             placeholderTextColor={colors.text4}
             secureTextEntry
             value={password}
-            onChangeText={t => { setPassword(t); clearError(); }}
+            onChangeText={t => {
+              setPassword(t);
+              clearError();
+            }}
           />
 
           {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
           <Pressable
-            style={[styles.btn, styles.btnPrimary, loading && styles.btnDisabled]}
+            style={[
+              styles.btn,
+              styles.btnPrimary,
+              loading && styles.btnDisabled,
+            ]}
             onPress={handleEmailSignIn}
             disabled={loading}
           >
-            {loading
-              ? <ActivityIndicator color={colors.white} />
-              : <Text style={styles.btnPrimaryText}>Sign in</Text>
-            }
+            {loading ? (
+              <ActivityIndicator color={colors.white} />
+            ) : (
+              <Text style={styles.btnPrimaryText}>Sign in</Text>
+            )}
           </Pressable>
 
           <Pressable onPress={() => setMode('forgotPassword')}>
@@ -203,7 +247,9 @@ export function SignInScreen() {
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.heading}>Welcome to{'\n'}SplitEasy</Text>
-        <Text style={styles.trust}>Your friends never need to download anything.</Text>
+        <Text style={styles.trust}>
+          Your friends never need to download anything.
+        </Text>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 

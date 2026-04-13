@@ -1,23 +1,41 @@
+import storage from '@react-native-firebase/storage';
+
 /**
- * Firebase Storage service stub.
- * Used for receipt photo uploads.
- * TODO: install firebase and replace stubs with real Storage calls.
+ * Firebase Storage service.
+ * Handles receipt photo uploads and deletions via @react-native-firebase/storage.
  */
 
+/**
+ * Uploads a receipt photo for a given group and expense.
+ * Fetches the local URI as a Blob, uploads it to
+ * groups/{groupId}/receipts/{expenseId}, and returns the public download URL.
+ */
 export async function uploadReceiptPhoto(
   groupId: string,
   expenseId: string,
   localUri: string,
 ): Promise<string> {
-  // TODO: const ref = storageRef(storage, `groups/${groupId}/receipts/${expenseId}`);
-  // TODO: const response = await fetch(localUri);
-  // TODO: const blob = await response.blob();
-  // TODO: await uploadBytes(ref, blob);
-  // TODO: return await getDownloadURL(ref);
-  throw new Error('Firebase Storage not yet installed');
+  const response = await fetch(localUri);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to read local file: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const blob = await response.blob();
+
+  const ref = storage().ref(`groups/${groupId}/receipts/${expenseId}`);
+  await ref.put(blob);
+
+  const downloadUrl: string = await ref.getDownloadURL();
+  return downloadUrl;
 }
 
+/**
+ * Deletes a receipt photo by its download URL.
+ * Resolves the storage reference directly from the URL and removes the object.
+ */
 export async function deleteReceiptPhoto(photoUrl: string): Promise<void> {
-  // TODO: const ref = storageRef(storage, photoUrl);
-  // TODO: await deleteObject(ref);
+  const ref = storage().refFromURL(photoUrl);
+  await ref.delete();
 }
