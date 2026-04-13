@@ -69,8 +69,8 @@
 ### 0.1 — Development Environment
 
 - [ ] Install Node.js (LTS version — check nodejs.org)
-- [ ] Install Expo CLI globally: `npm install -g expo-cli`
-- [ ] Install EAS CLI globally: `npm install -g eas-cli`
+- [ ] Install React Native CLI globally: `npm install -g @react-native-community/cli`
+- [ ] Install Java JDK 17 (required for Android builds)
 - [ ] Set up iOS Simulator via Xcode (Mac only)
 - [ ] Set up Android Emulator via Android Studio
 - [ ] Install VS Code + extensions: ESLint, Prettier, React Native Tools
@@ -80,15 +80,15 @@
 ### 0.2 — Project Initialization
 
 ```bash
-npx create-expo-app SplitEasy --template blank-typescript
+npx @react-native-community/cli init SplitEasy --template react-native-template-typescript
 cd SplitEasy
 git init
 git remote add origin https://github.com/YOUR_USERNAME/spliteasy
 ```
 
-- [ ] Project created successfully
-- [ ] App runs on iOS Simulator: `npx expo start`
-- [ ] App runs on Android Emulator
+- ✅ Project created (React Native CLI, not Expo)
+- [ ] App runs on iOS Simulator: `npx react-native run-ios`
+- [ ] App runs on Android Emulator: `npx react-native run-android`
 - [ ] Git repo initialized and first commit pushed
 - [ ] `.gitignore` includes: `.env`, `google-services.json`, `GoogleService-Info.plist`, `node_modules`
 
@@ -130,7 +130,7 @@ SplitEasy/
 │   │   │   ├── firestore.ts
 │   │   │   └── storage.ts
 │   │   ├── revenuecat.ts
-│   │   └── applovin.ts
+│   │   └── admob.ts
 │   ├── store/
 │   │   └── useAppStore.ts       (Zustand global state)
 │   ├── utils/
@@ -162,50 +162,65 @@ SplitEasy/
 Run all of these before writing a single screen:
 
 ```bash
-# Navigation
-npx expo install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/stack
-npx expo install react-native-screens react-native-safe-area-context
+# Navigation (already installed)
+npm install @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack
+npm install react-native-screens react-native-safe-area-context
 
 # Firebase
-npx expo install firebase
-npx expo install @react-native-firebase/app @react-native-firebase/auth
-npx expo install @react-native-firebase/firestore @react-native-firebase/storage
+npm install @react-native-firebase/app @react-native-firebase/auth
+npm install @react-native-firebase/firestore @react-native-firebase/storage
+# Place google-services.json in android/app/ and GoogleService-Info.plist in ios/
 
-# State management
+# State management (already installed)
 npm install zustand
 
 # Local storage
-npx expo install @react-native-async-storage/async-storage
+npm install @react-native-async-storage/async-storage
 
 # UI & animations
-npx expo install react-native-reanimated react-native-gesture-handler
-npx expo install @gorhom/bottom-sheet
+npm install react-native-reanimated react-native-gesture-handler
+npm install @gorhom/bottom-sheet
 
 # Camera & images
-npx expo install expo-image-picker expo-image-manipulator expo-camera
+npm install react-native-image-picker
+npm install react-native-image-resizer
 
-# Notifications
-npx expo install expo-notifications expo-device
+# Notifications (Firebase Cloud Messaging)
+npm install @react-native-firebase/messaging
+npm install @notifee/react-native
 
-# iOS tracking (required for AppLovin MAX)
-npx expo install expo-tracking-transparency
+# iOS tracking (required before AdMob init on iOS 14+)
+npm install react-native-tracking-transparency
 
 # PDF & sharing
-npx expo install expo-print expo-sharing
+npm install react-native-html-to-pdf
+npm install react-native-share
 
 # Revenue & Ads
-npm install react-native-purchases
-npm install react-native-applovin-max
+npm install react-native-purchases          # RevenueCat
+npm install react-native-google-mobile-ads  # Google AdMob
 
 # Utilities
 npm install date-fns
 
 # Crash reporting
-npx expo install sentry-expo
+npm install @sentry/react-native
+
+# iOS — run pod install after every native package add
+cd ios && pod install && cd ..
 ```
 
+**Android-specific setup:**
+- Add `google-services.json` to `android/app/`
+- Add AdMob App ID to `android/app/src/main/AndroidManifest.xml`
+
+**iOS-specific setup:**
+- Add `GoogleService-Info.plist` to `ios/SplitEasy/`
+- Add AdMob App ID to `ios/SplitEasy/Info.plist`
+
 - [ ] All packages installed with zero errors
-- [ ] App still loads after install
+- [ ] `pod install` runs cleanly on iOS
+- [ ] App still loads on both platforms after install
 - [ ] No TypeScript errors in base project
 
 ---
@@ -481,7 +496,7 @@ Do not start Phase 1 until:
 - ✅ Show after first group is created (not at app launch — too early)
 - ✅ Custom pre-prompt screen before iOS system dialog
 - ✅ Copy: "Know when someone settles up" — explain each notification type
-- 🎨 "Enable Notifications" → `Notifications.requestPermissionsAsync()` → system dialog _(expo-notifications not installed)_
+- 🎨 "Enable Notifications" → `notifee.requestPermission()` → system dialog _(@notifee/react-native not installed)_
 - 🎨 "Not now" → dismiss and store `notifDismissed = true` in AsyncStorage _(AsyncStorage not installed)_
 - [ ] Custom pre-prompt increases permission acceptance from ~40% to ~70% _(measure after real launch)_
 
@@ -495,7 +510,7 @@ Do not start Phase 2 until:
 - [ ] Sign in with Apple works on a real iPhone (not simulator)
 - [ ] "No account" mode creates a group stored in AsyncStorage _(AsyncStorage not installed)_
 - [ ] Group data saves to Firestore and persists after app restart _(Firebase not wired)_
-- [ ] Push notification permission is requested after group creation _(expo-notifications not installed)_
+- [ ] Push notification permission is requested after group creation _(@notifee/react-native not installed)_
 
 ---
 
@@ -517,7 +532,7 @@ Do not start Phase 2 until:
 - 🎨 Empty state: icon, title, subtitle, "Create a group" CTA button
 - [ ] Free-plan badge: `FREE PLAN` amber pill
 - [ ] 3-group limit: 4th group card shows lock overlay "Upgrade to unlock"
-- [ ] AppLovin MAX banner at bottom (Phase 3)
+- [ ] AdMob banner at bottom (Phase 3)
 - [ ] Firestore `onSnapshot` listener — replace mock data with real-time updates
 
 #### 2.2 — Free Limits Screen
@@ -535,7 +550,7 @@ Do not start Phase 2 until:
 - [ ] Recent expenses: last 5, with "View all →" link
 - [ ] "Add Expense" CTA: full-width indigo button
 - [ ] Firestore `onSnapshot` — balances recalculate instantly when expenses change
-- [ ] AppLovin MAX banner at bottom (placeholder)
+- [ ] AdMob banner at bottom (placeholder)
 
 ---
 
@@ -620,7 +635,7 @@ Tap 3: Tap "Save Expense"
 - 🎨 Each row: icon circle (emoji per category), description, group badge, meta line (who paid · total), colored amount
 - 🎨 Positive = green (+), negative = red (−), settlements = green (💸)
 - 🎨 Empty state per filter
-- [ ] AppLovin MAX native ad placeholder every 4th item (Phase 3)
+- [ ] AdMob native ad placeholder every 4th item (Phase 3)
 - [ ] Firestore compound query: all subcollection events ordered by `createdAt` — replace mock data
 
 #### 2.11 — Expense History
@@ -630,7 +645,7 @@ Tap 3: Tap "Save Expense"
 - [ ] Date filter pills: All / This Month / Last Month
 - [ ] Category filter pills
 - [ ] Each row: category icon, name, paid by, amount, your net share (green/red)
-- [ ] AppLovin MAX native ad placeholder every 8th item
+- [ ] AdMob native ad placeholder every 8th item
 - [ ] "Export CSV" button: generate CSV from Firestore data → share via native sheet
 
 #### 2.12 — Expense Detail Screen
@@ -680,14 +695,14 @@ Tap 3: Tap "Save Expense"
 - 🎨 Version footer: "SplitEasy v1.0.0" + Privacy / Terms links
 - [ ] Wire Sign Out to Firebase `auth.signOut()` → navigate to Onboarding
 - [ ] Wire Default Currency to AsyncStorage
-- [ ] Rate the App → `StoreReview.requestReview()` (expo-store-review)
+- [ ] Rate the App → `InAppReview.RequestInAppReview()` (react-native-in-app-review)
 - [ ] Wire to real user profile from Firestore / auth state
 
 #### 2.16 — Push Notifications
 
 - [ ] Expense added to your group → push notification (requires Expo push token stored on user profile)
 - [ ] Settlement confirmed → push to relevant member
-- [ ] Schedule with `expo-notifications`
+- [ ] Schedule with `@notifee/react-native` triggers + `@react-native-firebase/messaging` for push
 - [ ] Test on real physical device (push notifications don't work reliably in simulator)
 - [ ] Store push token in Firestore `users/{userId}/pushToken`
 
@@ -719,41 +734,56 @@ Do not start Phase 3 until:
 
 ---
 
-### Week 7 — AppLovin MAX Ads
+### Week 7 — Google AdMob Ads
 
-#### 3.1 — MAX SDK Setup
+#### 3.1 — AdMob SDK Setup
 
-- [ ] Create AppLovin account at dash.applovin.com
-- [ ] Create 4 ad units: Banner, Interstitial, Rewarded, Native
-- [ ] Write down all 8 ad unit IDs (4 for iOS, 4 for Android) in `.env`
-- [ ] Enable mediation networks in MAX dashboard: Google AdMob, Meta Audience Network, Unity Ads
-- [ ] Add AppLovin SDK key to `app.config.js`
-- [ ] Initialize MAX SDK in `App.tsx` — AFTER ATT consent on iOS
+- [ ] Create Google AdMob account at admob.google.com
+- [ ] Create new app in AdMob dashboard (iOS + Android separately)
+- [ ] Create 4 ad units per platform: Banner, Interstitial, Rewarded, Native Advanced
+- [ ] Write down both **App IDs** and all **8 ad unit IDs** (4 iOS + 4 Android) in `.env`
+- [ ] Add iOS App ID to `ios/SplitEasy/Info.plist`:
+  ```xml
+  <key>GADApplicationIdentifier</key>
+  <string>ca-app-pub-XXXX~XXXX</string>
+  ```
+- [ ] Add Android App ID to `android/app/src/main/AndroidManifest.xml`:
+  ```xml
+  <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+             android:value="ca-app-pub-XXXX~XXXX"/>
+  ```
+- [ ] Initialize AdMob SDK in `App.tsx` — AFTER ATT consent on iOS:
+  ```typescript
+  import mobileAds from 'react-native-google-mobile-ads';
+  await mobileAds().initialize();
+  ```
 
 #### 3.2 — ATT Consent Modal (iOS 14+ Required)
 
 - [ ] Build pre-prompt screen (must show BEFORE system ATT dialog)
 - [ ] Copy: "Help us show relevant ads — not random ones"
-- [ ] "Continue" → `requestTrackingPermissionsAsync()` → system ATT dialog
-- [ ] Pass ATT status to AppLovin MAX initialization
+- [ ] "Continue" → `requestTrackingPermission()` from `react-native-tracking-transparency` → system ATT dialog
+- [ ] Pass ATT status to AdMob initialization (`mobileAds().setRequestConfiguration`)
 - [ ] Test on real iPhone — ATT dialog does not appear in simulator
 
 #### 3.3 — Banner Ads
 
 ```typescript
 // src/components/ui/AdBanner.tsx
-import AppLovinMAX from 'react-native-applovin-max';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { usePremium } from '../../hooks/usePremium';
+
+const BANNER_ID = Platform.OS === 'ios' ? IOS_BANNER_ID : ANDROID_BANNER_ID;
 
 export const AdBanner = () => {
   const { isPremium } = usePremium();
   if (isPremium) return null; // Premium users see zero ads
 
   return (
-    <AppLovinMAX.AdView
-      adUnitId={Platform.OS === 'ios' ? IOS_BANNER_ID : ANDROID_BANNER_ID}
-      adFormat={AppLovinMAX.AdFormat.BANNER}
-      style={{ width: '100%', height: 50 }}
+    <BannerAd
+      unitId={BANNER_ID}
+      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      onAdFailedToLoad={() => {/* collapse gracefully */}}
     />
   );
 };
@@ -772,18 +802,23 @@ export const AdBanner = () => {
 - [ ] Frequency cap: max 1 interstitial per 3 minutes
 
 ```typescript
-// Frequency cap implementation
+// src/services/admob.ts
+import { InterstitialAd, AdEventType } from 'react-native-google-mobile-ads';
+
 const COOLDOWN_MS = 3 * 60 * 1000;
 let lastShownTime = 0;
+
+const interstitial = InterstitialAd.createForAdRequest(INTER_UNIT_ID);
+interstitial.load(); // preload on app start
 
 export const showInterstitialIfReady = (isPremium: boolean) => {
   if (isPremium) return;
   if (Date.now() - lastShownTime < COOLDOWN_MS) return;
-  if (!AppLovinMAX.isInterstitialReady(INTER_UNIT_ID)) return;
+  if (!interstitial.loaded) return;
 
-  AppLovinMAX.showInterstitial(INTER_UNIT_ID);
+  interstitial.show();
   lastShownTime = Date.now();
-  AppLovinMAX.loadInterstitial(INTER_UNIT_ID); // preload next
+  interstitial.load(); // preload next
 };
 ```
 
@@ -791,17 +826,33 @@ export const showInterstitialIfReady = (isPremium: boolean) => {
 
 #### 3.5 — Rewarded Video Ads
 
+```typescript
+// src/services/admob.ts
+import { RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
+
+const rewarded = RewardedAd.createForAdRequest(REWARDED_UNIT_ID);
+rewarded.load();
+
+export const showRewardedAd = (onRewarded: () => void) => {
+  rewarded.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {
+    onRewarded();
+    rewarded.load(); // preload next
+  });
+  rewarded.show();
+};
+```
+
 - [ ] Pre-load rewarded ad on app start
 - [ ] Build `RewardedVideoSheet` component
 - [ ] Trigger for: PDF export (once/day) + Receipt scanner (once/day)
-- [ ] Timer shown during video: "Unlocks in 28 seconds"
 - [ ] On reward earned: execute unlocked action + show success animation
 - [ ] Track daily unlock state in AsyncStorage — reset at midnight
 
 #### 3.6 — Native Ads
 
-- [ ] MAX native ad template styled to match expense cards exactly
-- [ ] "Sponsored" label in 8px slate gray — clearly labeled
+- [ ] Use `NativeAd` from `react-native-google-mobile-ads` (Native Advanced)
+- [ ] Style native ad template to match expense cards exactly
+- [ ] "Sponsored" label in 8px slate gray — clearly labeled per AdMob policy
 - [ ] Insert every 4th item in Activity Feed
 - [ ] Insert every 8th item in Expense History
 - [ ] Free users only
@@ -919,7 +970,7 @@ export function usePremium() {
 
 Do not start Phase 4 until:
 
-- [ ] All 4 AppLovin MAX ad formats load on real iPhone 14 and Samsung S21
+- [ ] All 4 Google AdMob ad formats load on real iPhone 14 and Samsung S21
 - [ ] Interstitial frequency cap works correctly (max 1 per 3 minutes)
 - [ ] RevenueCat subscription purchase completes in sandbox on both platforms
 - [ ] Premium users see exactly zero ads
@@ -1085,7 +1136,7 @@ Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt:
 #### 4.5 — Receipt Scanner Screen
 
 - [ ] Camera view with rectangular scan overlay
-- [ ] Capture → compress (expo-image-manipulator, max 1200px, 0.7 quality)
+- [ ] Capture → compress (react-native-image-resizer, max 1200px, 0.7 quality)
 - [ ] Base64 encode → POST to Cloudflare Worker
 - [ ] Loading state: "Reading receipt..." with subtle animation
 - [ ] Detected items list: name + amount + "Assign →" button per item
@@ -1113,7 +1164,7 @@ Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt:
 #### 4.8 — PDF Group Report
 
 ```html
-<!-- expo-print HTML template -->
+<!-- react-native-html-to-pdf HTML template -->
 <html>
   <head>
     <style>
@@ -1186,7 +1237,7 @@ Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt:
 ```
 
 - [ ] Build PDF preview screen: scrollable card showing the rendered PDF
-- [ ] "Export & Share" → `expo-print` generates PDF → `expo-sharing` opens native share sheet
+- [ ] "Export & Share" → `react-native-html-to-pdf` generates PDF → `react-native-share` opens native share sheet
 - [ ] "Print" option
 - [ ] Free users: `RewardedVideoSheet` shows first (watch to export once/day)
 - [ ] Premium users: instant export, no ad
@@ -1273,8 +1324,8 @@ Do not start Phase 5 until:
 - [ ] Nudge: message copies to clipboard, Messages deeplink opens on iPhone
 - [ ] Push notifications: fire on both platforms for expense added + settlement
 - [ ] RevenueCat sandbox: purchase → premium unlocked → cancel → free returns
-- [ ] AppLovin MAX: all 4 formats on real iPhone 14 and Samsung Galaxy S21
-- [ ] ATT: fires BEFORE MAX init on real iPhone (critical Apple requirement)
+- [ ] Google AdMob: all 4 formats on real iPhone 14 and Samsung Galaxy S21
+- [ ] ATT: fires BEFORE AdMob init on real iPhone (critical Apple requirement)
 - [ ] Offline: add expense in airplane mode → reconnect → syncs to Firestore
 - [ ] Paywall: triggers at correct moments (4th group, scanner, PDF, anniversary)
 
@@ -1287,12 +1338,12 @@ Do not start Phase 5 until:
 
 #### 5.7 — Crash Reporting (Sentry)
 
-```javascript
+```typescript
 // App.tsx
-import * as Sentry from 'sentry-expo';
+import * as Sentry from '@sentry/react-native';
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  enableInExpoDevelopment: false,
+  environment: __DEV__ ? 'development' : 'production',
 });
 ```
 
@@ -1340,7 +1391,7 @@ Do not submit to App Store until:
 - [ ] Zero Sentry crashes in 2 hours of continuous testing on real devices
 - [ ] All screens tested on iPhone 14 and Samsung Galaxy S21
 - [ ] RevenueCat purchase tested end-to-end in sandbox on both platforms
-- [ ] All AppLovin MAX ad formats confirmed on real devices
+- [ ] All Google AdMob ad formats confirmed on real devices
 - [ ] App Store and Play Store listings complete and reviewed
 - [ ] Privacy policy live at a public URL
 - [ ] 5+ TestFlight users gave positive feedback
@@ -1379,7 +1430,7 @@ Do not submit to App Store until:
 
 - [ ] Sentry: check for new crashes every morning
 - [ ] Firebase Analytics: DAU, onboarding completion %, paywall view rate
-- [ ] AppLovin MAX dashboard: eCPM, fill rate, revenue
+- [ ] Google AdMob dashboard: eCPM, fill rate, estimated revenue
 - [ ] RevenueCat dashboard: trial starts, conversions, MRR
 - [ ] App Store reviews: respond to every review within 48 hours
 - [ ] Fix critical bugs within 24 hours → submit expedited review request
@@ -1436,7 +1487,7 @@ Top post-launch requests for expense-splitting apps:
 - [ ] A/B test pricing: $24.99/yr vs $19.99/yr vs $29.99/yr
 - [ ] Test annual vs monthly pre-selection on paywall
 - [ ] Optimize interstitial timing: test showing after 3 completed settlements vs current trigger
-- [ ] Apply for AppLovin MAX Verified Publisher program at 10k MAU (higher CPMs)
+- [ ] Apply for Google AdMob premium account at 10k MAU (higher CPMs + direct deals)
 - [ ] Apply for Chewy, Amazon, or Chase Sapphire affiliate programs (high-CPA finance ads)
 
 ### Week 24 — Scale Planning
@@ -1526,7 +1577,7 @@ When every box is checked, SplitEasy ships and wins:
 
 | File                               | Purpose                                                    |
 | ---------------------------------- | ---------------------------------------------------------- |
-| `SplitEasy_Features.md`            | Complete feature list, free vs premium, AppLovin MAX setup |
+| `SplitEasy_Features.md`            | Complete feature list, free vs premium, Google AdMob setup |
 | `SplitEasy_Screens.md`             | All 32 screen designs with layout specs                    |
 | `SplitEasy_Roadmap.md`             | This file — week-by-week plan                              |
 | `SplitEasy_Project_Starter.md`     | Full code snippets, schema, setup commands                 |
