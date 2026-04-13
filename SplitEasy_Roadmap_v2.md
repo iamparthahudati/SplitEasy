@@ -20,42 +20,43 @@
 
 ## Current Status — Last Updated: 2026-04-13
 
-| Area | Status |
-|---|---|
-| Folder structure & theme | ✅ Complete |
-| TypeScript types | ✅ Complete |
-| Settlement algorithm + 10 unit tests | ✅ Complete |
-| Utility functions (formatters, splitCalculator) | ✅ Complete |
-| Custom navigation system | ✅ Complete |
-| UI components (Button, Card, Avatar, Badge) | ✅ Complete |
-| Global state store (useAppStore) | ✅ Complete |
-| Firebase service stubs | 🎨 Stubbed — needs real Firebase SDK |
-| 32 placeholder screens | ✅ All navigable |
-| Splash screen | 🎨 Design done — AsyncStorage routing pending |
-| Welcome carousel | 🎨 Design done — AsyncStorage write pending |
-| Sign In screen | 🎨 Design done — Firebase Auth pending |
-| Create Group screen | 🎨 Design done — Firestore write pending |
-| Notification prompt | 🎨 Design done — Notifications API pending |
-| **Next action** | Install dependencies (0.4) → wire Firebase (0.5) |
+| Area                                            | Status                                           |
+| ----------------------------------------------- | ------------------------------------------------ |
+| Folder structure & theme                        | ✅ Complete                                      |
+| TypeScript types                                | ✅ Complete                                      |
+| Settlement algorithm + 10 unit tests            | ✅ Complete                                      |
+| Utility functions (formatters, splitCalculator) | ✅ Complete                                      |
+| Custom navigation system                        | ✅ Complete                                      |
+| UI components (Button, Card, Avatar, Badge)     | ✅ Complete                                      |
+| Global state store (useAppStore)                | ✅ Complete                                      |
+| Firebase service stubs                          | 🎨 Stubbed — needs real Firebase SDK             |
+| 32 placeholder screens                          | ✅ All navigable                                 |
+| Splash screen                                   | 🎨 Design done — AsyncStorage routing pending    |
+| Welcome carousel                                | 🎨 Design done — AsyncStorage write pending      |
+| Sign In screen                                  | 🎨 Design done — Firebase Auth pending           |
+| Create Group screen                             | 🎨 Design done — Firestore write pending         |
+| Notification prompt                             | 🎨 Design done — Notifications API pending       |
+| **Next action**                                 | Install dependencies (0.4) → wire Firebase (0.5) |
 
 ---
 
 ## Quick Overview
 
-| Phase | Name | Weeks | Goal |
-|---|---|---|---|
-| **0** | Setup & foundation | 1 | Project runs on your phone |
-| **1** | Onboarding | 2 | User can sign up and create a group |
-| **2** | Core expense features | 3–6 | Full expense cycle works end-to-end |
-| **3** | Monetization | 7–9 | App earns money from day one |
-| **4** | Premium features | 10–12 | Users have strong reasons to upgrade |
-| **5** | Polish & testing | 13–14 | App Store ready, zero crashes |
-| **6** | Launch | 15 | Live on App Store + Google Play |
-| **7** | Post-launch growth | 16–24 | Scale to 50k MAU |
+| Phase | Name                  | Weeks | Goal                                 |
+| ----- | --------------------- | ----- | ------------------------------------ |
+| **0** | Setup & foundation    | 1     | Project runs on your phone           |
+| **1** | Onboarding            | 2     | User can sign up and create a group  |
+| **2** | Core expense features | 3–6   | Full expense cycle works end-to-end  |
+| **3** | Monetization          | 7–9   | App earns money from day one         |
+| **4** | Premium features      | 10–12 | Users have strong reasons to upgrade |
+| **5** | Polish & testing      | 13–14 | App Store ready, zero crashes        |
+| **6** | Launch                | 15    | Live on App Store + Google Play      |
+| **7** | Post-launch growth    | 16–24 | Scale to 50k MAU                     |
 
 ---
 
 ## Phase 0 — Setup & Foundation
+
 ### Week 1 · Goal: Project runs on your phone with all tools connected
 
 ---
@@ -230,11 +231,11 @@ export interface Group {
   name: string;
   emoji: string;
   color: string;
-  memberNames: string[];     // plain names — no account needed for members
-  createdBy: string;         // userId
+  memberNames: string[]; // plain names — no account needed for members
+  createdBy: string; // userId
   createdAt: Date;
   archived: boolean;
-  currency: string;          // 'USD', 'EUR', etc.
+  currency: string; // 'USD', 'EUR', etc.
 }
 
 // src/types/expense.ts
@@ -243,9 +244,9 @@ export interface Expense {
   name: string;
   amount: number;
   currency: string;
-  originalAmount?: number;   // if multi-currency
+  originalAmount?: number; // if multi-currency
   exchangeRate?: number;
-  paidBy: string;            // member name (not userId)
+  paidBy: string; // member name (not userId)
   splits: Record<string, number>; // { 'Alex': 60, 'Jordan': 60 }
   splitMethod: 'equal' | 'exact' | 'percentage' | 'itemized';
   items?: Array<{ name: string; amount: number; assignedTo: string[] }>;
@@ -260,11 +261,11 @@ export interface Expense {
 
 export interface Settlement {
   id: string;
-  from: string;              // member name
-  to: string;                // member name
+  from: string; // member name
+  to: string; // member name
   amount: number;
   settledAt: Date;
-  settledBy: string;         // userId
+  settledBy: string; // userId
 }
 
 export interface RecurringBill {
@@ -281,6 +282,7 @@ export interface RecurringBill {
 ```
 
 Firestore structure:
+
 ```
 users/{userId}/
   profile: { email, displayName, currency, defaultSplit, createdAt }
@@ -305,12 +307,22 @@ This is the mathematical core. Every balance depends on it. Write it first, test
 ```typescript
 // src/utils/settlement.ts
 
-export interface Balance { [memberName: string]: number }
-export interface Settlement { from: string; to: string; amount: number }
+export interface Balance {
+  [memberName: string]: number;
+}
+export interface Settlement {
+  from: string;
+  to: string;
+  amount: number;
+}
 
 export function calculateBalances(
-  expenses: Array<{ paidBy: string; amount: number; splits: Record<string, number> }>,
-  settlements: Array<{ from: string; to: string; amount: number }>
+  expenses: Array<{
+    paidBy: string;
+    amount: number;
+    splits: Record<string, number>;
+  }>,
+  settlements: Array<{ from: string; to: string; amount: number }>,
 ): Balance {
   const balances: Balance = {};
 
@@ -340,11 +352,13 @@ export function getSettlements(balances: Balance): Settlement[] {
     .filter(e => Math.abs(e.amount) > 0.01)
     .sort((a, b) => a.amount - b.amount);
 
-  let left = 0, right = entries.length - 1;
+  let left = 0,
+    right = entries.length - 1;
   while (left < right) {
     const debtor = entries[left];
     const creditor = entries[right];
-    const amount = Math.round(Math.min(-debtor.amount, creditor.amount) * 100) / 100;
+    const amount =
+      Math.round(Math.min(-debtor.amount, creditor.amount) * 100) / 100;
 
     if (amount > 0.01) {
       settlements.push({ from: debtor.id, to: creditor.id, amount });
@@ -389,6 +403,7 @@ Write these unit tests before moving on:
 ### ⏸ Phase 0 Gate — BLOCKED on Firebase + device testing
 
 Do not start Phase 1 until:
+
 - [ ] App loads on both iOS Simulator and Android Emulator _(needs 0.4 installs + device test)_
 - [ ] Firebase read/write works from the app _(needs 0.5 Firebase setup)_
 - ✅ All 32 placeholder screens are navigable
@@ -398,6 +413,7 @@ Do not start Phase 1 until:
 ---
 
 ## Phase 1 — Onboarding
+
 ### Week 2 · Goal: User can sign up and create a group
 
 ---
@@ -464,6 +480,7 @@ Do not start Phase 1 until:
 ### ⏸ Phase 1 Gate — BLOCKED on Firebase + AsyncStorage
 
 Do not start Phase 2 until:
+
 - [ ] Full onboarding flow works end-to-end on both platforms _(needs Firebase + AsyncStorage)_
 - [ ] Sign in with Apple works on a real iPhone (not simulator)
 - [ ] "No account" mode creates a group stored in AsyncStorage _(AsyncStorage not installed)_
@@ -473,6 +490,7 @@ Do not start Phase 2 until:
 ---
 
 ## Phase 2 — Core Expense Features
+
 ### Weeks 3–6 · Goal: Full expense cycle works — add, view, balance, settle
 
 ---
@@ -570,6 +588,7 @@ Tap 3: Tap "Save Expense"
 - [ ] Confetti animation: show when group balance reaches exactly $0.00
 
 **Confetti implementation (React Native Reanimated):**
+
 ```javascript
 // On group total balance reaching $0:
 // 1. Scale green checkmark circle 0 → 1.2 → 1.0 (spring, 400ms)
@@ -652,6 +671,7 @@ Tap 3: Tap "Save Expense"
 ### ✅ Phase 2 Gate
 
 Do not start Phase 3 until:
+
 - [ ] Full expense cycle: create group → add expense → see balance → settle → confetti
 - [ ] Balances calculate correctly (run settlement algorithm against real Firestore data)
 - [ ] Nudge copies to clipboard on real device
@@ -662,6 +682,7 @@ Do not start Phase 3 until:
 ---
 
 ## Phase 3 — Monetization
+
 ### Weeks 7–9 · Goal: App earns money from day one of launch
 
 ---
@@ -694,8 +715,8 @@ import { usePremium } from '../../hooks/usePremium';
 
 export const AdBanner = () => {
   const { isPremium } = usePremium();
-  if (isPremium) return null;  // Premium users see zero ads
-  
+  if (isPremium) return null; // Premium users see zero ads
+
   return (
     <AppLovinMAX.AdView
       adUnitId={Platform.OS === 'ios' ? IOS_BANNER_ID : ANDROID_BANNER_ID}
@@ -727,7 +748,7 @@ export const showInterstitialIfReady = (isPremium: boolean) => {
   if (isPremium) return;
   if (Date.now() - lastShownTime < COOLDOWN_MS) return;
   if (!AppLovinMAX.isInterstitialReady(INTER_UNIT_ID)) return;
-  
+
   AppLovinMAX.showInterstitial(INTER_UNIT_ID);
   lastShownTime = Date.now();
   AppLovinMAX.loadInterstitial(INTER_UNIT_ID); // preload next
@@ -783,7 +804,7 @@ export function usePremium() {
 
   useEffect(() => {
     checkPremium();
-    const listener = Purchases.addCustomerInfoUpdateListener((info) => {
+    const listener = Purchases.addCustomerInfoUpdateListener(info => {
       setIsPremium(!!info.entitlements.active['premium']);
     });
     return () => listener.remove();
@@ -793,8 +814,11 @@ export function usePremium() {
     try {
       const info = await Purchases.getCustomerInfo();
       setIsPremium(!!info.entitlements.active['premium']);
-    } catch { setIsPremium(false); }
-    finally { setIsLoading(false); }
+    } catch {
+      setIsPremium(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return { isPremium, isLoading };
@@ -818,21 +842,25 @@ export function usePremium() {
 #### 3.10 — Paywall Triggers (4 context variants)
 
 **Variant A — 4th group attempt:**
+
 - Show what they wanted to create (name + emoji in amber preview card)
 - "You've hit the free limit — 3 groups max on Free"
 - CTA: "Upgrade & Create Group"
 
 **Variant B — Receipt scanner tap:**
+
 - Bottom sheet (not full screen)
 - Shows AI scanner preview, 3 specific benefits
 - CTA: "Try Premium Free — 7 Days" + secondary "Watch an ad for 1 free scan"
 
 **Variant C — PDF export tap:**
+
 - Bottom sheet with PDF preview visible behind
 - Rewarded video option + premium option side by side
 - This variant drives BOTH ad revenue AND premium conversions
 
 **Variant D — 30-day anniversary:**
+
 - Push notification: "You've logged [N] expenses this month — see your full report →"
 - Tapping notification opens the PDF locked screen
 
@@ -858,6 +886,7 @@ export function usePremium() {
 ### ✅ Phase 3 Gate
 
 Do not start Phase 4 until:
+
 - [ ] All 4 AppLovin MAX ad formats load on real iPhone 14 and Samsung S21
 - [ ] Interstitial frequency cap works correctly (max 1 per 3 minutes)
 - [ ] RevenueCat subscription purchase completes in sandbox on both platforms
@@ -868,6 +897,7 @@ Do not start Phase 4 until:
 ---
 
 ## Phase 4 — Premium Features
+
 ### Weeks 10–12 · Goal: Premium feels worth every cent
 
 ---
@@ -903,7 +933,8 @@ exports.addRecurringExpenses = onSchedule('0 9 1 * *', async () => {
   const db = admin.firestore();
   const now = admin.firestore.Timestamp.now();
 
-  const snapshot = await db.collectionGroup('recurring')
+  const snapshot = await db
+    .collectionGroup('recurring')
     .where('active', '==', true)
     .where('nextDate', '<=', now)
     .get();
@@ -933,7 +964,7 @@ exports.addRecurringExpenses = onSchedule('0 9 1 * *', async () => {
     const next = new Date(r.nextDate.toDate());
     next.setMonth(next.getMonth() + 1);
     batch.update(doc.ref, {
-      nextDate: admin.firestore.Timestamp.fromDate(next)
+      nextDate: admin.firestore.Timestamp.fromDate(next),
     });
   }
 
@@ -953,7 +984,7 @@ exports.addRecurringExpenses = onSchedule('0 9 1 * *', async () => {
 
 The receipt scanner calls two paid APIs (Google Cloud Vision + Claude). Never put API keys in the app. Use a Cloudflare Worker as a proxy.
 
-```javascript
+````javascript
 // cloudflare-worker/index.js
 export default {
   async fetch(request, env) {
@@ -966,17 +997,20 @@ export default {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          requests: [{
-            image: { content: imageBase64 },
-            features: [{ type: 'TEXT_DETECTION' }]
-          }]
-        })
-      }
+          requests: [
+            {
+              image: { content: imageBase64 },
+              features: [{ type: 'TEXT_DETECTION' }],
+            },
+          ],
+        }),
+      },
     );
     const visionData = await visionRes.json();
     const rawText = visionData.responses[0]?.fullTextAnnotation?.text || '';
 
-    if (!rawText) return Response.json({ items: [], error: 'Cannot read receipt' });
+    if (!rawText)
+      return Response.json({ items: [], error: 'Cannot read receipt' });
 
     // Step 2: Claude API — parse raw OCR text into structured items
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -984,17 +1018,19 @@ export default {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 800,
-        messages: [{
-          role: 'user',
-          content: `Parse this receipt. Return ONLY a JSON array: [{"name": string, "amount": number}]
-Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt: ${rawText}`
-        }]
-      })
+        messages: [
+          {
+            role: 'user',
+            content: `Parse this receipt. Return ONLY a JSON array: [{"name": string, "amount": number}]
+Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt: ${rawText}`,
+          },
+        ],
+      }),
     });
     const claudeData = await claudeRes.json();
     const text = claudeData.content[0]?.text || '[]';
@@ -1005,9 +1041,9 @@ Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt:
     } catch {
       return Response.json({ items: [], error: 'Parse failed' });
     }
-  }
+  },
 };
-```
+````
 
 - [ ] Cloudflare Worker created and deployed
 - [ ] Google Vision API key and Claude API key stored as Cloudflare secrets
@@ -1047,32 +1083,73 @@ Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt:
 ```html
 <!-- expo-print HTML template -->
 <html>
-<head>
-<style>
-  body { font-family: -apple-system, sans-serif; padding: 24px; color: #0F172A; }
-  .header { background: #6366F1; color: white; padding: 16px; border-radius: 12px; margin-bottom: 20px; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-  th { background: #EEF2FF; color: #4338CA; font-size: 10px; padding: 8px; text-align: left; }
-  td { font-size: 11px; padding: 8px; border-bottom: 1px solid #EEF2FF; }
-  .pos { color: #059669; font-weight: 700; }
-  .neg { color: #DC2626; font-weight: 700; }
-  .footer { font-size: 9px; color: #94A3B8; text-align: center; margin-top: 20px; }
-</style>
-</head>
-<body>
-  <div class="header">
-    <h2>{{emoji}} {{groupName}}</h2>
-    <p>{{memberNames}} · {{count}} expenses · {{dateRange}}</p>
-  </div>
-  <h3>Expense History</h3>
-  <table>
-    <tr><th>Date</th><th>Description</th><th>Paid By</th><th>Amount</th><th>Your Share</th></tr>
-    {{expenses}}
-  </table>
-  <h3>Final Balances</h3>
-  {{balances}}
-  <div class="footer">Generated by SplitEasy · spliteasy.app</div>
-</body>
+  <head>
+    <style>
+      body {
+        font-family: -apple-system, sans-serif;
+        padding: 24px;
+        color: #0f172a;
+      }
+      .header {
+        background: #6366f1;
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th {
+        background: #eef2ff;
+        color: #4338ca;
+        font-size: 10px;
+        padding: 8px;
+        text-align: left;
+      }
+      td {
+        font-size: 11px;
+        padding: 8px;
+        border-bottom: 1px solid #eef2ff;
+      }
+      .pos {
+        color: #059669;
+        font-weight: 700;
+      }
+      .neg {
+        color: #dc2626;
+        font-weight: 700;
+      }
+      .footer {
+        font-size: 9px;
+        color: #94a3b8;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>{{emoji}} {{groupName}}</h2>
+      <p>{{memberNames}} · {{count}} expenses · {{dateRange}}</p>
+    </div>
+    <h3>Expense History</h3>
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Paid By</th>
+        <th>Amount</th>
+        <th>Your Share</th>
+      </tr>
+      {{expenses}}
+    </table>
+    <h3>Final Balances</h3>
+    {{balances}}
+    <div class="footer">Generated by SplitEasy · spliteasy.app</div>
+  </body>
 </html>
 ```
 
@@ -1094,6 +1171,7 @@ Include ONLY food/drink items. EXCLUDE tax, tip, total, service charge. Receipt:
 ### ✅ Phase 4 Gate
 
 Do not start Phase 5 until:
+
 - [ ] Recurring bills auto-create correctly via Firebase Function
 - [ ] Receipt scanner extracts items from 3+ real restaurant receipts accurately
 - [ ] Multi-currency shows correct converted amounts (verify against Google rate)
@@ -1104,6 +1182,7 @@ Do not start Phase 5 until:
 ---
 
 ## Phase 5 — Polish & Testing
+
 ### Weeks 13–14 · Goal: App Store ready, zero crashes, feels premium on every screen
 
 ---
@@ -1225,6 +1304,7 @@ Sentry.init({
 ### ✅ Phase 5 Gate
 
 Do not submit to App Store until:
+
 - [ ] Zero Sentry crashes in 2 hours of continuous testing on real devices
 - [ ] All screens tested on iPhone 14 and Samsung Galaxy S21
 - [ ] RevenueCat purchase tested end-to-end in sandbox on both platforms
@@ -1236,6 +1316,7 @@ Do not submit to App Store until:
 ---
 
 ## Phase 6 — Launch
+
 ### Week 15 · Goal: Live on App Store + Google Play, first real users
 
 ---
@@ -1283,6 +1364,7 @@ Do not submit to App Store until:
 ---
 
 ## Phase 7 — Post-Launch Growth
+
 ### Weeks 16–24 · Goal: 50,000 MAU · $7,000+/month revenue
 
 ---
@@ -1328,11 +1410,13 @@ Top post-launch requests for expense-splitting apps:
 ### Week 24 — Scale Planning
 
 By end of Week 24 you should have:
+
 - 40,000–60,000 MAU
 - $5,000–9,000/month revenue
 - Clear data on what % of users hit the 3-group paywall (primary conversion trigger)
 
 Evaluate:
+
 - [ ] Hire a part-time React Native developer for 2 days/week
 - [ ] Explore Splitwise acquisition discussions if MAU is growing fast (they have acquired competitors before)
 - [ ] International expansion: Canada, UK, Australia all use English and have high per-capita spending
@@ -1342,14 +1426,14 @@ Evaluate:
 
 ## Revenue Projections
 
-| Month | MAU | Avg eCPM | Ad Revenue | Premium (2%) | Monthly Total |
-|---|---|---|---|---|---|
-| 1 | 400 | $9 | $30 | $20 | $50 |
-| 2 | 1,500 | $10 | $130 | $80 | $210 |
-| 3 | 3,500 | $10 | $300 | $180 | $480 |
-| 6 | 14,000 | $10 | $1,200 | $700 | $1,900 |
-| 9 | 30,000 | $11 | $2,800 | $1,500 | $4,300 |
-| 12 | 52,000 | $11 | $5,000 | $2,900 | $7,900 |
+| Month | MAU    | Avg eCPM | Ad Revenue | Premium (2%) | Monthly Total |
+| ----- | ------ | -------- | ---------- | ------------ | ------------- |
+| 1     | 400    | $9       | $30        | $20          | $50           |
+| 2     | 1,500  | $10      | $130       | $80          | $210          |
+| 3     | 3,500  | $10      | $300       | $180         | $480          |
+| 6     | 14,000 | $10      | $1,200     | $700         | $1,900        |
+| 9     | 30,000 | $11      | $2,800     | $1,500       | $4,300        |
+| 12    | 52,000 | $11      | $5,000     | $2,900       | $7,900        |
 
 Revenue spikes at: Memorial Day, July 4th, Labor Day, Spring Break, Thanksgiving — all travel periods when friend groups split costs. Plan TikTok campaigns 2 weeks before each.
 
@@ -1408,17 +1492,17 @@ When every box is checked, SplitEasy ships and wins:
 
 ## Files in This Project
 
-| File | Purpose |
-|---|---|
-| `SplitEasy_Features.md` | Complete feature list, free vs premium, AppLovin MAX setup |
-| `SplitEasy_Screens.md` | All 32 screen designs with layout specs |
-| `SplitEasy_Roadmap.md` | This file — week-by-week plan |
-| `SplitEasy_Project_Starter.md` | Full code snippets, schema, setup commands |
-| `SplitEasy_Premium_Build_Guide.md` | Premium UI guide and winning strategy |
+| File                               | Purpose                                                    |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `SplitEasy_Features.md`            | Complete feature list, free vs premium, AppLovin MAX setup |
+| `SplitEasy_Screens.md`             | All 32 screen designs with layout specs                    |
+| `SplitEasy_Roadmap.md`             | This file — week-by-week plan                              |
+| `SplitEasy_Project_Starter.md`     | Full code snippets, schema, setup commands                 |
+| `SplitEasy_Premium_Build_Guide.md` | Premium UI guide and winning strategy                      |
 
 ---
 
-*SplitEasy Development Roadmap v2.0*
-*15 weeks to launch · 24 weeks to 50k MAU*
-*First task: write settlement.ts · Test it · Then build everything else.*
-*The settlement algorithm is the entire app. Get it right.*
+_SplitEasy Development Roadmap v2.0_
+_15 weeks to launch · 24 weeks to 50k MAU_
+_First task: write settlement.ts · Test it · Then build everything else._
+_The settlement algorithm is the entire app. Get it right._
