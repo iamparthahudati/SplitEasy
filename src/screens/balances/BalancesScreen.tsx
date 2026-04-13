@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights } from '../../theme/typography';
 import { spacing, radius, sizes } from '../../theme/spacing';
+import { CustomHeader } from '../../components/ui/CustomHeader';
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
@@ -121,9 +122,7 @@ export function BalancesScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Balances</Text>
-      </View>
+      <CustomHeader title="Balances" />
 
       {/* ── Summary hero ───────────────────────────────────────────────── */}
       <View style={[styles.heroCard, net > 0 ? styles.heroCardPos : net < 0 ? styles.heroCardNeg : styles.heroCardZero]}>

@@ -13,6 +13,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights } from '../../theme/typography';
 import { spacing, radius, sizes } from '../../theme/spacing';
+import { CustomHeader } from '../../components/ui/CustomHeader';
 import type { SettingsStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<SettingsStackParamList, 'SettingsHome'>;
@@ -73,12 +74,10 @@ export function SettingsHomeScreen() {
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ── Header ───────────────────────────────────────────────────── */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Settings</Text>
-        </View>
+      {/* ── Header ─────────────────────────────────────────────────────── */}
+      <CustomHeader title="Settings" />
 
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* ── Profile card ─────────────────────────────────────────────── */}
         <Pressable style={styles.profileCard} onPress={() => navigation.navigate('Profile')}>
           <View style={[styles.profileAvatar, { backgroundColor: MOCK_USER.avatarColor }]}>

@@ -2,8 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import type { SettingsStackParamList } from './types';
-import { colors } from '../theme/colors';
-import { fontWeights } from '../theme/typography';
+import { CustomHeader } from '../components/ui/CustomHeader';
 
 import { SettingsHomeScreen } from '../screens/settings/SettingsHomeScreen';
 import { ProfileScreen } from '../screens/settings/ProfileScreen';
@@ -17,12 +16,15 @@ export function SettingsStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: colors.white },
-        headerTintColor: colors.brand,
-        headerTitleStyle: { fontWeight: fontWeights.semibold as any, color: colors.text1 },
-        headerShadowVisible: false,
-        headerBackTitle: '',
         animation: 'slide_from_right',
+        header: ({ navigation, options, back }) => (
+          <CustomHeader
+            title={options.title ?? ''}
+            showBack={!!back}
+            onBack={navigation.goBack}
+            safeAreaTop
+          />
+        ),
       }}
     >
       <Stack.Screen name="SettingsHome" component={SettingsHomeScreen} options={{ headerShown: false }} />

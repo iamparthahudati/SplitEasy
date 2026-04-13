@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { fontSizes, fontWeights } from '../../theme/typography';
 import { spacing, radius } from '../../theme/spacing';
+import { CustomHeader } from '../../components/ui/CustomHeader';
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
@@ -162,9 +163,7 @@ export function ActivityScreen() {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Activity</Text>
-      </View>
+      <CustomHeader title="Activity" />
 
       {/* ── Filter pills ───────────────────────────────────────────────── */}
       <View style={styles.filterRow}>
