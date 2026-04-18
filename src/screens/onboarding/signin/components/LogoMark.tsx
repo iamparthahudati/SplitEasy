@@ -2,29 +2,34 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { fontWeights } from '../../../../theme/typography';
 
-// ─── Logo constants ───────────────────────────────────────────────────────────
-const LR = 22; // left semicircle radius → 44px diameter
-const RR = 27; // right arc radius (larger D-shape)
-const SW = 2.5; // orange stroke width
-const H = RR * 2; // total height driven by taller right arc
-const BG = '#1A1560'; // background color for masking right arc left half
 const ORANGE = '#F59E0B';
+const BG_MASK = '#1A1560'; // matches screen background for arc masking
 
-// ─── Split-circle mark ────────────────────────────────────────────────────────
-// Left  : solid white filled semicircle (radius LR)
-// Right : orange outline arc only (radius RR, larger — D-shape)
-//         achieved by drawing a full orange circle then masking its left half
-// Center: vertical orange divider line
-function SplitCircle() {
-  const totalW = LR + RR;
+// ─── Props ────────────────────────────────────────────────────────────────────
+interface LogoMarkProps {
+  /** Circle-only mode: renders just the split-circle, no wordmark */
+  iconOnly?: boolean;
+  /** Scale multiplier — default 1 (icon ~44px), use 2+ for hero display */
+  scale?: number;
+}
+
+// ─── Split-circle icon ────────────────────────────────────────────────────────
+// Left  : solid white semicircle
+// Right : orange outline arc (larger radius → D-shape)
+// Center: orange vertical divider
+function SplitCircleIcon({ scale = 1 }: { scale?: number }) {
+  const LR = 22 * scale; // left semicircle radius
+  const RR = 27 * scale; // right arc radius (larger)
+  const SW = 2.5 * scale; // stroke width
+  const H = RR * 2; // total height
 
   return (
-    <View style={{ width: totalW, height: H }}>
+    <View style={{ width: LR + RR, height: H }}>
       {/* Right arc — full orange circle outline */}
       <View
         style={{
           position: 'absolute',
-          left: LR - RR, // center the right circle on the divider
+          left: LR - RR,
           top: 0,
           width: RR * 2,
           height: RR * 2,
@@ -34,7 +39,7 @@ function SplitCircle() {
           backgroundColor: 'transparent',
         }}
       />
-      {/* Mask: cover left half of right circle with bg color */}
+      {/* Mask left half of right circle */}
       <View
         style={{
           position: 'absolute',
@@ -42,11 +47,11 @@ function SplitCircle() {
           top: 0,
           width: RR,
           height: RR * 2,
-          backgroundColor: BG,
+          backgroundColor: BG_MASK,
         }}
       />
 
-      {/* Left filled semicircle */}
+      {/* Left filled white semicircle */}
       <View
         style={{
           position: 'absolute',
@@ -67,13 +72,13 @@ function SplitCircle() {
         />
       </View>
 
-      {/* Center vertical orange divider */}
+      {/* Center orange divider */}
       <View
         style={{
           position: 'absolute',
-          left: LR - 1,
+          left: LR - SW / 2,
           top: (H - LR * 2) / 2,
-          width: 2,
+          width: SW,
           height: LR * 2,
           backgroundColor: ORANGE,
         }}
@@ -82,35 +87,45 @@ function SplitCircle() {
   );
 }
 
-// ─── LogoMark: circle + wordmark inline ──────────────────────────────────────
-export function LogoMark() {
+// ─── LogoMark ─────────────────────────────────────────────────────────────────
+export function LogoMark({ iconOnly = false, scale = 1 }: LogoMarkProps) {
+  const fontSize = 26 * scale;
+
+  if (iconOnly) {
+    return <SplitCircleIcon scale={scale} />;
+  }
+
   return (
-    <View style={styles.row}>
-      <SplitCircle />
-      <Text style={styles.wordmark}>
-        <Text style={styles.wordmarkWhite}>Split</Text>
-        <Text style={styles.wordmarkOrange}>Easy</Text>
-      </Text>
+    <View style={styles.column}>
+      {/* Split-circle icon */}
+      <SplitCircleIcon scale={scale} />
+
+      {/* Two-tone wordmark below the icon */}
+      <View style={styles.wordmarkRow}>
+        <Text style={[styles.wordmarkWhite, { fontSize }]}>Split</Text>
+        <Text style={[styles.wordmarkOrange, { fontSize }]}>Easy</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
+  column: {
+    alignItems: 'center',
+    gap: 14,
+  },
+  wordmarkRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-  },
-  wordmark: {
-    fontSize: 26,
-    letterSpacing: -0.3,
   },
   wordmarkWhite: {
     fontWeight: fontWeights.bold,
     color: '#FFFFFF',
+    letterSpacing: -0.5,
   },
   wordmarkOrange: {
     fontWeight: fontWeights.bold,
     color: ORANGE,
+    letterSpacing: -0.5,
   },
 });
