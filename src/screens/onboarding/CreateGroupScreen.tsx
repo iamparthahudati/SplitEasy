@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import {
-  FlatList,
+  Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -11,17 +12,12 @@ import {
   View,
 } from 'react-native';
 
-import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
-import { spacing, radius, sizes } from '../../theme/spacing';
 import { useNavigation } from '../../navigation/NavigationContext';
+import { colors } from '../../theme/colors';
+import { radius, sizes, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
-const EMOJI_OPTIONS = [
-  '🏠','✈️','🍕','🎉','🏖','🎿','🚗','⛺','🎭','🎵',
-  '🏋️','🛒','💡','📚','🎮','🌍','🍻','🎂','💼','🐾',
-  '🌺','🏔','🚀','💃','🎯','🌮','☕','🎪','🏄','🎁',
-];
-
+// ─── Group color swatches ─────────────────────────────────────────────────────
 const GROUP_COLORS = [
   colors.brand,
   '#059669',
@@ -33,19 +29,180 @@ const GROUP_COLORS = [
   '#16A34A',
 ];
 
+// ─── Camera badge icon ────────────────────────────────────────────────────────
+function CameraIcon() {
+  return (
+    <View style={camStyles.wrap}>
+      <View style={camStyles.body} />
+      <View style={camStyles.lens} />
+      <View style={camStyles.bump} />
+    </View>
+  );
+}
+
+const camStyles = StyleSheet.create({
+  wrap: {
+    width: 22,
+    height: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  body: {
+    position: 'absolute',
+    width: 20,
+    height: 14,
+    borderRadius: 3,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    bottom: 1,
+  },
+  lens: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    bottom: 5,
+    zIndex: 1,
+  },
+  bump: {
+    position: 'absolute',
+    width: 6,
+    height: 4,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+    borderWidth: 2,
+    borderBottomWidth: 0,
+    borderColor: '#FFFFFF',
+    top: 3,
+    left: 5,
+  },
+});
+
+// ─── Group image picker ───────────────────────────────────────────────────────
+interface GroupImagePickerProps {
+  imageUri: string | null;
+  color: string;
+  groupName: string;
+  onPickImage: () => void;
+}
+
+function GroupImagePicker({
+  imageUri,
+  color,
+  groupName,
+  onPickImage,
+}: GroupImagePickerProps) {
+  const initials = groupName.trim().slice(0, 2).toUpperCase() || 'GR';
+
+  return (
+    <View style={pickerStyles.wrapper}>
+      <Pressable onPress={onPickImage}>
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={pickerStyles.image} />
+        ) : (
+          <View style={[pickerStyles.placeholder, { backgroundColor: color }]}>
+            <Text style={pickerStyles.initials}>{initials}</Text>
+          </View>
+        )}
+        {/* Camera badge */}
+        <View style={pickerStyles.badge}>
+          <CameraIcon />
+        </View>
+      </Pressable>
+      <Text style={pickerStyles.hint}>Tap to add a group photo</Text>
+    </View>
+  );
+}
+
+const pickerStyles = StyleSheet.create({
+  wrapper: {
+    alignItems: 'center',
+    marginTop: spacing[4],
+    marginBottom: spacing[6],
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  placeholder: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  initials: {
+    fontSize: fontSizes['2xl'],
+    fontWeight: fontWeights.bold as any,
+    color: '#FFFFFF',
+    letterSpacing: 1,
+  },
+  badge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.brand,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2.5,
+    borderColor: colors.bg,
+  },
+  hint: {
+    marginTop: spacing[3],
+    fontSize: fontSizes.sm,
+    color: colors.text3,
+    fontWeight: fontWeights.medium as any,
+  },
+});
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
 export function CreateGroupScreen() {
   const { navigate } = useNavigation();
   const [groupName, setGroupName] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState(EMOJI_OPTIONS[0]);
+  const [groupImage, setGroupImage] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState(GROUP_COLORS[0]);
   const [members, setMembers] = useState<string[]>(['']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const lastInputRef = useRef<TextInput>(null);
 
+  // ── Image picker ────────────────────────────────────────────────────────────
+  const handlePickImage = () => {
+    Alert.alert('Group Photo', 'Choose a photo for your group', [
+      {
+        text: 'Camera',
+        onPress: () => {
+          // TODO: wire react-native-image-picker — launchCamera
+        },
+      },
+      {
+        text: 'Photo Library',
+        onPress: () => {
+          // TODO: wire react-native-image-picker — launchImageLibrary
+        },
+      },
+      ...(groupImage
+        ? [
+            {
+              text: 'Remove Photo',
+              style: 'destructive' as const,
+              onPress: () => setGroupImage(null),
+            },
+          ]
+        : []),
+      { text: 'Cancel', style: 'cancel' as const },
+    ]);
+  };
+
+  // ── Members ─────────────────────────────────────────────────────────────────
   const addMemberField = () => {
     setMembers(prev => [...prev, '']);
-    // Focus the new input on next render
     setTimeout(() => lastInputRef.current?.focus(), 50);
   };
 
@@ -54,26 +211,28 @@ export function CreateGroupScreen() {
   };
 
   const removeMember = (index: number) => {
-    if (members.length <= 1) { return; }
+    if (members.length <= 1) {
+      return;
+    }
     setMembers(prev => prev.filter((_, i) => i !== index));
   };
 
-  const filledMembers = members.filter(m => m.trim().length > 0);
-
+  // ── Create ──────────────────────────────────────────────────────────────────
   const handleCreate = async () => {
     if (!groupName.trim()) {
       setError('Give your group a name.');
       return;
     }
-    if (filledMembers.length === 0) {
+    const filled = members.filter(m => m.trim().length > 0);
+    if (filled.length === 0) {
       setError('Add at least one member.');
       return;
     }
     setLoading(true);
     setError('');
     try {
+      // TODO: upload groupImage to Firebase Storage
       // TODO: write to Firestore — groups/{groupId}
-      // TODO: update user.groupIds in Firestore
       navigate('NotificationPrompt');
     } catch {
       setError('Something went wrong. Please try again.');
@@ -84,55 +243,52 @@ export function CreateGroupScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={screenStyles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={screenStyles.container}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.heading}>Create your group</Text>
-        <Text style={styles.sub}>You can always add more people later.</Text>
+        <Text style={screenStyles.heading}>Create your group</Text>
+        <Text style={screenStyles.sub}>
+          You can always add more people later.
+        </Text>
+
+        {/* Group image picker */}
+        <GroupImagePicker
+          imageUri={groupImage}
+          color={selectedColor}
+          groupName={groupName}
+          onPickImage={handlePickImage}
+        />
 
         {/* Group name */}
-        <Text style={styles.label}>Group name</Text>
+        <Text style={screenStyles.label}>Group name</Text>
         <TextInput
-          style={styles.input}
+          style={screenStyles.input}
           placeholder="e.g. Spain Trip, Flat Bills"
           placeholderTextColor={colors.text4}
           autoFocus
           value={groupName}
-          onChangeText={t => { setGroupName(t); setError(''); }}
+          onChangeText={t => {
+            setGroupName(t);
+            setError('');
+          }}
           maxLength={40}
         />
 
-        {/* Emoji picker */}
-        <Text style={styles.label}>Pick an emoji</Text>
-        <View style={styles.emojiGrid}>
-          {EMOJI_OPTIONS.map(emoji => (
-            <Pressable
-              key={emoji}
-              style={[
-                styles.emojiCell,
-                selectedEmoji === emoji && styles.emojiCellSelected,
-              ]}
-              onPress={() => setSelectedEmoji(emoji)}
-            >
-              <Text style={styles.emojiText}>{emoji}</Text>
-            </Pressable>
-          ))}
-        </View>
-
         {/* Color picker */}
-        <Text style={styles.label}>Group color</Text>
-        <View style={styles.colorRow}>
+        <Text style={screenStyles.label}>Group color</Text>
+        <View style={screenStyles.colorRow}>
           {GROUP_COLORS.map(c => (
             <Pressable
               key={c}
               style={[
-                styles.colorDot,
+                screenStyles.colorDot,
                 { backgroundColor: c },
-                selectedColor === c && styles.colorDotSelected,
+                selectedColor === c && screenStyles.colorDotSelected,
               ]}
               onPress={() => setSelectedColor(c)}
             />
@@ -140,12 +296,12 @@ export function CreateGroupScreen() {
         </View>
 
         {/* Members */}
-        <Text style={styles.label}>Members</Text>
+        <Text style={screenStyles.label}>Members</Text>
         {members.map((name, index) => (
-          <View key={index} style={styles.memberRow}>
+          <View key={index} style={screenStyles.memberRow}>
             <TextInput
               ref={index === members.length - 1 ? lastInputRef : undefined}
-              style={[styles.input, styles.memberInput]}
+              style={[screenStyles.input, screenStyles.memberInput]}
               placeholder={`Member ${index + 1} name`}
               placeholderTextColor={colors.text4}
               value={name}
@@ -155,28 +311,28 @@ export function CreateGroupScreen() {
             />
             {members.length > 1 && (
               <Pressable
-                style={styles.removeBtn}
+                style={screenStyles.removeBtn}
                 onPress={() => removeMember(index)}
                 hitSlop={8}
               >
-                <Text style={styles.removeText}>✕</Text>
+                <Text style={screenStyles.removeText}>✕</Text>
               </Pressable>
             )}
           </View>
         ))}
 
-        <Pressable style={styles.addMemberBtn} onPress={addMemberField}>
-          <Text style={styles.addMemberText}>＋ Add another member</Text>
+        <Pressable style={screenStyles.addMemberBtn} onPress={addMemberField}>
+          <Text style={screenStyles.addMemberText}>＋ Add another member</Text>
         </Pressable>
 
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {error ? <Text style={screenStyles.errorText}>{error}</Text> : null}
 
         <Pressable
-          style={[styles.createBtn, loading && styles.btnDisabled]}
+          style={[screenStyles.createBtn, loading && screenStyles.btnDisabled]}
           onPress={handleCreate}
           disabled={loading}
         >
-          <Text style={styles.createBtnText}>
+          <Text style={screenStyles.createBtnText}>
             {loading ? 'Creating…' : 'Create Group'}
           </Text>
         </Pressable>
@@ -185,7 +341,8 @@ export function CreateGroupScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+// ─── Screen styles ────────────────────────────────────────────────────────────
+const screenStyles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.bg,
@@ -204,7 +361,7 @@ const styles = StyleSheet.create({
   sub: {
     fontSize: fontSizes.base,
     color: colors.text3,
-    marginBottom: spacing[6],
+    marginBottom: spacing[2],
   },
   label: {
     fontSize: fontSizes.sm,
@@ -225,28 +382,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.base,
     color: colors.text1,
   },
-  emojiGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing[2],
-  },
-  emojiCell: {
-    width: 48,
-    height: 48,
-    borderRadius: radius.xs,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.white,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-  },
-  emojiCellSelected: {
-    borderColor: colors.brand,
-    backgroundColor: colors.brandLight,
-  },
-  emojiText: {
-    fontSize: fontSizes.xl,
-  },
   colorRow: {
     flexDirection: 'row',
     gap: spacing[3],
@@ -256,7 +391,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    borderWidth: 2,
+    borderWidth: 2.5,
     borderColor: 'transparent',
   },
   colorDotSelected: {
