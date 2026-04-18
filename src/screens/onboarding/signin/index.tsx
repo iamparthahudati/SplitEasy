@@ -157,9 +157,9 @@ export function SignInScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* Hero logo — large stacked icon + wordmark */}
-        <View style={{ alignSelf: 'center', marginBottom: 48 }}>
-          <LogoMark scale={2} />
+        {/* Logo */}
+        <View style={{ alignSelf: 'center', marginBottom: 40 }}>
+          <LogoMark />
         </View>
 
         {/* Hero text */}
