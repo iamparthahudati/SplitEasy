@@ -61,7 +61,7 @@ export const SocialButton = ({
             <Text style={styles.googleG}>{'G'}</Text>
           )}
           <Text style={labelStyle}>
-            {isApple ? 'Continue with Apple' : 'Continue with Google'}
+            {isApple ? 'Sign in with Apple' : 'Sign in with Google'}
           </Text>
         </View>
       )}

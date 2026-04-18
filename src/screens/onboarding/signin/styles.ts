@@ -5,7 +5,7 @@ import { fontSizes, fontWeights } from '../../../theme/typography';
 
 // ── Palette constants ────────────────────────────────────────────────────────
 
-export const BG_BASE = '#2D2A6E';
+export const BG_BASE = '#1A1560';
 export const BRAND_INDIGO = '#6366F1';
 
 const BG = BG_BASE;
@@ -18,7 +18,18 @@ export const styles = StyleSheet.create({
 
   screenBg: {
     flex: 1,
-    backgroundColor: '#2D2A6E',
+    backgroundColor: '#1A1560',
+  },
+
+  // Radial purple glow — center of screen
+  glowCircle: {
+    position: 'absolute',
+    width: 480,
+    height: 480,
+    borderRadius: 240,
+    backgroundColor: 'rgba(76,29,149,0.55)',
+    alignSelf: 'center',
+    top: '20%',
   },
 
   root: {

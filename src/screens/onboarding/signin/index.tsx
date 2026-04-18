@@ -8,7 +8,7 @@ import { ForgotPasswordView } from './components/ForgotPasswordView';
 import { LogoMark } from './components/LogoMark';
 import { OrDivider } from './components/OrDivider';
 import { SocialButton } from './components/SocialButton';
-import { BG_BASE } from './styles';
+import { BG_BASE, styles as sharedStyles } from './styles';
 
 type Mode = 'main' | 'email' | 'forgotPassword';
 
@@ -149,13 +149,18 @@ export function SignInScreen() {
 
   return (
     <View style={styles.root}>
+      {/* Radial purple glow */}
+      <View style={sharedStyles.glowCircle} />
+
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         {/* Logo */}
-        <LogoMark />
+        <View style={{ alignSelf: 'center' }}>
+          <LogoMark />
+        </View>
 
         {/* Hero text */}
         <Text style={styles.heading}>Welcome back</Text>
@@ -211,7 +216,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     paddingHorizontal: 24,
     paddingTop: 72,
     paddingBottom: 40,
@@ -222,6 +227,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: 10,
+    alignSelf: 'center',
   },
   subtitle: {
     fontSize: 14,
@@ -229,12 +235,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 36,
+    alignSelf: 'center',
   },
   errorText: {
     fontSize: 13,
     color: '#F87171',
     marginBottom: 12,
     textAlign: 'center',
+    alignSelf: 'center',
   },
   footer: {
     marginTop: 'auto' as any,
@@ -242,5 +250,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: 'rgba(255,255,255,0.3)',
     textAlign: 'center',
+    alignSelf: 'center',
   },
 });

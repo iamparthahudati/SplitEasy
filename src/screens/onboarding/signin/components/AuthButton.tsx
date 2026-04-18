@@ -61,10 +61,12 @@ const styles = StyleSheet.create({
   emailButton: {
     backgroundColor: 'rgba(255,255,255,0.07)',
     borderColor: 'rgba(255,255,255,0.2)',
+    marginBottom: 12,
   },
   guestButton: {
     backgroundColor: 'transparent',
     borderColor: 'rgba(255,255,255,0.12)',
+    marginBottom: 12,
   },
   label: {
     letterSpacing: 0.2,
