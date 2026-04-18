@@ -158,7 +158,7 @@ export function SignInScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Logo */}
-        <View style={{ alignSelf: 'center' }}>
+        <View style={{ alignSelf: 'center', marginBottom: 40 }}>
           <LogoMark />
         </View>
 
