@@ -13,10 +13,6 @@ const GRAD_BOTTOM = '#3730A3'; // indigo 700
 const checkHasOnboarded = (): Promise<boolean> => Promise.resolve(false);
 const checkHasGroups = (): Promise<boolean> => Promise.resolve(false);
 
-// ─── Split-circle logo mark ───────────────────────────────────────────────────
-// Left half : solid white filled semicircle
-// Right half: white stroke outline only, transparent inside
-// Center    : 1px white vertical divider
 function LogoMark() {
   const R = 38; // radius → 76px diameter
   const D = R * 2;
@@ -105,18 +101,18 @@ export function SplashScreen() {
       }).start();
     });
 
-    // Step 3: navigate after 2s
-    const timer = setTimeout(async () => {
-      const hasOnboarded = await checkHasOnboarded();
-      if (!hasOnboarded) {
-        reset('Welcome');
-        return;
-      }
-      const hasGroups = await checkHasGroups();
-      reset(hasGroups ? 'Groups' : 'CreateGroup');
-    }, 2000);
+    // Step 3: navigate after 2s — PAUSED for visual review
+    // const timer = setTimeout(async () => {
+    //   const hasOnboarded = await checkHasOnboarded();
+    //   if (!hasOnboarded) {
+    //     reset('Welcome');
+    //     return;
+    //   }
+    //   const hasGroups = await checkHasGroups();
+    //   reset(hasGroups ? 'Groups' : 'CreateGroup');
+    // }, 2000);
 
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, [logoScale, logoOpacity, subOpacity, reset]);
 
   return (
