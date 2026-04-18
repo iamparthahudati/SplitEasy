@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useNavigation } from '../../../navigation/NavigationContext';
 import { colors } from '../../../theme/colors';
@@ -33,7 +34,7 @@ const GROUP_COLORS = [
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export function CreateGroupScreen(): React.JSX.Element {
-  const { navigate } = useNavigation();
+  const { navigate, reset } = useNavigation();
   const [groupName, setGroupName] = useState('');
   const [groupImage, setGroupImage] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState(GROUP_COLORS[0]);
@@ -41,6 +42,10 @@ export function CreateGroupScreen(): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const lastInputRef = useRef<TextInput>(null);
+
+  // ── Skip ────────────────────────────────────────────────────────────────────
+
+  const handleSkip = () => reset('Groups');
 
   // ── Image picker ────────────────────────────────────────────────────────────
 
@@ -115,119 +120,151 @@ export function CreateGroupScreen(): React.JSX.Element {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={s.root}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={s.container}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+    <SafeAreaView style={s.safeArea} edges={['top']}>
+      {/* Skip button — absolute top-right */}
+      <Pressable style={s.skipBtn} onPress={handleSkip} hitSlop={8}>
+        <Text style={s.skipText}>Skip</Text>
+      </Pressable>
+
+      <KeyboardAvoidingView
+        style={s.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <Text style={s.heading}>Create your group</Text>
-        <Text style={s.sub}>You can always add more people later.</Text>
-
-        {/* Group image picker */}
-        <GroupImagePicker
-          imageUri={groupImage}
-          color={selectedColor}
-          groupName={groupName}
-          onPickImage={handlePickImage}
-        />
-
-        {/* Group name */}
-        <Text style={s.label}>Group name</Text>
-        <TextInput
-          style={s.input}
-          placeholder="e.g. Spain Trip, Flat Bills"
-          placeholderTextColor={colors.text4}
-          autoFocus
-          value={groupName}
-          onChangeText={t => {
-            setGroupName(t);
-            setError('');
-          }}
-          maxLength={40}
-        />
-
-        {/* Color picker */}
-        <Text style={s.label}>Group color</Text>
-        <View style={s.colorRow}>
-          {GROUP_COLORS.map(c => (
-            <Pressable
-              key={c}
-              style={[
-                s.colorDot,
-                { backgroundColor: c },
-                selectedColor === c && s.colorDotSelected,
-              ]}
-              onPress={() => setSelectedColor(c)}
-            />
-          ))}
-        </View>
-
-        {/* Members */}
-        <Text style={s.label}>Members</Text>
-        {members.map((name, index) => (
-          <View key={index} style={s.memberRow}>
-            <TextInput
-              ref={index === members.length - 1 ? lastInputRef : undefined}
-              style={[s.input, s.memberInput]}
-              placeholder={`Member ${index + 1} name`}
-              placeholderTextColor={colors.text4}
-              value={name}
-              onChangeText={v => updateMember(index, v)}
-              returnKeyType="next"
-              onSubmitEditing={addMemberField}
-            />
-            {members.length > 1 && (
-              <Pressable
-                style={s.removeBtn}
-                onPress={() => removeMember(index)}
-                hitSlop={8}
-              >
-                <Text style={s.removeText}>✕</Text>
-              </Pressable>
-            )}
-          </View>
-        ))}
-
-        <Pressable style={s.addMemberBtn} onPress={addMemberField}>
-          <Text style={s.addMemberText}>＋ Add another member</Text>
-        </Pressable>
-
-        {error ? <Text style={s.errorText}>{error}</Text> : null}
-
-        <Pressable
-          style={[s.createBtn, loading && s.btnDisabled]}
-          onPress={handleCreate}
-          disabled={loading}
+        <ScrollView
+          contentContainerStyle={s.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={s.createBtnText}>
-            {loading ? 'Creating…' : 'Create Group'}
-          </Text>
-        </Pressable>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Text style={s.heading}>Create your first group</Text>
+          <Text style={s.stepIndicator}>1 of 2</Text>
+          <Text style={s.sub}>You can always add more people later.</Text>
+
+          {/* Group image picker */}
+          <GroupImagePicker
+            imageUri={groupImage}
+            color={selectedColor}
+            groupName={groupName}
+            onPickImage={handlePickImage}
+          />
+
+          {/* Group name */}
+          <Text style={s.label}>Group name</Text>
+          <TextInput
+            style={s.input}
+            placeholder="e.g. Spain Trip, Flat Bills"
+            placeholderTextColor={colors.text4}
+            autoFocus
+            value={groupName}
+            onChangeText={t => {
+              setGroupName(t);
+              setError('');
+            }}
+            maxLength={40}
+          />
+
+          {/* Color picker */}
+          <Text style={s.label}>Group color</Text>
+          <View style={s.colorRow}>
+            {GROUP_COLORS.map(c => (
+              <Pressable
+                key={c}
+                style={[
+                  s.colorDot,
+                  { backgroundColor: c },
+                  selectedColor === c && s.colorDotSelected,
+                ]}
+                onPress={() => setSelectedColor(c)}
+              />
+            ))}
+          </View>
+
+          {/* Members */}
+          <Text style={s.label}>Members</Text>
+          {members.map((name, index) => (
+            <View key={index} style={s.memberRow}>
+              <TextInput
+                ref={index === members.length - 1 ? lastInputRef : undefined}
+                style={[s.input, s.memberInput]}
+                placeholder={`Member ${index + 1} name`}
+                placeholderTextColor={colors.text4}
+                value={name}
+                onChangeText={v => updateMember(index, v)}
+                returnKeyType="next"
+                onSubmitEditing={addMemberField}
+              />
+              {members.length > 1 && (
+                <Pressable
+                  style={s.removeBtn}
+                  onPress={() => removeMember(index)}
+                  hitSlop={8}
+                >
+                  <Text style={s.removeText}>✕</Text>
+                </Pressable>
+              )}
+            </View>
+          ))}
+
+          <Pressable style={s.addMemberBtn} onPress={addMemberField}>
+            <Text style={s.addMemberText}>+ Add another member</Text>
+          </Pressable>
+
+          {error ? <Text style={s.errorText}>{error}</Text> : null}
+
+          <Pressable
+            style={[s.createBtn, loading && s.btnDisabled]}
+            onPress={handleCreate}
+            disabled={loading}
+          >
+            <Text style={s.createBtnText}>
+              {loading ? 'Creating…' : 'Create Group'}
+            </Text>
+          </Pressable>
+
+          <Pressable style={s.skipLinkBtn} onPress={handleSkip}>
+            <Text style={s.skipLinkText}>or skip for now</Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
-  root: {
+  safeArea: {
     flex: 1,
     backgroundColor: colors.bg,
   },
+  skipBtn: {
+    position: 'absolute',
+    top: spacing[4],
+    right: spacing[5],
+    zIndex: 10,
+    paddingVertical: spacing[2],
+    paddingHorizontal: spacing[2],
+  },
+  skipText: {
+    fontSize: fontSizes.base,
+    color: colors.text3,
+  },
+  root: {
+    flex: 1,
+  },
   container: {
     paddingHorizontal: spacing[5],
-    paddingTop: 64,
+    paddingTop: spacing[8],
     paddingBottom: spacing[10],
   },
   heading: {
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.bold,
     color: colors.text1,
+    marginBottom: spacing[1],
+  },
+  stepIndicator: {
+    fontSize: fontSizes.sm,
+    color: colors.text4,
     marginBottom: spacing[2],
   },
   sub: {
@@ -318,5 +355,13 @@ const s = StyleSheet.create({
     color: colors.white,
     fontSize: fontSizes.md,
     fontWeight: fontWeights.semibold,
+  },
+  skipLinkBtn: {
+    alignItems: 'center',
+    paddingVertical: spacing[4],
+  },
+  skipLinkText: {
+    fontSize: fontSizes.sm,
+    color: colors.text3,
   },
 });

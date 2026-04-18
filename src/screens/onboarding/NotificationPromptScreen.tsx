@@ -1,21 +1,24 @@
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
-import { spacing, radius, sizes } from '../../theme/spacing';
 import { useNavigation } from '../../navigation/NavigationContext';
+import { colors } from '../../theme/colors';
+import { radius, sizes, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 const NOTIFICATION_BENEFITS = [
   { icon: '💰', text: 'Know when someone settles up' },
-  { icon: '➕', text: 'See new expenses as they\'re added' },
+  { icon: '➕', text: "See new expenses as they're added" },
   { icon: '👋', text: 'Get nudged when a balance is overdue' },
 ];
+
+function BellIcon() {
+  return (
+    <View style={styles.bellCircle}>
+      <Text style={styles.bellGlyph}>🔔</Text>
+    </View>
+  );
+}
 
 export function NotificationPromptScreen() {
   const { reset } = useNavigation();
@@ -37,10 +40,14 @@ export function NotificationPromptScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.bell}>🔔</Text>
+        <BellIcon />
+
         <Text style={styles.heading}>Stay in the loop</Text>
+        <Text style={styles.progress}>2 of 2</Text>
+
         <Text style={styles.sub}>
-          Enable notifications so you always know what's happening with your money.
+          Enable notifications so you always know what's happening with your
+          money.
         </Text>
 
         <View style={styles.benefitsList}>
@@ -67,7 +74,7 @@ export function NotificationPromptScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: colors.onboardingTop,
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingBottom: spacing[8],
@@ -81,14 +88,30 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[8],
     alignItems: 'center',
   },
-  bell: {
-    fontSize: 56,
+  bellCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: radius.pill,
+    backgroundColor: colors.brand,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: spacing[4],
+  },
+  bellGlyph: {
+    fontSize: 28,
+    lineHeight: 34,
   },
   heading: {
     fontSize: fontSizes['2xl'],
-    fontWeight: fontWeights.bold as any,
+    fontWeight: fontWeights.bold,
     color: colors.text1,
+    marginBottom: spacing[1],
+    textAlign: 'center',
+  },
+  progress: {
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.medium,
+    color: colors.text4,
     marginBottom: spacing[2],
     textAlign: 'center',
   },
@@ -117,7 +140,7 @@ const styles = StyleSheet.create({
   benefitText: {
     fontSize: fontSizes.base,
     color: colors.text2,
-    fontWeight: fontWeights.medium as any,
+    fontWeight: fontWeights.medium,
     flex: 1,
   },
   enableBtn: {
@@ -132,7 +155,7 @@ const styles = StyleSheet.create({
   enableText: {
     color: colors.white,
     fontSize: fontSizes.md,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
   },
   laterBtn: {
     paddingVertical: spacing[3],
