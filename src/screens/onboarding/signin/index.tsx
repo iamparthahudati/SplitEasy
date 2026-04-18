@@ -1,40 +1,16 @@
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { useNavigation } from '../../../navigation/NavigationContext';
-import { styles } from './styles';
+import { AuthButton } from './components/AuthButton';
+import { EmailSignInView } from './components/EmailSignInView';
+import { ForgotPasswordView } from './components/ForgotPasswordView';
+import { LogoMark } from './components/LogoMark';
+import { OrDivider } from './components/OrDivider';
+import { SocialButton } from './components/SocialButton';
+import { BG_BASE } from './styles';
 
 type Mode = 'main' | 'email' | 'forgotPassword';
-
-// ── Logo mark: split circle + wordmark ──────────────────────────────────────
-
-function LogoMark() {
-  return (
-    <View style={styles.logoRow}>
-      {/* Split circle mark */}
-      <View style={styles.splitCircle}>
-        {/* Left half — solid white */}
-        <View style={styles.splitLeft} />
-        {/* Right half — outlined arc via border */}
-        <View style={styles.splitRight} />
-        {/* Center divider */}
-        <View style={styles.splitDivider} />
-      </View>
-      <Text style={styles.wordmark}>SplitEasy</Text>
-    </View>
-  );
-}
-
-// ── Main export ──────────────────────────────────────────────────────────────
 
 export function SignInScreen() {
   const { navigate } = useNavigation();
@@ -47,7 +23,7 @@ export function SignInScreen() {
 
   const clearError = () => setError('');
 
-  // ── Auth handlers ──────────────────────────────────────────────────────────
+  // ── Auth handlers ────────────────────────────────────────────────────────────
 
   const handleApple = async () => {
     setLoading(true);
@@ -118,209 +94,153 @@ export function SignInScreen() {
     navigate('CreateGroup');
   };
 
-  // ── Forgot password sub-view ───────────────────────────────────────────────
+  // ── Sub-views ────────────────────────────────────────────────────────────────
 
   if (mode === 'forgotPassword') {
     return (
-      <KeyboardAvoidingView
-        style={styles.root}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <View style={styles.safeArea}>
-          <View style={styles.subContainer}>
-            <Pressable
-              style={styles.backRow}
-              onPress={() => {
-                setMode('email');
-                setResetSent(false);
-              }}
-            >
-              <Text style={styles.backText}>← Back</Text>
-            </Pressable>
-
-            <Text style={styles.subHeading}>Reset password</Text>
-            <Text style={styles.subSubtitle}>
-              We'll send a reset link to your email.
-            </Text>
-
-            {resetSent ? (
-              <View style={styles.successBox}>
-                <Text style={styles.successText}>
-                  Reset link sent. Check your inbox.
-                </Text>
-              </View>
-            ) : (
-              <>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email address"
-                  placeholderTextColor="rgba(255,255,255,0.35)"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={email}
-                  onChangeText={t => {
-                    setEmail(t);
-                    clearError();
-                  }}
-                />
-                {error ? <Text style={styles.errorText}>{error}</Text> : null}
-                <Pressable
-                  style={[styles.btnPrimary, loading && styles.btnDisabled]}
-                  onPress={handleForgotPassword}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <ActivityIndicator color="#FFFFFF" />
-                  ) : (
-                    <Text style={styles.btnPrimaryText}>Send reset link</Text>
-                  )}
-                </Pressable>
-              </>
-            )}
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+      <ForgotPasswordView
+        email={email}
+        loading={loading}
+        error={error}
+        resetSent={resetSent}
+        onEmailChange={t => {
+          setEmail(t);
+          clearError();
+        }}
+        onSubmit={handleForgotPassword}
+        onBack={() => {
+          setMode('email');
+          setResetSent(false);
+          clearError();
+        }}
+      />
     );
   }
-
-  // ── Email sub-view ─────────────────────────────────────────────────────────
 
   if (mode === 'email') {
     return (
-      <KeyboardAvoidingView
-        style={styles.root}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <View style={styles.safeArea}>
-          <ScrollView
-            contentContainerStyle={styles.subContainer}
-            keyboardShouldPersistTaps="handled"
-          >
-            <Pressable style={styles.backRow} onPress={() => setMode('main')}>
-              <Text style={styles.backText}>← Back</Text>
-            </Pressable>
-
-            <Text style={styles.subHeading}>Sign in</Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Email address"
-              placeholderTextColor="rgba(255,255,255,0.35)"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoFocus
-              value={email}
-              onChangeText={t => {
-                setEmail(t);
-                clearError();
-              }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="rgba(255,255,255,0.35)"
-              secureTextEntry
-              value={password}
-              onChangeText={t => {
-                setPassword(t);
-                clearError();
-              }}
-            />
-
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-            <Pressable
-              style={[styles.btnPrimary, loading && styles.btnDisabled]}
-              onPress={handleEmailSignIn}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.btnPrimaryText}>Sign in</Text>
-              )}
-            </Pressable>
-
-            <Pressable onPress={() => setMode('forgotPassword')}>
-              <Text style={styles.forgotLink}>Forgot password?</Text>
-            </Pressable>
-          </ScrollView>
-        </View>
-      </KeyboardAvoidingView>
+      <EmailSignInView
+        email={email}
+        password={password}
+        loading={loading}
+        error={error}
+        onEmailChange={t => {
+          setEmail(t);
+          clearError();
+        }}
+        onPasswordChange={t => {
+          setPassword(t);
+          clearError();
+        }}
+        onSignIn={handleEmailSignIn}
+        onForgotPassword={() => {
+          setMode('forgotPassword');
+          clearError();
+        }}
+        onBack={() => {
+          setMode('main');
+          clearError();
+        }}
+      />
     );
   }
 
-  // ── Main sign-in view ──────────────────────────────────────────────────────
+  // ── Main view ────────────────────────────────────────────────────────────────
 
   return (
     <View style={styles.root}>
-      {/* Radial purple glow */}
-      <View style={styles.glowCircle} />
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Logo */}
+        <LogoMark />
 
-      <View style={styles.safeArea}>
-        <ScrollView
-          contentContainerStyle={styles.mainContainer}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Logo */}
-          <LogoMark />
+        {/* Hero text */}
+        <Text style={styles.heading}>Welcome back</Text>
+        <Text style={styles.subtitle}>
+          Your friends never need to download anything.
+        </Text>
 
-          {/* Hero text */}
-          <Text style={styles.welcomeHeading}>Welcome back</Text>
-          <Text style={styles.welcomeSubtitle}>
-            Your friends never need to download anything.
-          </Text>
+        {/* Error */}
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {/* Social buttons */}
+        <SocialButton
+          variant="apple"
+          onPress={handleApple}
+          loading={loading}
+          disabled={loading}
+        />
+        <SocialButton
+          variant="google"
+          onPress={handleGoogle}
+          loading={loading}
+          disabled={loading}
+        />
 
-          {/* Buttons */}
-          <View style={styles.buttonsSection}>
-            {/* Apple */}
-            <Pressable
-              style={[styles.btnApple, loading && styles.btnDisabled]}
-              onPress={handleApple}
-              disabled={loading}
-            >
-              <Text style={styles.appleIcon}></Text>
-              <Text style={styles.btnAppleText}>Sign in with Apple</Text>
-            </Pressable>
+        {/* Divider */}
+        <OrDivider />
 
-            {/* Google */}
-            <Pressable
-              style={[styles.btnGoogle, loading && styles.btnDisabled]}
-              onPress={handleGoogle}
-              disabled={loading}
-            >
-              <Text style={styles.googleG}>G</Text>
-              <Text style={styles.btnGoogleText}>Sign in with Google</Text>
-            </Pressable>
+        {/* Email + Guest */}
+        <AuthButton
+          label="Continue with Email"
+          variant="email"
+          onPress={() => setMode('email')}
+        />
+        <AuthButton
+          label="Continue without account"
+          variant="guest"
+          onPress={handleNoAccount}
+        />
 
-            {/* Divider */}
-            <View style={styles.dividerRow}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* Email */}
-            <Pressable style={styles.btnEmail} onPress={() => setMode('email')}>
-              <Text style={styles.btnEmailText}>Continue with Email</Text>
-            </Pressable>
-
-            {/* Guest */}
-            <Pressable style={styles.btnGuest} onPress={handleNoAccount}>
-              <Text style={styles.btnGuestText}>Continue without account</Text>
-            </Pressable>
-          </View>
-
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              {'\uD83D\uDD12'} Encrypted and private
-            </Text>
-          </View>
-        </ScrollView>
-      </View>
+        {/* Footer */}
+        <Text style={styles.footer}>
+          {'\uD83D\uDD12'} Encrypted and private
+        </Text>
+      </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: BG_BASE,
+  },
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 72,
+    paddingBottom: 40,
+  },
+  heading: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.4)',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 36,
+  },
+  errorText: {
+    fontSize: 13,
+    color: '#F87171',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  footer: {
+    marginTop: 'auto' as any,
+    paddingTop: 32,
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.3)',
+    textAlign: 'center',
+  },
+});

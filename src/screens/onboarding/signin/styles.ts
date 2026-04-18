@@ -5,17 +5,21 @@ import { fontSizes, fontWeights } from '../../../theme/typography';
 
 // ── Palette constants ────────────────────────────────────────────────────────
 
-export const BG_BASE = '#0A0728';
-export const BG_GLOW = 'rgba(76,29,149,0.5)'; // #4C1D95 @ 50%
+export const BG_BASE = '#2D2A6E';
+export const BRAND_INDIGO = '#6366F1';
 
 const BG = BG_BASE;
-const BRAND_INDIGO = '#6366F1';
 const WHITE = '#FFFFFF';
 
 // ── Styles ───────────────────────────────────────────────────────────────────
 
 export const styles = StyleSheet.create({
   // ── Layout ────────────────────────────────────────────────────────────────
+
+  screenBg: {
+    flex: 1,
+    backgroundColor: '#2D2A6E',
+  },
 
   root: {
     flex: 1,
@@ -40,23 +44,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing[6],
     paddingTop: spacing[5], // 20px
     paddingBottom: spacing[8],
-  },
-
-  // ── Radial glow ───────────────────────────────────────────────────────────
-
-  glowCircle: {
-    position: 'absolute',
-    width: 500,
-    height: 500,
-    borderRadius: 250,
-    backgroundColor: 'rgba(76,29,149,0.5)', // #4C1D95 @ 50%
-    alignSelf: 'center',
-    top: '35%',
-    // Shadow approximation for the glow spread
-    shadowColor: '#4C1D95',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 120,
   },
 
   // ── Logo mark ─────────────────────────────────────────────────────────────
@@ -103,7 +90,7 @@ export const styles = StyleSheet.create({
     top: 0,
     width: 2,
     height: 28,
-    backgroundColor: BG,
+    backgroundColor: BG_BASE,
   },
 
   wordmark: {
