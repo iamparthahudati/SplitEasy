@@ -1,8 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
 import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
+import { formatCurrency } from '../../../../utils/formatters';
+
+// Phase 1 color tokens (fallback to hex until colors.ts is updated)
+const HERO_INDIGO = colors.heroIndigo ?? '#3730A3';
+const HERO_INDIGO_BRIGHT = colors.heroIndigoBright ?? '#4F46E5';
 
 interface HeroBannerProps {
   name: string;
@@ -11,22 +17,13 @@ interface HeroBannerProps {
   totalSpent: number;
 }
 
-const formatCurrency = (value: number): string => {
-  const abs = Math.abs(value);
-  const formatted = abs.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  return `$${formatted}`;
-};
-
-export const HeroBanner = ({
+export function HeroBanner({
   name,
   memberCount,
   balance,
   totalSpent,
-}: HeroBannerProps) => {
-  const balanceColor = balance > 0 ? colors.pos : colors.white;
+}: HeroBannerProps) {
+  const balanceColor = balance > 0 ? colors.posAlt ?? '#16A34A' : colors.white;
 
   return (
     <View style={styles.container}>
@@ -59,7 +56,7 @@ export const HeroBanner = ({
         <View style={styles.statCell}>
           <Text style={styles.statLabel}>YOUR BALANCE</Text>
           <Text style={[styles.statValue, { color: balanceColor }]}>
-            {formatCurrency(balance)}
+            {formatCurrency(Math.abs(balance))}
           </Text>
         </View>
 
@@ -74,7 +71,7 @@ export const HeroBanner = ({
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -85,11 +82,11 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[4],
   },
   gradientTop: {
-    backgroundColor: '#3730A3',
+    backgroundColor: HERO_INDIGO,
     bottom: '50%',
   },
   gradientBottom: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: HERO_INDIGO_BRIGHT,
     top: '50%',
   },
   decorativeCircle: {
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
     lineHeight: fontSizes.lg * 1.3,
   },
   groupName: {
-    fontSize: 20,
+    fontSize: fontSizes.xl,
     fontWeight: fontWeights.bold,
     color: colors.white,
     flex: 1,
@@ -140,7 +137,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statLabel: {
-    fontSize: 11,
+    fontSize: fontSizes.xs + 1,
     fontWeight: fontWeights.semibold,
     color: colors.white,
     opacity: 0.75,
@@ -149,7 +146,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[1],
   },
   statValue: {
-    fontSize: 28,
+    fontSize: fontSizes['3xl'] - 2,
     fontWeight: fontWeights.bold,
     color: colors.white,
     letterSpacing: -0.5,

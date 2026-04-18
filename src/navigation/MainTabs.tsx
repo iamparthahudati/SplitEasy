@@ -19,7 +19,7 @@ const TABS: Array<{ route: MainTabRoute; label: string; icon: string }> = [
   { route: 'Settings', label: 'Settings', icon: '⚙' },
 ];
 
-function TabScreen({ route }: { route: MainTabRoute }) {
+function TabScreen({ route }: { route: MainTabRoute }): React.ReactElement {
   switch (route) {
     case 'Groups':
       return <GroupsHomeScreen />;
@@ -29,6 +29,12 @@ function TabScreen({ route }: { route: MainTabRoute }) {
       return <ActivityScreen />;
     case 'Settings':
       return <SettingsHomeScreen />;
+    default: {
+      // Exhaustiveness check — TypeScript will error here if a MainTabRoute case is unhandled above
+      const _exhaustive: never = route;
+      void _exhaustive;
+      return <GroupsHomeScreen />;
+    }
   }
 }
 
@@ -94,12 +100,12 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.medium as any,
+    fontWeight: fontWeights.medium,
     color: colors.text4,
   },
   tabLabelActive: {
     color: colors.brand,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
   },
   activeIndicator: {
     position: 'absolute',

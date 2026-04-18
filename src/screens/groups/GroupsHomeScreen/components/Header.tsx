@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+
 import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
@@ -11,53 +12,56 @@ const D = LR * 2;
 // ─── Split-circle logo (View-based, no SVG) ───────────────────────────────────
 function SplitCircleLogo() {
   return (
-    <View style={{ width: D, height: D }}>
+    <View style={logoStyles.root}>
       {/* Full circle outline */}
-      <View
-        style={{
-          position: 'absolute',
-          width: D,
-          height: D,
-          borderRadius: LR,
-          borderWidth: 1.5,
-          borderColor: LOGO_BLUE,
-          backgroundColor: 'transparent',
-        }}
-      />
+      <View style={logoStyles.outline} />
       {/* Left half — solid white */}
-      <View
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: LR,
-          height: D,
-          overflow: 'hidden',
-        }}
-      >
-        <View
-          style={{
-            width: D,
-            height: D,
-            borderRadius: LR,
-            backgroundColor: '#FFFFFF',
-          }}
-        />
+      <View style={logoStyles.leftClip}>
+        <View style={logoStyles.leftFill} />
       </View>
       {/* Center divider */}
-      <View
-        style={{
-          position: 'absolute',
-          left: LR - 0.75,
-          top: 0,
-          width: 1.5,
-          height: D,
-          backgroundColor: LOGO_BLUE,
-        }}
-      />
+      <View style={logoStyles.divider} />
     </View>
   );
 }
+
+const logoStyles = StyleSheet.create({
+  root: {
+    width: D,
+    height: D,
+  },
+  outline: {
+    position: 'absolute',
+    width: D,
+    height: D,
+    borderRadius: LR,
+    borderWidth: 1.5,
+    borderColor: LOGO_BLUE,
+    backgroundColor: 'transparent',
+  },
+  leftClip: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: LR,
+    height: D,
+    overflow: 'hidden',
+  },
+  leftFill: {
+    width: D,
+    height: D,
+    borderRadius: LR,
+    backgroundColor: colors.white,
+  },
+  divider: {
+    position: 'absolute',
+    left: LR - 0.75,
+    top: 0,
+    width: 1.5,
+    height: D,
+    backgroundColor: LOGO_BLUE,
+  },
+});
 
 // ─── Bell icon (View-based) ───────────────────────────────────────────────────
 function BellIcon() {
@@ -101,7 +105,7 @@ interface HeaderProps {
 export function Header({
   groupCount,
   onBellPress,
-  notificationCount = 1,
+  notificationCount = 0,
 }: HeaderProps) {
   return (
     <View style={styles.container}>
@@ -153,14 +157,15 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: fontSizes.sm,
+    fontWeight: fontWeights.regular,
     color: colors.text3,
     lineHeight: 16,
   },
   bellButton: {
-    width: 40,
-    height: 40,
+    width: spacing[10],
+    height: spacing[10],
     borderRadius: radius.pill,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
   },
   badgeText: {
-    fontSize: 9,
+    fontSize: fontSizes.xs - 1,
     fontWeight: fontWeights.bold,
     color: colors.white,
   },

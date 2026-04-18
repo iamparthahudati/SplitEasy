@@ -42,7 +42,6 @@ export interface NavParams {
   groupId?: string;
   expenseId?: string;
   memberId?: string;
-  [key: string]: unknown;
 }
 
 interface NavEntry {
@@ -77,9 +76,7 @@ export function NavigationProvider({
   children,
   initialScreen = 'Splash',
 }: NavigationProviderProps) {
-  const [stack, setStack] = useState<NavEntry[]>([
-    { screen: initialScreen },
-  ]);
+  const [stack, setStack] = useState<NavEntry[]>([{ screen: initialScreen }]);
   const [activeTab, setActiveTab] = useState<MainTabRoute>('Groups');
 
   const currentEntry = stack[stack.length - 1];
@@ -98,11 +95,8 @@ export function NavigationProvider({
 
   const setTab = useCallback((tab: MainTabRoute) => {
     setActiveTab(tab);
-    // Reset group stack when switching tabs
-    setStack(prev => {
-      const base = prev[0];
-      return [base, { screen: tab }];
-    });
+    // Reset to a clean single-entry stack for the selected tab
+    setStack([{ screen: tab }]);
   }, []);
 
   return (

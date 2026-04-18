@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
 import { colors } from '../../../../theme/colors';
-import { spacing } from '../../../../theme/spacing';
+import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
+import { formatBalance } from '../../../../utils/formatters';
+
+// Phase 1 color tokens (fallback to hex until colors.ts is updated)
+const COLOR_POS_ALT = colors.posAlt ?? '#16A34A';
+const COLOR_POS_BG_ALT = colors.posBgAlt ?? '#DCFCE7';
+const COLOR_SETTLE_GREEN = colors.settleGreen ?? '#2D9B6F';
 
 interface BalanceRowProps {
   initials: string;
@@ -13,32 +20,28 @@ interface BalanceRowProps {
   onSettle: () => void;
 }
 
-export const BalanceRow = ({
+export function BalanceRow({
   initials,
   avatarColor,
   name,
   relation,
   balance,
   onSettle,
-}: BalanceRowProps) => {
+}: BalanceRowProps) {
   const isPositive = balance > 0;
   const isZero = balance === 0;
 
-  const amountBadgeStyle = isPositive
-    ? { backgroundColor: '#DCFCE7' }
+  const badgeStyle = isPositive
+    ? styles.badgePositive
     : isZero
-    ? { backgroundColor: '#F1F5F9' }
-    : { backgroundColor: '#FEE2E2' };
+    ? styles.badgeZero
+    : styles.badgeNegative;
 
-  const amountTextStyle = isPositive
-    ? { color: '#16A34A' }
+  const badgeTextStyle = isPositive
+    ? styles.badgeTextPositive
     : isZero
-    ? { color: colors.text3 }
-    : { color: '#DC2626' };
-
-  const formattedAmount = `${isPositive ? '+' : ''}$${Math.abs(balance).toFixed(
-    2,
-  )}`;
+    ? styles.badgeTextZero
+    : styles.badgeTextNegative;
 
   return (
     <View>
@@ -53,17 +56,19 @@ export const BalanceRow = ({
           <Text style={styles.name} numberOfLines={1}>
             {name}
           </Text>
-          <Text style={styles.relation} numberOfLines={1}>
-            {relation}
-          </Text>
+          {relation.length > 0 && (
+            <Text style={styles.relation} numberOfLines={1}>
+              {relation}
+            </Text>
+          )}
         </View>
 
         {/* Right side */}
         <View style={styles.right}>
           {/* Amount badge */}
-          <View style={[styles.amountBadge, amountBadgeStyle]}>
-            <Text style={[styles.amountText, amountTextStyle]}>
-              {formattedAmount}
+          <View style={[styles.amountBadge, badgeStyle]}>
+            <Text style={[styles.amountText, badgeTextStyle]}>
+              {formatBalance(balance)}
             </Text>
           </View>
 
@@ -71,13 +76,15 @@ export const BalanceRow = ({
           {isZero ? (
             <Text style={styles.settledText}>Settled</Text>
           ) : (
-            <TouchableOpacity
-              style={styles.settleButton}
+            <Pressable
+              style={({ pressed }) => [
+                styles.settleButton,
+                pressed && styles.settleButtonPressed,
+              ]}
               onPress={onSettle}
-              activeOpacity={0.8}
             >
               <Text style={styles.settleButtonText}>Settle</Text>
-            </TouchableOpacity>
+            </Pressable>
           )}
         </View>
       </View>
@@ -86,7 +93,7 @@ export const BalanceRow = ({
       <View style={styles.separator} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   row: {
@@ -98,13 +105,13 @@ const styles = StyleSheet.create({
   avatar: {
     width: 44,
     height: 44,
-    borderRadius: 22,
+    borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
   },
   initials: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: fontSizes.base,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
@@ -115,13 +122,13 @@ const styles = StyleSheet.create({
     marginRight: spacing[2],
   },
   name: {
-    fontSize: 15,
+    fontSize: fontSizes.base + 1,
     fontWeight: fontWeights.bold,
     color: colors.text1,
     marginBottom: 2,
   },
   relation: {
-    fontSize: 13,
+    fontSize: fontSizes.sm + 1,
     fontWeight: fontWeights.regular,
     color: colors.text3,
   },
@@ -132,33 +139,54 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   amountBadge: {
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1] + 2,
   },
   amountText: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semibold,
   },
+  badgePositive: {
+    backgroundColor: COLOR_POS_BG_ALT,
+  },
+  badgeTextPositive: {
+    color: COLOR_POS_ALT,
+  },
+  badgeNegative: {
+    backgroundColor: colors.negBg,
+  },
+  badgeTextNegative: {
+    color: colors.neg,
+  },
+  badgeZero: {
+    backgroundColor: colors.border,
+  },
+  badgeTextZero: {
+    color: colors.text3,
+  },
   settleButton: {
-    backgroundColor: '#2D9B6F',
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    backgroundColor: COLOR_SETTLE_GREEN,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing[3] + 2,
+    paddingVertical: spacing[2],
+  },
+  settleButtonPressed: {
+    opacity: 0.8,
   },
   settleButtonText: {
-    color: '#FFFFFF',
-    fontSize: 13,
+    color: colors.white,
+    fontSize: fontSizes.sm + 1,
     fontWeight: fontWeights.semibold,
   },
   settledText: {
-    fontSize: 13,
+    fontSize: fontSizes.sm + 1,
     fontWeight: fontWeights.medium,
     color: colors.text3,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: colors.borderMid,
     marginLeft: 44 + spacing[3] + spacing[4],
   },
 });

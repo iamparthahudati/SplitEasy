@@ -1,8 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
 import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
-import { fontSizes } from '../../../../theme/typography';
+import { fontSizes, fontWeights } from '../../../../theme/typography';
+import { formatBalance } from '../../../../utils/formatters';
+
+// Phase 1 color tokens (fallback to hex until colors.ts is updated)
+const HERO_INDIGO_BRIGHT = colors.heroIndigoBright ?? '#4F46E5';
+const COLOR_POS_ALT = colors.posAlt ?? '#16A34A';
 
 interface RecentExpenseRowProps {
   icon: string;
@@ -13,26 +19,23 @@ interface RecentExpenseRowProps {
   onPress: () => void;
 }
 
-export const RecentExpenseRow = ({
+export function RecentExpenseRow({
   icon,
   name,
   paidBy,
   date,
   amount,
   onPress,
-}: RecentExpenseRowProps) => {
+}: RecentExpenseRowProps) {
   const isPositive = amount >= 0;
-  const amountColor = isPositive ? '#16A34A' : '#DC2626';
-  const amountLabel = isPositive
-    ? `+$${Math.abs(amount).toFixed(2)}`
-    : `-$${Math.abs(amount).toFixed(2)}`;
+  const amountColor = isPositive ? COLOR_POS_ALT : colors.neg;
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.row}
+      <Pressable
+        style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
         onPress={onPress}
-        activeOpacity={0.7}
+        android_ripple={{ color: 'rgba(0,0,0,0.04)' }}
       >
         <View style={styles.iconContainer}>
           <Text style={styles.iconText}>{icon}</Text>
@@ -48,14 +51,14 @@ export const RecentExpenseRow = ({
         </View>
 
         <Text style={[styles.amount, { color: amountColor }]}>
-          {amountLabel}
+          {formatBalance(amount)}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <View style={styles.separator} />
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   row: {
@@ -63,43 +66,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: spacing[3],
     paddingHorizontal: spacing[4],
-    backgroundColor: '#F2F3F7',
+    backgroundColor: colors.white,
+  },
+  rowPressed: {
+    backgroundColor: colors.bg,
   },
   iconContainer: {
     width: 44,
     height: 44,
     borderRadius: radius.md,
-    backgroundColor: '#4F46E5',
+    backgroundColor: HERO_INDIGO_BRIGHT,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing[3],
   },
   iconText: {
     fontSize: fontSizes.lg,
-    color: '#FFFFFF',
+    color: colors.white,
   },
   info: {
     flex: 1,
     marginRight: spacing[2],
   },
   name: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: fontSizes.base + 1,
+    fontWeight: fontWeights.bold,
     color: colors.text1,
     marginBottom: 2,
   },
   meta: {
-    fontSize: 13,
-    fontWeight: '400',
+    fontSize: fontSizes.sm + 1,
+    fontWeight: fontWeights.regular,
     color: colors.text3,
   },
   amount: {
     fontSize: fontSizes.base,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: colors.borderMid,
     marginLeft: spacing[4] + 44 + spacing[3],
     marginRight: spacing[4],
   },

@@ -1,7 +1,14 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
+import { formatBalance } from '../../../../utils/formatters';
+
+// Phase 1 color tokens (fallback to hex until colors.ts is updated)
+const COLOR_POS_ALT = colors.posAlt ?? '#16A34A';
+const COLOR_POS_BG_ALT = colors.posBgAlt ?? '#DCFCE7';
 
 interface GroupCardProps {
   emoji: string;
@@ -12,28 +19,26 @@ interface GroupCardProps {
   onPress: () => void;
 }
 
-export const GroupCard = ({
+export function GroupCard({
   emoji,
   color,
   name,
   subtitle,
   balance,
   onPress,
-}: GroupCardProps) => {
+}: GroupCardProps) {
   const renderBadge = () => {
     if (balance > 0) {
       return (
         <View style={styles.badgePositive}>
-          <Text style={styles.badgeTextPositive}>+${balance.toFixed(2)}</Text>
+          <Text style={styles.badgeTextPositive}>{formatBalance(balance)}</Text>
         </View>
       );
     }
     if (balance < 0) {
       return (
         <View style={styles.badgeNegative}>
-          <Text style={styles.badgeTextNegative}>
-            -${Math.abs(balance).toFixed(2)}
-          </Text>
+          <Text style={styles.badgeTextNegative}>{formatBalance(balance)}</Text>
         </View>
       );
     }
@@ -69,19 +74,19 @@ export const GroupCard = ({
       <View style={styles.separator} />
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
     gap: spacing[3],
   },
   pressed: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.bg,
   },
   iconArea: {
     width: 48,
@@ -101,57 +106,57 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: fontSizes.md,
-    fontWeight: String(fontWeights.bold) as '700',
-    color: '#0F172A',
+    fontWeight: fontWeights.bold,
+    color: colors.text1,
     letterSpacing: -0.1,
   },
   subtitle: {
-    fontSize: 13,
-    fontWeight: String(fontWeights.regular) as '400',
-    color: '#64748B',
+    fontSize: fontSizes.sm + 1,
+    fontWeight: fontWeights.regular,
+    color: colors.text3,
   },
   right: {
     alignItems: 'flex-end',
     flexShrink: 0,
   },
   badgePositive: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: COLOR_POS_BG_ALT,
     borderRadius: radius.pill,
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2] / 2,
   },
   badgeTextPositive: {
     fontSize: fontSizes.sm,
-    fontWeight: String(fontWeights.semibold) as '600',
-    color: '#16A34A',
+    fontWeight: fontWeights.semibold,
+    color: COLOR_POS_ALT,
   },
   badgeNegative: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: colors.negBg,
     borderRadius: radius.pill,
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2] / 2,
   },
   badgeTextNegative: {
     fontSize: fontSizes.sm,
-    fontWeight: String(fontWeights.semibold) as '600',
-    color: '#DC2626',
+    fontWeight: fontWeights.semibold,
+    color: colors.neg,
   },
   badgeSettled: {
     borderRadius: radius.pill,
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2] / 2,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: colors.borderMid,
     backgroundColor: 'transparent',
   },
   badgeTextSettled: {
     fontSize: fontSizes.sm,
-    fontWeight: String(fontWeights.medium) as '500',
-    color: '#94A3B8',
+    fontWeight: fontWeights.medium,
+    color: colors.zero,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: colors.borderMid,
     marginLeft: 48 + spacing[3] + spacing[4],
   },
 });

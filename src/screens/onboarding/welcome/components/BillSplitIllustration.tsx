@@ -58,5 +58,3 @@ export function BillSplitIllustration() {
     </View>
   );
 }
-
-export default BillSplitIllustration;

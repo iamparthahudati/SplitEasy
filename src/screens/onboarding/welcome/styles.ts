@@ -7,8 +7,6 @@ import { fontSizes, fontWeights } from '../../../theme/typography';
 // ---------------------------------------------------------------------------
 
 // WelcomeScreen background
-
-// WelcomeScreen background
 export const BG_BASE = '#1A1560'; // top half
 export const BG_BOTTOM = '#2D2A6E'; // bottom half
 

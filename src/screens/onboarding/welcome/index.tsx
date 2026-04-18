@@ -52,6 +52,8 @@ const SLIDES: Slide[] = [
 // ─── TODO: persist to AsyncStorage once installed ────────────────────────────
 const markOnboarded = () => {};
 
+const VIEWABILITY_CONFIG = { viewAreaCoveragePercentThreshold: 50 };
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
 export function WelcomeScreen() {
   const { reset } = useNavigation();
@@ -108,7 +110,7 @@ export function WelcomeScreen() {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
+        viewabilityConfig={VIEWABILITY_CONFIG}
         style={styles.flatList}
         renderItem={({ item }) => (
           <SlideItem
