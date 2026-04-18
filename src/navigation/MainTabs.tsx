@@ -2,29 +2,39 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../theme/colors';
-import { spacing, sizes } from '../theme/spacing';
+import { sizes, spacing } from '../theme/spacing';
 import { fontSizes, fontWeights } from '../theme/typography';
-import { useNavigation, MainTabRoute } from './NavigationContext';
+import { MainTabRoute, useNavigation } from './NavigationContext';
 
 // Tab screens
-import { GroupsHomeScreen } from '../screens/groups/GroupsHomeScreen';
-import { BalancesScreen } from '../screens/balances/BalancesScreen';
 import { ActivityScreen } from '../screens/activity/ActivityScreen';
+import { BalancesScreen } from '../screens/balances/BalancesScreen';
+import { GroupsHomeScreen } from '../screens/groups/GroupsHomeScreen/index';
 import { SettingsHomeScreen } from '../screens/settings/SettingsHomeScreen';
 
 const TABS: Array<{ route: MainTabRoute; label: string; icon: string }> = [
-  { route: 'Groups', label: 'Groups', icon: '👥' },
-  { route: 'Balances', label: 'Balances', icon: '⚖️' },
-  { route: 'Activity', label: 'Activity', icon: '📋' },
-  { route: 'Settings', label: 'Settings', icon: '⚙️' },
+  { route: 'Groups', label: 'Groups', icon: '⊞' },
+  { route: 'Balances', label: 'Balances', icon: '⚖' },
+  { route: 'Activity', label: 'Activity', icon: '◷' },
+  { route: 'Settings', label: 'Settings', icon: '⚙' },
 ];
 
-function TabScreen({ route }: { route: MainTabRoute }) {
+function TabScreen({ route }: { route: MainTabRoute }): React.ReactElement {
   switch (route) {
-    case 'Groups':   return <GroupsHomeScreen />;
-    case 'Balances': return <BalancesScreen />;
-    case 'Activity': return <ActivityScreen />;
-    case 'Settings': return <SettingsHomeScreen />;
+    case 'Groups':
+      return <GroupsHomeScreen />;
+    case 'Balances':
+      return <BalancesScreen />;
+    case 'Activity':
+      return <ActivityScreen />;
+    case 'Settings':
+      return <SettingsHomeScreen />;
+    default: {
+      // Exhaustiveness check — TypeScript will error here if a MainTabRoute case is unhandled above
+      const _exhaustive: never = route;
+      void _exhaustive;
+      return <GroupsHomeScreen />;
+    }
   }
 }
 
@@ -90,12 +100,12 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.medium as any,
+    fontWeight: fontWeights.medium,
     color: colors.text4,
   },
   tabLabelActive: {
     color: colors.brand,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
   },
   activeIndicator: {
     position: 'absolute',

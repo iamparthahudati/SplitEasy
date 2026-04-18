@@ -3,22 +3,22 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
+import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const BG_BASE = '#2D2A6E';
-const BRAND_INDIGO = '#6366F1';
-const WHITE = '#FFFFFF';
+const BG_BASE = colors.onboardingTop; // '#1A1560'
+const WHITE = colors.white;
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -60,9 +60,9 @@ export const EmailSignInView = ({
       >
         {/* Back button */}
         <View style={s.backRow}>
-          <TouchableOpacity onPress={onBack} activeOpacity={0.7}>
+          <Pressable onPress={onBack} hitSlop={8}>
             <Text style={s.backText}>← Back</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         {/* Heading */}
@@ -101,10 +101,9 @@ export const EmailSignInView = ({
         {error.length > 0 && <Text style={s.errorText}>{error}</Text>}
 
         {/* Primary sign-in button */}
-        <TouchableOpacity
+        <Pressable
           style={[s.btnPrimary, loading && s.btnDisabled]}
           onPress={onSignIn}
-          activeOpacity={0.8}
           disabled={loading}
         >
           {loading ? (
@@ -112,16 +111,12 @@ export const EmailSignInView = ({
           ) : (
             <Text style={s.btnPrimaryText}>Sign in</Text>
           )}
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Forgot password link */}
-        <TouchableOpacity
-          onPress={onForgotPassword}
-          activeOpacity={0.7}
-          disabled={loading}
-        >
+        <Pressable onPress={onForgotPassword} disabled={loading} hitSlop={8}>
           <Text style={s.forgotLink}>Forgot password?</Text>
-        </TouchableOpacity>
+        </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -148,14 +143,14 @@ const s = StyleSheet.create({
   },
   backText: {
     fontSize: fontSizes.base, // 14
-    fontWeight: fontWeights.medium as any,
+    fontWeight: fontWeights.medium,
     color: 'rgba(255,255,255,0.6)',
   },
 
   // Heading
   heading: {
     fontSize: 28,
-    fontWeight: fontWeights.bold as any,
+    fontWeight: fontWeights.bold,
     color: WHITE,
     marginBottom: spacing[6], // 24
   },
@@ -186,7 +181,7 @@ const s = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: BRAND_INDIGO,
+    backgroundColor: colors.brand,
     marginBottom: spacing[3], // 12
   },
   btnDisabled: {
@@ -194,7 +189,7 @@ const s = StyleSheet.create({
   },
   btnPrimaryText: {
     fontSize: fontSizes.md, // 16
-    fontWeight: fontWeights.semibold as any, // 600
+    fontWeight: fontWeights.semibold, // 600
     color: WHITE,
   },
 

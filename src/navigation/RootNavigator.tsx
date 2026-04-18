@@ -98,7 +98,11 @@ export function RootNavigator() {
     case 'About':
       return <AboutScreen />;
 
-    default:
+    default: {
+      // Exhaustiveness check — TypeScript will error here if a ScreenName case is unhandled above
+      const _exhaustive: never = currentScreen;
+      void _exhaustive;
       return <SplashScreen />;
+    }
   }
 }
