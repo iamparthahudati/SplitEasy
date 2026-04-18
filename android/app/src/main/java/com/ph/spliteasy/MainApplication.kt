@@ -1,4 +1,4 @@
-package com.spliteasy
+package com.ph.spliteasy
 
 import android.app.Application
 import com.facebook.react.PackageList
