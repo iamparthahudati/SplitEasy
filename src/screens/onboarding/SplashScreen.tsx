@@ -101,18 +101,18 @@ export function SplashScreen() {
       }).start();
     });
 
-    // Step 3: navigate after 2s — PAUSED for visual review
-    // const timer = setTimeout(async () => {
-    //   const hasOnboarded = await checkHasOnboarded();
-    //   if (!hasOnboarded) {
-    //     reset('Welcome');
-    //     return;
-    //   }
-    //   const hasGroups = await checkHasGroups();
-    //   reset(hasGroups ? 'Groups' : 'CreateGroup');
-    // }, 2000);
+    // Step 3: navigate after 2s
+    const timer = setTimeout(async () => {
+      const hasOnboarded = await checkHasOnboarded();
+      if (!hasOnboarded) {
+        reset('Welcome');
+        return;
+      }
+      const hasGroups = await checkHasGroups();
+      reset(hasGroups ? 'Groups' : 'CreateGroup');
+    }, 2000);
 
-    // return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [logoScale, logoOpacity, subOpacity, reset]);
 
   return (
