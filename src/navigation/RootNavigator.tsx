@@ -5,7 +5,7 @@ import { useNavigation } from './NavigationContext';
 // Auth screens
 import { CreateGroupScreen } from '../screens/onboarding/CreateGroupScreen';
 import { NotificationPromptScreen } from '../screens/onboarding/NotificationPromptScreen';
-import { SignInScreen } from '../screens/onboarding/SignInScreen';
+import { SignInScreen } from '../screens/onboarding/signin';
 import { SplashScreen } from '../screens/onboarding/SplashScreen';
 import { WelcomeScreen } from '../screens/onboarding/welcome';
 
