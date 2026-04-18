@@ -1,0 +1,120 @@
+Design a premium mobile app onboarding screen for "SplitEasy" — 
+a bill splitting app. This is slide 1 of 3 in a welcome carousel.
+Show the screen completely flat and front-facing — no device angle, 
+no perspective tilt. Screen fills the entire frame edge to edge.
+390x844px canvas.
+
+BACKGROUND:
+A smooth vertical gradient. Top: #1E1B4B (near-black dark indigo). 
+Bottom: #3730A3 (indigo 700). Same dark, deep, premium feel as the 
+splash screen — this is intentional visual continuity. The user is 
+still in the welcome emotional space. No electric blue, no neon, 
+no banding. Perfectly smooth.
+
+STATUS BAR (top 44px):
+Left: "9:41" white Inter 600 15px.
+Center: Dynamic Island — black pill 126x37px, 12px from top.
+Right: signal, wifi, battery icons in white.
+
+SKIP BUTTON (top right):
+"Skip" — Inter 500, 14px, white at 55% opacity.
+20px from right edge, 72px from top.
+No border, no background — just text, barely there.
+
+ILLUSTRATION AREA (centered horizontally, upper third of screen,
+roughly 200px tall, centered around y=280):
+
+Glow backdrop behind the illustration:
+A soft circular radial glow, 200px diameter, white at 7% opacity.
+Not a visible circle — just a very subtle brightening of the 
+background behind the avatars. Barely perceptible.
+
+Three overlapping avatar circles representing three people 
+splitting a bill together:
+
+Left avatar: 52px circle, color #818CF8 (soft indigo-purple).
+White border 1.5px at 25% opacity around the circle.
+Letter "A" centered inside — Inter 700, 18px, white.
+Positioned left of center.
+
+Center avatar: 52px circle, color #6366F1 (brand indigo).
+White border 1.5px at 25% opacity.
+Letter "B" centered inside — Inter 700, 18px, white.
+Sits 4px HIGHER than the left and right avatars — 
+slightly elevated, suggesting this person paid the bill.
+Has an additional very subtle ring behind it: 
+64px circle, white at 10% opacity.
+
+Right avatar: 52px circle, color #4F46E5 (deeper indigo).
+White border 1.5px at 25% opacity.
+Letter "C" centered inside — Inter 700, 18px, white.
+Positioned right of center.
+
+Overlap: each avatar overlaps the next by 14px — 
+they are connected, not separate.
+
+Horizontal divider line:
+160px wide, 1.5px tall, white at 25% opacity.
+Sits 20px below the bottom of the avatars.
+This line represents the bill being divided.
+
+Three amount labels below the divider, 
+each aligned under its corresponding avatar:
+"$12" under A — Inter 600, 14px, white.
+"$12" under B — Inter 600, 14px, white.
+"$11" under C — Inter 600, 14px, white.
+The uneven split ($11 vs $12) is intentional — 
+it shows the app handles real math, not just round numbers.
+Gap between divider and labels: 12px.
+
+TEXT BLOCK (centered, below illustration, 40px gap):
+
+Title:
+"Split any bill in 3 taps"
+Inter 700, 28px, pure white, line-height 36px, text-align center.
+This is the largest and most important text on the screen.
+Max width 310px.
+
+Subtitle (12px below title):
+"No more mental math. No more awkward conversations. 
+Just tap, split, done."
+Inter 400, 16px, white at 72% opacity, line-height 26px, 
+text-align center, max width 300px.
+Three short sentences. Each one eliminates a pain point.
+
+PAGE DOTS (centered, 124px from bottom):
+3 dots in a horizontal row, 8px gap between them.
+
+Dot 1 (active — this is slide 1): 
+A pill shape — 24px wide, 6px tall, border-radius 999px, 
+solid white. This pill shape is a premium detail — 
+not a circle like inactive dots.
+
+Dot 2 (inactive): 6px circle, white at 32% opacity.
+Dot 3 (inactive): 6px circle, white at 32% opacity.
+
+NEXT BUTTON (fixed bottom, 48px from bottom):
+Full width minus 40px total (20px each side).
+Height: 56px, border-radius: 16px.
+Background: pure white.
+Text: "Next" — Inter 600, 16px, #6366F1 (brand indigo), centered.
+No shadow — the white button on dark background 
+has enough contrast without one.
+
+OVERALL FEEL:
+This screen sells a feeling, not a feature. 
+The three overlapping avatars with amounts below them 
+tell the entire story without a single word of explanation.
+Dark, premium, considered. Same visual language as the splash screen.
+The illustration is geometric and clean — no gradients inside 
+the avatars, no textures, no drop shadows on the circles.
+Flat, modern, confident.
+
+The screen should feel like it belongs to the same app family 
+as the splash screen — same darkness, same indigo palette, 
+same typographic precision. A user swiping from splash to 
+this screen should feel continuity, not a jarring change.
+
+Render as a flat UI screen, perfectly front-facing,
+ultra sharp, no device frame, no mockup angle,
+no photography effects, no lens flare. Pure screen design.

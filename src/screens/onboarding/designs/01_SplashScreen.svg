@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="880" viewBox="0 0 390 880"
+    style="font-family: system-ui, -apple-system, sans-serif;">
+
+    <!-- Full background -->
+    <rect x="0" y="0" width="390" height="844" rx="44" fill="#1E1B4B" />
+
+    <!-- Clip path for rounded iPhone frame -->
+    <defs>
+        <clipPath id="iphone-clip">
+            <rect x="0" y="0" width="390" height="844" rx="44" />
+        </clipPath>
+    </defs>
+
+    <!-- Clipped content group -->
+    <g clip-path="url(#iphone-clip)">
+
+        <!-- Full background fill (inside clip) -->
+        <rect x="0" y="0" width="390" height="844" fill="#1E1B4B" />
+
+        <!-- Gradient overlay bottom 60% -->
+        <rect x="0" y="338" width="390" height="506" fill="#4338CA" opacity="0.72" />
+
+        <!-- Center content group, vertically centered around y=422 -->
+
+        <!-- Chain-link logo mark centered at x=195, y=370 -->
+        <!-- Left link -->
+        <rect x="161" y="358" width="38" height="24" rx="12" fill="white" />
+        <!-- Left cutout -->
+        <rect x="170" y="364" width="20" height="12" rx="6" fill="#312E81" opacity="0.85" />
+        <!-- Right link -->
+        <rect x="189" y="358" width="38" height="24" rx="12" fill="rgba(255,255,255,0.45)" />
+        <!-- Right cutout -->
+        <rect x="198" y="364" width="20" height="12" rx="6" fill="#312E81" opacity="0.85" />
+        <!-- Split line -->
+        <rect x="194" y="358" width="1.5" height="24" fill="rgba(255,255,255,0.5)" />
+
+        <!-- Wordmark -->
+        <text x="195" y="418" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="34"
+            font-weight="800" fill="white" letter-spacing="-1">SplitEasy</text>
+
+        <!-- Divider line -->
+        <rect x="175" y="430" width="40" height="1.5" fill="rgba(255,255,255,0.3)" />
+
+        <!-- Tagline -->
+        <text x="195" y="452" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10"
+            font-weight="600" fill="rgba(255,255,255,0.6)" letter-spacing="3">SPLIT BILLS · KEEP FRIENDS</text>
+
+        <!-- Version -->
+        <text x="195" y="804" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10"
+            fill="rgba(255,255,255,0.3)">v1.0.0</text>
+
+        <!-- Status bar background -->
+        <rect x="0" y="0" width="390" height="44" fill="rgba(0,0,0,0.2)" />
+
+        <!-- Status bar: Time -->
+        <text x="20" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600"
+            fill="white">9:41</text>
+
+        <!-- Status bar: Signal dots (right side) -->
+        <!-- Signal bars -->
+        <rect x="310" y="22" width="3" height="8" rx="1" fill="white" opacity="0.4" />
+        <rect x="315" y="19" width="3" height="11" rx="1" fill="white" opacity="0.6" />
+        <rect x="320" y="16" width="3" height="14" rx="1" fill="white" opacity="0.8" />
+        <rect x="325" y="13" width="3" height="17" rx="1" fill="white" />
+
+        <!-- WiFi icon (simplified arcs) -->
+        <path d="M338 26 Q342 22 346 26" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"
+            opacity="0.5" />
+        <path d="M335 23 Q342 17 349 23" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"
+            opacity="0.75" />
+        <path d="M332 20 Q342 12 352 20" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" />
+        <circle cx="342" cy="29" r="1.5" fill="white" />
+
+        <!-- Battery icon -->
+        <rect x="358" y="17" width="22" height="12" rx="3" fill="none" stroke="white" stroke-width="1.5"
+            opacity="0.9" />
+        <rect x="380" y="21" width="2.5" height="4" rx="1" fill="white" opacity="0.6" />
+        <rect x="360" y="19" width="16" height="8" rx="2" fill="white" />
+
+    </g>
+
+    <!-- iPhone frame border (on top of content) -->
+    <rect x="0" y="0" width="390" height="844" rx="44" fill="none" stroke="#333" stroke-width="2" />
+
+    <!-- Notch / Dynamic Island -->
+    <rect x="150" y="10" width="90" height="26" rx="13" fill="#111" />
+
+    <!-- Screen label below frame -->
+    <text x="195" y="870" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13"
+        font-weight="600" fill="#64748B">01 — Splash Screen</text>
+
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="880"
+    font-family="system-ui, -apple-system, sans-serif">
+
+    <!-- Background -->
+    <rect width="390" height="844" fill="#1E1B4B" />
+
+    <!-- Gradient overlay layers (top #1E1B4B → bottom #4338CA) -->
+    <rect x="0" y="300" width="390" height="544" fill="#4338CA" opacity="0.15" />
+    <rect x="0" y="380" width="390" height="464" fill="#4338CA" opacity="0.25" />
+    <rect x="0" y="460" width="390" height="384" fill="#4338CA" opacity="0.38" />
+    <rect x="0" y="540" width="390" height="304" fill="#4338CA" opacity="0.52" />
+    <rect x="0" y="620" width="390" height="224" fill="#4338CA" opacity="0.68" />
+    <rect x="0" y="700" width="390" height="144" fill="#4338CA" opacity="0.85" />
+
+    <!-- Status bar -->
+    <rect x="0" y="0" width="390" height="44" fill="rgba(0,0,0,0.15)" />
+    <text x="20" y="28" font-size="15" fill="white" font-weight="600"
+        font-family="system-ui, -apple-system, sans-serif">9:41</text>
+
+    <!-- Skip button -->
+    <text x="358" y="80" font-size="14" fill="rgba(255,255,255,0.6)" text-anchor="end"
+        font-family="system-ui, -apple-system, sans-serif">Skip</text>
+
+    <!-- Illustration area -->
+    <!-- Glow circle -->
+    <circle cx="195" cy="300" r="90" fill="rgba(255,255,255,0.08)" />
+
+    <!-- Left avatar -->
+    <circle cx="161" cy="290" r="26" fill="#818CF8" stroke="white" stroke-width="2" stroke-opacity="0.3" />
+    <text x="161" y="296" font-size="18" font-weight="700" fill="white" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif">A</text>
+
+    <!-- Center avatar -->
+    <circle cx="195" cy="290" r="26" fill="#6366F1" stroke="white" stroke-width="2" stroke-opacity="0.3" />
+    <text x="195" y="296" font-size="18" font-weight="700" fill="white" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif">B</text>
+
+    <!-- Right avatar -->
+    <circle cx="229" cy="290" r="26" fill="#4F46E5" stroke="white" stroke-width="2" stroke-opacity="0.3" />
+    <text x="229" y="296" font-size="18" font-weight="700" fill="white" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif">C</text>
+
+    <!-- Divider line -->
+    <rect x="125" y="326" width="140" height="1.5" fill="rgba(255,255,255,0.3)" />
+
+    <!-- Amount labels -->
+    <text x="161" y="348" font-size="14" font-weight="600" fill="white" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif">$12</text>
+    <text x="195" y="348" font-size="14" font-weight="600" fill="white" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif">$12</text>
+    <text x="229" y="348" font-size="14" font-weight="600" fill="white" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif">$11</text>
+
+    <!-- Title -->
+    <text x="195" y="420" text-anchor="middle" font-size="28" font-weight="700" fill="white"
+        font-family="system-ui, -apple-system, sans-serif">Split any bill in 3 taps</text>
+
+    <!-- Subtitle -->
+    <text x="195" y="452" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)"
+        font-family="system-ui, -apple-system, sans-serif">No more mental math. No more</text>
+    <text x="195" y="474" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)"
+        font-family="system-ui, -apple-system, sans-serif">awkward conversations.</text>
+
+    <!-- Page dots -->
+    <!-- Active dot -->
+    <rect x="178" y="717" width="24" height="6" rx="3" fill="white" />
+    <!-- Inactive dots -->
+    <circle cx="212" cy="720" r="3" fill="rgba(255,255,255,0.35)" />
+    <circle cx="224" cy="720" r="3" fill="rgba(255,255,255,0.35)" />
+
+    <!-- Next button -->
+    <rect x="20" y="748" width="350" height="56" rx="16" fill="white" />
+    <text x="195" y="782" text-anchor="middle" font-size="16" font-weight="600" fill="#6366F1"
+        font-family="system-ui, -apple-system, sans-serif">Next</text>
+
+    <!-- iPhone frame -->
+    <rect x="0" y="0" width="390" height="844" rx="44" fill="none" stroke="#333" stroke-width="2" />
+
+    <!-- Screen label -->
+    <text x="195" y="870" text-anchor="middle" font-size="13" fill="#64748B" font-weight="600"
+        font-family="system-ui, -apple-system, sans-serif">02 — Welcome Carousel (Slide 1 of 3)</text>
+
+</svg>
