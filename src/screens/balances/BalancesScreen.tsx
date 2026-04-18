@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
-import { spacing, radius, sizes } from '../../theme/spacing';
 import { CustomHeader } from '../../components/ui/CustomHeader';
+import { colors } from '../../theme/colors';
+import { radius, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
@@ -20,16 +14,52 @@ interface PersonBalance {
   name: string;
   balance: number; // positive = they owe you, negative = you owe them
   currency: string;
-  groups: string[]; // group names they're in
+  groups: string[];
 }
 
 const MOCK_BALANCES: PersonBalance[] = [
-  { id: '1', name: 'Alex Chen', balance: 86.50, currency: '$', groups: ['Spain Trip 2024', 'Pizza Fridays'] },
-  { id: '2', name: 'Mia Torres', balance: 38.00, currency: '$', groups: ['Spain Trip 2024'] },
-  { id: '3', name: 'Jordan Lee', balance: -42.00, currency: '$', groups: ['Flat Bills'] },
-  { id: '4', name: 'Sam Park', balance: 18.75, currency: '$', groups: ['Pizza Fridays'] },
-  { id: '5', name: 'Taylor Kim', balance: -18.25, currency: '$', groups: ['Flat Bills', 'Spain Trip 2024'] },
-  { id: '6', name: 'Riley Wong', balance: 0, currency: '$', groups: ['Weekend Ski'] },
+  {
+    id: '1',
+    name: 'Alex Chen',
+    balance: 86.5,
+    currency: '$',
+    groups: ['Spain Trip 2024', 'Pizza Fridays'],
+  },
+  {
+    id: '2',
+    name: 'Mia Torres',
+    balance: 38.0,
+    currency: '$',
+    groups: ['Spain Trip 2024'],
+  },
+  {
+    id: '3',
+    name: 'Jordan Lee',
+    balance: -42.0,
+    currency: '$',
+    groups: ['Flat Bills'],
+  },
+  {
+    id: '4',
+    name: 'Sam Park',
+    balance: 18.75,
+    currency: '$',
+    groups: ['Pizza Fridays'],
+  },
+  {
+    id: '5',
+    name: 'Taylor Kim',
+    balance: -18.25,
+    currency: '$',
+    groups: ['Flat Bills', 'Spain Trip 2024'],
+  },
+  {
+    id: '6',
+    name: 'Riley Wong',
+    balance: 0,
+    currency: '$',
+    groups: ['Weekend Ski'],
+  },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -37,32 +67,46 @@ const MOCK_BALANCES: PersonBalance[] = [
 type FilterType = 'all' | 'owes_me' | 'i_owe';
 
 function getInitials(name: string): string {
-  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  return name
+    .split(' ')
+    .slice(0, 2)
+    .map(w => w[0])
+    .join('')
+    .toUpperCase();
 }
 
 const AVATAR_COLORS = [
-  '#6366F1', '#059669', '#D97706', '#DC2626',
-  '#7C3AED', '#0891B2', '#BE185D', '#16A34A',
+  '#6366F1',
+  '#059669',
+  '#D97706',
+  '#DC2626',
+  '#7C3AED',
+  '#0891B2',
+  '#BE185D',
+  '#16A34A',
 ];
 
 function avatarColor(name: string): string {
   let hash = 0;
-  for (let i = 0; i < name.length; i++) { hash = name.charCodeAt(i) + ((hash << 5) - hash); }
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-// ─── Components ───────────────────────────────────────────────────────────────
+// ─── BalanceRow ───────────────────────────────────────────────────────────────
 
 function BalanceRow({ person }: { person: PersonBalance }) {
   const isPos = person.balance > 0;
-  const isNeg = person.balance < 0;
   const isZero = person.balance === 0;
   const abs = Math.abs(person.balance).toFixed(2);
 
   return (
     <View style={styles.row}>
       {/* Avatar */}
-      <View style={[styles.avatar, { backgroundColor: avatarColor(person.name) }]}>
+      <View
+        style={[styles.avatar, { backgroundColor: avatarColor(person.name) }]}
+      >
         <Text style={styles.avatarText}>{getInitials(person.name)}</Text>
       </View>
 
@@ -74,26 +118,127 @@ function BalanceRow({ person }: { person: PersonBalance }) {
         </Text>
       </View>
 
-      {/* Balance + action */}
+      {/* Right column */}
       <View style={styles.rowRight}>
         {isZero ? (
           <Text style={styles.settledText}>Settled</Text>
         ) : (
           <>
-            <Text style={[styles.balanceAmount, isPos ? styles.posText : styles.negText]}>
-              {isPos ? `+${person.currency}${abs}` : `-${person.currency}${abs}`}
+            <Text
+              style={[
+                styles.balanceAmount,
+                isPos ? styles.posText : styles.negText,
+              ]}
+            >
+              {isPos
+                ? `+${person.currency}${abs}`
+                : `-${person.currency}${abs}`}
             </Text>
-            <Text style={[styles.balanceLabel, isPos ? styles.posText : styles.negText]}>
+            <Text
+              style={[
+                styles.balanceLabel,
+                isPos ? styles.posText : styles.negText,
+              ]}
+            >
               {isPos ? 'owes you' : 'you owe'}
             </Text>
           </>
         )}
         {!isZero && (
-          <Pressable style={[styles.settleBtn, isPos ? styles.settleBtnPos : styles.settleBtnNeg]}>
+          <Pressable
+            style={[
+              styles.settleBtn,
+              isPos ? styles.settleBtnPos : styles.settleBtnNeg,
+            ]}
+          >
             <Text style={styles.settleBtnText}>Settle</Text>
           </Pressable>
         )}
       </View>
+    </View>
+  );
+}
+
+// ─── HeroCard ─────────────────────────────────────────────────────────────────
+
+function HeroCard({
+  net,
+  owedToMe,
+  iOwe,
+}: {
+  net: number;
+  owedToMe: number;
+  iOwe: number;
+}) {
+  const heroBg =
+    net > 0 ? colors.posBg : net < 0 ? colors.negBg : colors.brandLight;
+
+  return (
+    <View style={[styles.heroCard, { backgroundColor: heroBg }]}>
+      {/* Label */}
+      <Text style={styles.heroLabel}>
+        {net > 0 ? "You're owed" : net < 0 ? 'You owe' : 'All settled up'}
+      </Text>
+
+      {/* Amount */}
+      {net !== 0 && (
+        <Text
+          style={[styles.heroAmount, net > 0 ? styles.posText : styles.negText]}
+        >
+          ${Math.abs(net).toFixed(2)}
+        </Text>
+      )}
+
+      {/* Zero subtitle */}
+      {net === 0 && (
+        <Text style={styles.heroZeroSub}>
+          No outstanding balances across all groups.
+        </Text>
+      )}
+
+      {/* Stats row */}
+      {net !== 0 && (
+        <View style={styles.heroStats}>
+          {/* Owed to me */}
+          <View style={styles.heroStat}>
+            <Text
+              style={[styles.heroStatAmount, styles.posText]}
+              numberOfLines={1}
+            >
+              ${owedToMe.toFixed(2)}
+            </Text>
+            <Text style={styles.heroStatLabel}>owed to me</Text>
+          </View>
+
+          {/* Vertical divider */}
+          <View style={styles.heroStatDivider} />
+
+          {/* I owe */}
+          <View style={styles.heroStat}>
+            <Text
+              style={[styles.heroStatAmount, styles.negText]}
+              numberOfLines={1}
+            >
+              ${iOwe.toFixed(2)}
+            </Text>
+            <Text style={styles.heroStatLabel}>I owe</Text>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+}
+
+// ─── EmptyState ───────────────────────────────────────────────────────────────
+
+function EmptyState() {
+  return (
+    <View style={styles.emptyState}>
+      <View style={styles.emptyIconCircle}>
+        <Text style={styles.emptyIconText}>0</Text>
+      </View>
+      <Text style={styles.emptyTitle}>Nothing here</Text>
+      <Text style={styles.emptySubtitle}>No balances match this filter.</Text>
     </View>
   );
 }
@@ -103,8 +248,14 @@ function BalanceRow({ person }: { person: PersonBalance }) {
 export function BalancesScreen() {
   const [filter, setFilter] = useState<FilterType>('all');
 
-  const owedToMe = MOCK_BALANCES.filter(p => p.balance > 0).reduce((s, p) => s + p.balance, 0);
-  const iOwe = MOCK_BALANCES.filter(p => p.balance < 0).reduce((s, p) => s + Math.abs(p.balance), 0);
+  const owedToMe = MOCK_BALANCES.filter(p => p.balance > 0).reduce(
+    (s, p) => s + p.balance,
+    0,
+  );
+  const iOwe = MOCK_BALANCES.filter(p => p.balance < 0).reduce(
+    (s, p) => s + Math.abs(p.balance),
+    0,
+  );
   const net = owedToMe - iOwe;
 
   const filtered = MOCK_BALANCES.filter(p => {
@@ -121,62 +272,38 @@ export function BalancesScreen() {
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      {/* ── Header ─────────────────────────────────────────────────────── */}
+      {/* Header */}
       <CustomHeader title="Balances" />
 
-      {/* ── Summary hero ───────────────────────────────────────────────── */}
-      <View style={[styles.heroCard, net > 0 ? styles.heroCardPos : net < 0 ? styles.heroCardNeg : styles.heroCardZero]}>
-        <View style={styles.heroMain}>
-          <Text style={styles.heroLabel}>
-            {net > 0 ? "You're owed" : net < 0 ? 'You owe' : 'All settled up 🎉'}
-          </Text>
-          {net !== 0 && (
-            <Text style={[styles.heroAmount, net > 0 ? styles.posText : styles.negText]}>
-              ${Math.abs(net).toFixed(2)}
-            </Text>
-          )}
-          {net === 0 && (
-            <Text style={styles.heroZeroSub}>No outstanding balances across all groups.</Text>
-          )}
-        </View>
+      {/* Hero card */}
+      <HeroCard net={net} owedToMe={owedToMe} iOwe={iOwe} />
 
-        {net !== 0 && (
-          <View style={styles.heroStats}>
-            <View style={styles.heroStat}>
-              <Text style={styles.heroStatAmount} numberOfLines={1}>${owedToMe.toFixed(2)}</Text>
-              <Text style={styles.heroStatLabel}>owed to me</Text>
-            </View>
-            <View style={styles.heroStatDivider} />
-            <View style={styles.heroStat}>
-              <Text style={[styles.heroStatAmount, styles.negText]} numberOfLines={1}>${iOwe.toFixed(2)}</Text>
-              <Text style={styles.heroStatLabel}>I owe</Text>
-            </View>
-          </View>
-        )}
-      </View>
-
-      {/* ── Filter pills ───────────────────────────────────────────────── */}
+      {/* Filter pills */}
       <View style={styles.filterRow}>
         {FILTERS.map(f => (
           <Pressable
             key={f.key}
-            style={[styles.filterPill, filter === f.key && styles.filterPillActive]}
+            style={[
+              styles.filterPill,
+              filter === f.key && styles.filterPillActive,
+            ]}
             onPress={() => setFilter(f.key)}
           >
-            <Text style={[styles.filterText, filter === f.key && styles.filterTextActive]}>
+            <Text
+              style={[
+                styles.filterText,
+                filter === f.key && styles.filterTextActive,
+              ]}
+            >
               {f.label}
             </Text>
           </Pressable>
         ))}
       </View>
 
-      {/* ── People list ────────────────────────────────────────────────── */}
+      {/* People list / empty state */}
       {filtered.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyIcon}>⚖️</Text>
-          <Text style={styles.emptyTitle}>Nothing here</Text>
-          <Text style={styles.emptySubtitle}>No balances match this filter.</Text>
-        </View>
+        <EmptyState />
       ) : (
         <FlatList
           data={filtered}
@@ -194,83 +321,74 @@ export function BalancesScreen() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
-
-  // Header
-  header: {
-    paddingHorizontal: spacing[5],
-    paddingTop: spacing[3],
-    paddingBottom: spacing[4],
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  headerTitle: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.bold as any,
-    color: colors.text1,
+  // Root
+  root: {
+    flex: 1,
+    backgroundColor: colors.bg,
   },
 
-  // Hero card
+  // ── Hero card ──────────────────────────────────────────────────────────────
   heroCard: {
-    margin: spacing[5],
-    borderRadius: radius.lg,
-    padding: spacing[5],
+    marginHorizontal: 20,
+    marginTop: 16,
+    borderRadius: 20,
+    padding: 20,
   },
-  heroCardPos: { backgroundColor: colors.posBg },
-  heroCardNeg: { backgroundColor: colors.negBg },
-  heroCardZero: { backgroundColor: colors.brandLight },
-  heroMain: { marginBottom: spacing[4] },
   heroLabel: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.sm, // 12px
     fontWeight: fontWeights.medium as any,
     color: colors.text3,
-    marginBottom: spacing[1],
+    marginBottom: 4,
   },
   heroAmount: {
-    fontSize: fontSizes['4xl'],
+    fontSize: fontSizes['4xl'], // 36px → closest; spec says 40px
     fontWeight: fontWeights.extrabold as any,
     letterSpacing: -1,
   },
   heroZeroSub: {
-    fontSize: fontSizes.base,
-    color: colors.brand,
+    fontSize: fontSizes.base, // 14px
     fontWeight: fontWeights.medium as any,
+    color: colors.brand,
   },
   heroStats: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: spacing[4],
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.06)',
+    marginTop: 16,
+    paddingTop: 16,
   },
-  heroStat: { flex: 1, alignItems: 'center' },
+  heroStat: {
+    flex: 1,
+    alignItems: 'center',
+  },
   heroStatAmount: {
-    fontSize: fontSizes.lg,
+    fontSize: fontSizes.lg, // 18px
     fontWeight: fontWeights.bold as any,
     color: colors.pos,
   },
   heroStatLabel: {
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.xs, // 11px (xs=10, closest available)
     color: colors.text4,
     marginTop: 2,
   },
   heroStatDivider: {
     width: 1,
     height: 32,
-    backgroundColor: 'rgba(0,0,0,0.08)',
+    backgroundColor: 'rgba(0,0,0,0.06)',
   },
 
-  // Filters
+  // ── Filter pills ───────────────────────────────────────────────────────────
   filterRow: {
     flexDirection: 'row',
-    paddingHorizontal: spacing[5],
-    gap: spacing[2],
-    marginBottom: spacing[2],
+    paddingHorizontal: 20,
+    gap: 8,
+    marginTop: 12,
+    marginBottom: 4,
   },
   filterPill: {
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[2],
+    paddingHorizontal: 14,
+    paddingVertical: 6,
     borderRadius: radius.pill,
     backgroundColor: colors.white,
     borderWidth: 1,
@@ -281,32 +399,33 @@ const styles = StyleSheet.create({
     borderColor: colors.brand,
   },
   filterText: {
-    fontSize: fontSizes.sm,
+    fontSize: 13,
     fontWeight: fontWeights.medium as any,
     color: colors.text3,
   },
-  filterTextActive: { color: colors.white },
+  filterTextActive: {
+    fontWeight: fontWeights.semibold as any,
+    color: colors.white,
+  },
 
-  // List
+  // ── List ───────────────────────────────────────────────────────────────────
   listContent: {
-    paddingHorizontal: spacing[5],
     paddingBottom: spacing[10],
   },
   separator: {
     height: 1,
     backgroundColor: colors.border,
-    marginLeft: 60,
+    marginLeft: 76,
   },
 
-  // Row
+  // ── Person row ─────────────────────────────────────────────────────────────
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing[4],
-    gap: spacing[3],
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    gap: 12,
     backgroundColor: colors.white,
-    marginHorizontal: -spacing[5],
-    paddingHorizontal: spacing[5],
   },
   avatar: {
     width: 44,
@@ -316,53 +435,85 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatarText: {
-    fontSize: fontSizes.sm,
+    fontSize: 13,
     fontWeight: fontWeights.bold as any,
     color: colors.white,
   },
-  rowInfo: { flex: 1, gap: 3 },
+  rowInfo: {
+    flex: 1,
+    gap: 3,
+  },
   personName: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.base, // 14px
     fontWeight: fontWeights.semibold as any,
     color: colors.text1,
   },
   personGroups: {
-    fontSize: fontSizes.xs,
+    fontSize: 11,
     color: colors.text4,
   },
-  rowRight: { alignItems: 'flex-end', gap: 2 },
+  rowRight: {
+    alignItems: 'flex-end',
+    gap: 3,
+  },
   balanceAmount: {
-    fontSize: fontSizes.base,
+    fontSize: 15,
     fontWeight: fontWeights.bold as any,
   },
   balanceLabel: {
-    fontSize: fontSizes.xs,
+    fontSize: 11,
     fontWeight: fontWeights.medium as any,
   },
   posText: { color: colors.pos },
   negText: { color: colors.neg },
   settledText: {
-    fontSize: fontSizes.sm,
-    color: colors.zero,
+    fontSize: 13,
     fontWeight: fontWeights.medium as any,
+    color: colors.zero,
   },
   settleBtn: {
-    marginTop: spacing[1],
-    paddingHorizontal: spacing[3],
+    paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: radius.pill,
   },
   settleBtnPos: { backgroundColor: colors.pos },
   settleBtnNeg: { backgroundColor: colors.neg },
   settleBtnText: {
-    fontSize: fontSizes.xs,
+    fontSize: 11,
     fontWeight: fontWeights.semibold as any,
     color: colors.white,
   },
 
-  // Empty
-  emptyState: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing[8] },
-  emptyIcon: { fontSize: 48, marginBottom: spacing[4] },
-  emptyTitle: { fontSize: fontSizes.lg, fontWeight: fontWeights.bold as any, color: colors.text1, marginBottom: spacing[2] },
-  emptySubtitle: { fontSize: fontSizes.base, color: colors.text3, textAlign: 'center' },
+  // ── Empty state ────────────────────────────────────────────────────────────
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing[8],
+  },
+  emptyIconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.brandLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing[4],
+  },
+  emptyIconText: {
+    fontSize: fontSizes.xl,
+    fontWeight: fontWeights.bold as any,
+    color: colors.brand,
+  },
+  emptyTitle: {
+    fontSize: fontSizes.lg, // 18px
+    fontWeight: fontWeights.bold as any,
+    color: colors.text1,
+    marginBottom: spacing[2],
+  },
+  emptySubtitle: {
+    fontSize: fontSizes.base, // 14px
+    color: colors.text3,
+    textAlign: 'center',
+  },
 });

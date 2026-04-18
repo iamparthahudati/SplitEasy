@@ -1,20 +1,14 @@
-import React from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
-import { spacing, radius, sizes } from '../../theme/spacing';
 import { CustomHeader } from '../../components/ui/CustomHeader';
 import type { SettingsStackParamList } from '../../navigation/types';
+import { colors } from '../../theme/colors';
+import { radius, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 type Nav = NativeStackNavigationProp<SettingsStackParamList, 'SettingsHome'>;
 
@@ -28,7 +22,11 @@ const MOCK_USER = {
   isPremium: false,
 };
 
-// ─── Components ───────────────────────────────────────────────────────────────
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function SectionHeader({ title }: { title: string }) {
+  return <Text style={styles.sectionHeader}>{title}</Text>;
+}
 
 function SettingsRow({
   icon,
@@ -50,21 +48,21 @@ function SettingsRow({
       android_ripple={{ color: colors.brandLight }}
     >
       <View style={styles.settingsRowLeft}>
-        <View style={[styles.rowIconWrap, destructive && styles.rowIconWrapRed]}>
+        <View
+          style={[styles.rowIconWrap, destructive && styles.rowIconWrapRed]}
+        >
           <Text style={styles.rowIcon}>{icon}</Text>
         </View>
-        <Text style={[styles.rowLabel, destructive && styles.rowLabelRed]}>{label}</Text>
+        <Text style={[styles.rowLabel, destructive && styles.rowLabelRed]}>
+          {label}
+        </Text>
       </View>
       <View style={styles.settingsRowRight}>
         {value ? <Text style={styles.rowValue}>{value}</Text> : null}
-        <Text style={[styles.chevron, destructive && styles.chevronRed]}>›</Text>
+        <Text style={styles.chevron}>›</Text>
       </View>
     </Pressable>
   );
-}
-
-function SectionHeader({ title }: { title: string }) {
-  return <Text style={styles.sectionHeader}>{title}</Text>;
 }
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -74,13 +72,16 @@ export function SettingsHomeScreen() {
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      {/* ── Header ─────────────────────────────────────────────────────── */}
       <CustomHeader title="Settings" />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* ── Profile card ─────────────────────────────────────────────── */}
-        <Pressable style={styles.profileCard} onPress={() => navigation.navigate('Profile')}>
-          <View style={[styles.profileAvatar, { backgroundColor: MOCK_USER.avatarColor }]}>
+        {/* ── Profile Card ─────────────────────────────────────────────── */}
+        <Pressable
+          style={styles.profileCard}
+          onPress={() => navigation.navigate('Profile')}
+          android_ripple={{ color: colors.brandLight }}
+        >
+          <View style={styles.profileAvatar}>
             <Text style={styles.profileInitials}>{MOCK_USER.initials}</Text>
           </View>
           <View style={styles.profileInfo}>
@@ -92,20 +93,32 @@ export function SettingsHomeScreen() {
           </View>
         </Pressable>
 
-        {/* ── Premium upgrade card ─────────────────────────────────────── */}
+        {/* ── Premium Upgrade Card ─────────────────────────────────────── */}
         {!MOCK_USER.isPremium && (
-          <Pressable style={styles.premiumCard}>
-            <View>
-              <Text style={styles.premiumTitle}>Upgrade to Premium</Text>
-              <Text style={styles.premiumSub}>Unlimited groups, recurring bills & more.</Text>
+          <View style={styles.premiumCard}>
+            <View style={styles.premiumTopRow}>
+              <View style={styles.premiumTextBlock}>
+                <Text style={styles.premiumTitle}>Upgrade to Premium</Text>
+                <Text style={styles.premiumSub}>
+                  Unlimited groups, AI scanner, zero ads.
+                </Text>
+              </View>
+              <View style={styles.proBadge}>
+                <Text style={styles.proBadgeText}>✦ PRO</Text>
+              </View>
             </View>
-            <View style={styles.premiumBadge}>
-              <Text style={styles.premiumBadgeText}>✦ PRO</Text>
-            </View>
-          </Pressable>
+            <Pressable
+              style={styles.premiumButton}
+              android_ripple={{ color: 'rgba(255,255,255,0.1)' }}
+            >
+              <Text style={styles.premiumButtonText}>
+                Start 7-day free trial
+              </Text>
+            </Pressable>
+          </View>
         )}
 
-        {/* ── Account section ──────────────────────────────────────────── */}
+        {/* ── Account ──────────────────────────────────────────────────── */}
         <SectionHeader title="Account" />
         <View style={styles.section}>
           <SettingsRow
@@ -122,7 +135,7 @@ export function SettingsHomeScreen() {
           />
         </View>
 
-        {/* ── Preferences section ───────────────────────────────────────── */}
+        {/* ── Preferences ──────────────────────────────────────────────── */}
         <SectionHeader title="Preferences" />
         <View style={styles.section}>
           <SettingsRow
@@ -132,7 +145,7 @@ export function SettingsHomeScreen() {
           />
         </View>
 
-        {/* ── App section ────────────────────────────────────────────────── */}
+        {/* ── App ──────────────────────────────────────────────────────── */}
         <SectionHeader title="App" />
         <View style={styles.section}>
           <SettingsRow
@@ -141,17 +154,9 @@ export function SettingsHomeScreen() {
             onPress={() => navigation.navigate('About')}
           />
           <View style={styles.rowDivider} />
-          <SettingsRow
-            icon="⭐"
-            label="Rate the App"
-            onPress={() => {}}
-          />
+          <SettingsRow icon="⭐" label="Rate the App" onPress={() => {}} />
           <View style={styles.rowDivider} />
-          <SettingsRow
-            icon="💬"
-            label="Send Feedback"
-            onPress={() => {}}
-          />
+          <SettingsRow icon="💬" label="Send Feedback" onPress={() => {}} />
         </View>
 
         {/* ── Sign Out ─────────────────────────────────────────────────── */}
@@ -178,133 +183,152 @@ export function SettingsHomeScreen() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
-
-  // Header
-  header: {
-    paddingHorizontal: spacing[5],
-    paddingTop: spacing[3],
-    paddingBottom: spacing[4],
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  headerTitle: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.bold as any,
-    color: colors.text1,
+  root: {
+    flex: 1,
+    backgroundColor: colors.bg,
   },
 
-  // Profile card
+  // ── Profile Card
   profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: spacing[5],
-    marginBottom: spacing[3],
-    padding: spacing[4],
+    marginHorizontal: 20,
+    marginTop: 16,
+    borderRadius: 20,
+    padding: 20,
     backgroundColor: colors.white,
-    borderRadius: radius.lg,
+    shadowColor: colors.shadowNeutral,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
     borderWidth: 1,
     borderColor: colors.border,
-    gap: spacing[3],
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
   },
   profileAvatar: {
-    width: sizes.avatarLg,
-    height: sizes.avatarLg,
-    borderRadius: sizes.avatarLg / 2,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.brand,
     alignItems: 'center',
     justifyContent: 'center',
   },
   profileInitials: {
-    fontSize: fontSizes.xl,
+    fontSize: 22,
     fontWeight: fontWeights.bold as any,
     color: colors.white,
   },
-  profileInfo: { flex: 1, gap: 2 },
+  profileInfo: {
+    flex: 1,
+  },
   profileName: {
-    fontSize: fontSizes.md,
+    fontSize: fontSizes.lg,
     fontWeight: fontWeights.semibold as any,
     color: colors.text1,
   },
   profileEmail: {
-    fontSize: fontSizes.sm,
+    fontSize: 13,
     color: colors.text4,
+    marginTop: 2,
   },
   editBadge: {
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[1],
+    paddingHorizontal: 14,
+    paddingVertical: 6,
     borderRadius: radius.pill,
     borderWidth: 1.5,
     borderColor: colors.brand,
   },
   editBadgeText: {
-    fontSize: fontSizes.sm,
+    fontSize: 13,
     fontWeight: fontWeights.semibold as any,
     color: colors.brand,
   },
 
-  // Premium card
+  // ── Premium Card
   premiumCard: {
+    marginHorizontal: 20,
+    marginTop: 12,
+    borderRadius: 20,
+    padding: 20,
+    backgroundColor: '#1E1B4B',
+  },
+  premiumTopRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginHorizontal: spacing[5],
-    marginBottom: spacing[3],
-    padding: spacing[4],
-    backgroundColor: colors.brand,
-    borderRadius: radius.lg,
-    gap: spacing[3],
+  },
+  premiumTextBlock: {
+    flex: 1,
+    marginRight: 12,
   },
   premiumTitle: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.md,
     fontWeight: fontWeights.bold as any,
     color: colors.white,
-    marginBottom: 2,
   },
   premiumSub: {
-    fontSize: fontSizes.sm,
-    color: 'rgba(255,255,255,0.8)',
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.65)',
+    marginTop: 4,
   },
-  premiumBadge: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[2],
-    borderRadius: radius.sm,
+  proBadge: {
+    backgroundColor: colors.premiumGold,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
   },
-  premiumBadgeText: {
+  proBadgeText: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.extrabold as any,
+    color: colors.premiumGoldDark,
+  },
+  premiumButton: {
+    marginTop: 16,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.20)',
+    borderRadius: 12,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  premiumButtonText: {
+    fontSize: fontSizes.base,
+    fontWeight: fontWeights.semibold as any,
     color: colors.white,
-    letterSpacing: 1,
+    textAlign: 'center',
   },
 
-  // Section header
+  // ── Section Header
   sectionHeader: {
-    paddingHorizontal: spacing[5],
-    paddingTop: spacing[4],
-    paddingBottom: spacing[2],
-    fontSize: fontSizes.xs,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 8,
+    fontSize: 11,
     fontWeight: fontWeights.semibold as any,
     color: colors.text4,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
 
-  // Settings section
+  // ── Settings Section
   section: {
-    marginHorizontal: spacing[5],
+    marginHorizontal: 20,
     backgroundColor: colors.white,
-    borderRadius: radius.md,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     overflow: 'hidden',
   },
+
+  // ── Settings Row
   settingsRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[4],
   },
   settingsRowLeft: {
     flexDirection: 'row',
@@ -315,52 +339,57 @@ const styles = StyleSheet.create({
   rowIconWrap: {
     width: 32,
     height: 32,
-    borderRadius: radius.xs,
-    backgroundColor: colors.bg,
+    borderRadius: 8,
+    backgroundColor: colors.surfaceDeep,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  rowIconWrapRed: { backgroundColor: colors.negBg },
-  rowIcon: { fontSize: fontSizes.base },
+  rowIconWrapRed: {
+    backgroundColor: colors.negBg,
+  },
+  rowIcon: {
+    fontSize: fontSizes.base,
+  },
   rowLabel: {
     fontSize: fontSizes.base,
     fontWeight: fontWeights.medium as any,
     color: colors.text1,
   },
-  rowLabelRed: { color: colors.neg },
+  rowLabelRed: {
+    color: colors.neg,
+  },
   settingsRowRight: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing[2],
   },
   rowValue: {
-    fontSize: fontSizes.sm,
+    fontSize: 13,
     color: colors.text4,
   },
   chevron: {
-    fontSize: fontSizes.xl,
+    fontSize: 20,
     color: colors.text4,
     lineHeight: 24,
   },
-  chevronRed: { color: colors.neg },
   rowDivider: {
     height: 1,
     backgroundColor: colors.border,
-    marginLeft: spacing[4] + 32 + spacing[3], // align with text
+    marginLeft: 60,
   },
 
-  // Footer
+  // ── Footer
   footer: {
     alignItems: 'center',
-    paddingVertical: spacing[8],
-    gap: spacing[2],
+    paddingVertical: 32,
+    gap: 6,
   },
   footerVersion: {
-    fontSize: fontSizes.sm,
+    fontSize: 13,
     color: colors.text4,
   },
   footerLinks: {
-    fontSize: fontSizes.xs,
+    fontSize: 11,
     color: colors.text4,
   },
 });
