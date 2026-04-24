@@ -199,7 +199,46 @@ blue, separate from the primary brand color.
 
 ---
 
-## AI Prompt — Premium SVG Logo Design
+## AI Prompt — Current Logo Refinement (Wallet + Swoosh Variant)
+
+Use this prompt to iterate on the existing wallet-and-swoosh logo. Apply to Midjourney,
+Adobe Firefly, DALL-E, Ideogram, or a human designer brief.
+
+---
+
+### Prompt
+
+> Refine an existing logo for a mobile app called **SplitEasy** — a bill-splitting and
+> expense-sharing app for friends, flatmates, and travel groups.
+>
+> **Current design to improve:** A dark navy wallet icon with sparkle stars (✦), wrapped by
+> a teal swoosh arc, with the wordmark "SPLIT EASY" in bold teal below. Keep this overall
+> concept — only apply the three specific fixes below.
+>
+> **Fix 1 — Balance the swoosh:**
+> The swoosh currently feels heavier/thicker on the left side. Make it a smooth, even-weight
+> elliptical orbit arc that wraps the wallet symmetrically. The arc should taper equally at
+> both ends — same weight, same taper — so it reads as a balanced orbit, not a lopsided stroke.
+>
+> **Fix 2 — Enlarge the wallet icon:**
+> The wallet mark inside the circle is too small and loses detail below 64px. Increase the
+> wallet to occupy ~65% of the enclosing circle (up from ~45%). The card slot detail inside
+> the wallet should be bold enough to read at 48px. Remove any fine inner details that vanish
+> at small sizes — keep only: wallet body, card slot rectangle, corner radius.
+>
+> **Fix 3 — Open up the wordmark letter-spacing:**
+> "SPLIT EASY" currently feels slightly tight. Increase letter-spacing to +150 tracking
+> (roughly 0.15em). Keep the bold weight and all-caps treatment. The extra air makes the
+> wordmark feel more premium and balances the visual weight of the icon above it.
+>
+> **Keep unchanged:** Color palette (dark navy `#1A2744` + teal `#2E7D82`), sparkle stars
+> placement, all-caps bold wordmark, overall compact square composition.
+>
+> **Deliver:** SVG + 1024×1024px PNG, transparent background version, and dark background version.
+
+---
+
+## AI Prompt — Premium SVG Logo Design (Original Split-Circle Concept)
 
 Use this prompt with any AI image generation or vector design tool (Figma AI, Midjourney,
 Adobe Firefly, DALL-E, or a human designer brief).
