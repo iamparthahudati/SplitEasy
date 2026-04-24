@@ -15,6 +15,7 @@ import styles from './styles';
 interface FeatureItem {
   iconName: IconName;
   iconBg: string;
+  iconColor: string;
   title: string;
   description: string;
 }
@@ -23,32 +24,40 @@ const FEATURES: FeatureItem[] = [
   {
     iconName: 'users',
     iconBg: colors.brandLight,
+    iconColor: '#6366F1',
     title: 'Unlimited Groups',
-    description: 'Create as many groups as you need — no caps.',
+    description:
+      'Create as many groups as you need — travel, home, work, and more.',
   },
   {
     iconName: 'file-text',
     iconBg: colors.posBg,
+    iconColor: '#10B981',
     title: 'PDF Export',
-    description: 'Export any group as a clean PDF to share or archive.',
+    description:
+      "Export any group's expense history as a clean, shareable PDF.",
   },
   {
     iconName: 'globe',
     iconBg: colors.pendBg,
+    iconColor: '#F59E0B',
     title: 'Multi-Currency',
-    description: 'Track expenses in any currency with live conversion.',
+    description: 'Track expenses in any currency with live conversion rates.',
   },
   {
     iconName: 'camera',
     iconBg: colors.negBg,
+    iconColor: '#EF4444',
     title: 'Receipt Scanning',
-    description: 'Snap a photo and auto-fill expense details.',
+    description:
+      'Snap a photo of any receipt and auto-fill the expense details.',
   },
   {
     iconName: 'shield',
     iconBg: colors.posBgAlt,
+    iconColor: '#10B981',
     title: 'Priority Support',
-    description: 'Get help fast with dedicated premium support.',
+    description: 'Get help fast with dedicated priority support from our team.',
   },
 ];
 
@@ -71,10 +80,10 @@ export function PremiumFeaturesScreen(): JSX.Element {
           <View style={styles.heroIconWrap}>
             <Icon name="crown" size={24} stroke={colors.white} fill="none" />
           </View>
+          <View style={styles.heroDecorCircle} pointerEvents="none" />
           <Text style={styles.heroTitle}>Go Premium</Text>
           <Text style={styles.heroSubtitle}>
-            Unlock the full SplitEasy experience with unlimited access to every
-            feature.
+            Everything you need to split bills like a pro.
           </Text>
         </View>
 
@@ -86,6 +95,7 @@ export function PremiumFeaturesScreen(): JSX.Element {
               key={item.title}
               iconName={item.iconName}
               iconBg={item.iconBg}
+              iconColor={item.iconColor}
               title={item.title}
               description={item.description}
             />

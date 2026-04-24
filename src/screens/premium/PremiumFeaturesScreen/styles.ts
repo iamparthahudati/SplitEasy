@@ -47,6 +47,15 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.75)',
     lineHeight: fontSizes.sm * 1.5,
   },
+  heroDecorCircle: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    bottom: -30,
+    right: -30,
+  },
 
   // ── Feature cards list ────────────────────────────────────────────────────
   cardsSection: {
@@ -58,6 +67,7 @@ const styles = StyleSheet.create({
   // ── CTA button ────────────────────────────────────────────────────────────
   ctaButton: {
     marginHorizontal: spacing[4],
+    marginBottom: spacing[6],
   },
 });
 

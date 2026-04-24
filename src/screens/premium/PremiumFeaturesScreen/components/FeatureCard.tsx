@@ -5,20 +5,18 @@ import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface FeatureCardProps {
   iconName: IconName;
   iconBg: string;
+  iconColor: string;
   title: string;
   description: string;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export function FeatureCard({
   iconName,
   iconBg,
+  iconColor,
   title,
   description,
 }: FeatureCardProps): JSX.Element {
@@ -26,7 +24,7 @@ export function FeatureCard({
     <View style={styles.card}>
       {/* Icon square */}
       <View style={[styles.iconWrap, { backgroundColor: iconBg }]}>
-        <Icon name={iconName} size={22} stroke={colors.brand} fill="none" />
+        <Icon name={iconName} size={22} stroke={iconColor} fill="none" />
       </View>
 
       {/* Text content */}
@@ -50,6 +48,12 @@ const styles = StyleSheet.create({
     padding: spacing[4],
     alignItems: 'flex-start',
     gap: spacing[4],
+    // Shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
   },
   iconWrap: {
     width: 48,

@@ -19,42 +19,10 @@ export interface PremiumBannerProps {
   style?: StyleProp<ViewStyle>;
 }
 
-// ─── Decorative orbs (pure View, no SVG needed) ───────────────────────────────
-
-function Orb({
-  size,
-  top,
-  right,
-  opacity,
-}: {
-  size: number;
-  top: number;
-  right: number;
-  opacity: number;
-}): JSX.Element {
-  return (
-    <View
-      pointerEvents="none"
-      style={{
-        position: 'absolute',
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: colors.white,
-        opacity,
-        top,
-        right,
-      }}
-    />
-  );
-}
-
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export function PremiumBanner({
-  title = 'Unlock Premium',
-  subtitle = 'Unlimited groups, PDF export, multi-currency and more.',
-  ctaLabel = 'Upgrade now',
+  title = 'Upgrade to Premium',
+  subtitle = 'Remove all limits and unlock every feature.',
+  ctaLabel = 'Upgrade Now',
   features,
   onPress,
   compact = false,
@@ -109,18 +77,8 @@ export function PremiumBanner({
         style,
       ]}
       accessibilityRole="button"
-      accessibilityLabel={`${title}. ${ctaLabel}`}
+      accessibilityLabel="Upgrade to Premium"
     >
-      {/* Decorative background orbs */}
-      <Orb size={120} top={-40} right={-30} opacity={0.06} />
-      <Orb size={72} top={10} right={60} opacity={0.05} />
-
-      {/* Premium badge */}
-      <View style={styles.badge}>
-        <Icon name="zap" size={10} stroke={colors.brandDark} fill="none" />
-        <Text style={styles.badgeLabel}>PREMIUM</Text>
-      </View>
-
       {/* Title */}
       <Text style={styles.title}>{title}</Text>
 
@@ -132,31 +90,24 @@ export function PremiumBanner({
         <View style={styles.featuresRow}>
           {features.map((f, i) => (
             <View key={i} style={styles.featurePill}>
-              <Icon
-                name="check"
-                size={10}
-                stroke={colors.brandDark}
-                fill="none"
-              />
               <Text style={styles.featureLabel}>{f}</Text>
             </View>
           ))}
         </View>
       )}
 
-      {/* CTA row */}
-      <View style={styles.ctaRow}>
-        <View style={styles.ctaBtn}>
-          <Text style={styles.ctaBtnLabel}>{ctaLabel}</Text>
-          <Icon
-            name="arrow-forward"
-            size={14}
-            stroke={colors.brand}
-            fill="none"
-          />
-        </View>
-        <Text style={styles.dismissHint}>No commitment, cancel anytime</Text>
-      </View>
+      {/* CTA button */}
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.ctaBtn,
+          pressed && styles.ctaBtnPressed,
+        ]}
+        accessibilityRole="button"
+        accessibilityLabel="Upgrade Now"
+      >
+        <Text style={styles.ctaBtnLabel}>Upgrade Now</Text>
+      </Pressable>
     </Pressable>
   );
 }

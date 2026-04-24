@@ -11,60 +11,39 @@ const styles = StyleSheet.create({
   // ── Full card ──
   card: {
     backgroundColor: colors.brand,
-    borderRadius: radius.lg,
-    padding: spacing[5],
+    borderRadius: radius.md,
+    padding: spacing[4],
     overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: colors.brand,
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.35,
-        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 8,
+        elevation: 4,
       },
     }),
   },
   cardPressed: {
-    backgroundColor: colors.brandDark,
-  },
-
-  // Badge
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: colors.white,
-    borderRadius: radius.pill,
-    paddingVertical: spacing[1],
-    paddingHorizontal: spacing[2],
-    gap: 4,
-    marginBottom: spacing[3],
-  },
-  badgeLabel: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.extrabold,
-    color: colors.brandDark,
-    letterSpacing: letterSpacings.wider,
+    backgroundColor: '#4F46E5',
   },
 
   // Title
   title: {
-    fontSize: fontSizes['2xl'],
+    fontSize: fontSizes.md,
     fontWeight: fontWeights.bold,
     color: colors.white,
-    letterSpacing: letterSpacings.tight,
-    marginBottom: spacing[2],
+    marginBottom: 4,
   },
 
   // Subtitle
   subtitle: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.regular,
-    color: 'rgba(255,255,255,0.75)',
-    lineHeight: fontSizes.sm * 1.6,
-    marginBottom: spacing[4],
+    color: 'rgba(255,255,255,0.80)',
+    marginBottom: spacing[3],
   },
 
   // Feature pills row
@@ -72,50 +51,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing[2],
-    marginBottom: spacing[5],
   },
   featurePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
     backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: radius.pill,
+    borderRadius: 99,
     paddingVertical: 4,
-    paddingHorizontal: spacing[2] + 2,
+    paddingHorizontal: 10,
   },
   featureLabel: {
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.medium,
+    fontWeight: fontWeights.semibold,
     color: colors.white,
   },
 
-  // CTA row
-  ctaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing[3],
-  },
+  // CTA button
   ctaBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing[1] + 2,
+    marginTop: spacing[3],
     backgroundColor: colors.white,
-    borderRadius: radius.pill,
-    paddingVertical: spacing[2] + 2,
-    paddingHorizontal: spacing[4],
+    borderRadius: radius.sm,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ctaBtnPressed: {
+    backgroundColor: 'rgba(255,255,255,0.90)',
   },
   ctaBtnLabel: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.base,
     fontWeight: fontWeights.semibold,
     color: colors.brand,
-  },
-  dismissHint: {
-    flex: 1,
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.regular,
-    color: 'rgba(255,255,255,0.5)',
-    textAlign: 'right',
   },
 
   // ── Compact strip ──
