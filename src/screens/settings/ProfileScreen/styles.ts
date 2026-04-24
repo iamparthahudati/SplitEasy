@@ -4,6 +4,10 @@ import { radius, spacing } from '../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../theme/typography';
 
 export default StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.white,
+  },
   root: {
     flex: 1,
     backgroundColor: colors.screenBg,

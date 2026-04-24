@@ -53,7 +53,7 @@ export function DefaultCurrencyScreen() {
   }, [query]);
 
   return (
-    <SafeAreaView style={styles.root} edges={['bottom']}>
+    <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
       <ScreenHeader title="Default Currency" onBack={goBack} />
 
       <View style={styles.searchWrapper}>

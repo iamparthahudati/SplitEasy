@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from '../../../components/atoms/Icon';
 import { InputField } from '../../../components/molecules/InputField';
 import { ListRow } from '../../../components/molecules/ListRow';
@@ -25,81 +26,88 @@ export function ProfileScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.root}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScreenHeader title="Profile" onBack={goBack} />
-
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <KeyboardAvoidingView
+        style={styles.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Avatar */}
-        <View style={styles.avatarSection}>
-          <View style={styles.avatarWrapper}>
-            <Avatar name={MOCK_NAME} size="lg" style={styles.avatar} />
-            <View style={styles.cameraBadge}>
-              <Icon name="camera" size={14} stroke={colors.white} fill="none" />
+        <ScreenHeader title="Profile" onBack={goBack} />
+
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Avatar */}
+          <View style={styles.avatarSection}>
+            <View style={styles.avatarWrapper}>
+              <Avatar name={MOCK_NAME} size="lg" style={styles.avatar} />
+              <View style={styles.cameraBadge}>
+                <Icon
+                  name="camera"
+                  size={14}
+                  stroke={colors.white}
+                  fill="none"
+                />
+              </View>
             </View>
           </View>
-        </View>
 
-        {/* Form fields */}
-        <View style={styles.formSection}>
-          <View style={styles.fieldSpacing}>
-            <InputField
-              label="Display Name"
-              value={displayName}
-              onChangeText={setDisplayName}
-              placeholder="Your name"
-              leftIcon="user"
+          {/* Form fields */}
+          <View style={styles.formSection}>
+            <View style={styles.fieldSpacing}>
+              <InputField
+                label="Display Name"
+                value={displayName}
+                onChangeText={setDisplayName}
+                placeholder="Your name"
+                leftIcon="user"
+              />
+            </View>
+            <View style={styles.fieldSpacing}>
+              <InputField
+                label="Email"
+                value={MOCK_EMAIL}
+                onChangeText={() => undefined}
+                placeholder="Email address"
+                leftIcon="mail"
+                editable={false}
+                hint="Email cannot be changed"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
+
+          {/* Member Since */}
+          <View style={styles.memberCard}>
+            <ListRow
+              title="Member Since"
+              rightLabel={MOCK_MEMBER_SINCE}
+              showChevron={false}
             />
           </View>
-          <View style={styles.fieldSpacing}>
-            <InputField
-              label="Email"
-              value={MOCK_EMAIL}
-              onChangeText={() => undefined}
-              placeholder="Email address"
-              leftIcon="mail"
-              editable={false}
-              hint="Email cannot be changed"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          </View>
-        </View>
 
-        {/* Member Since */}
-        <View style={styles.memberCard}>
-          <ListRow
-            title="Member Since"
-            rightLabel={MOCK_MEMBER_SINCE}
-            showChevron={false}
-          />
-        </View>
-
-        {/* Save */}
-        <Button
-          label="Save Changes"
-          onPress={handleSave}
-          variant="primary"
-          loading={saving}
-          style={styles.saveButton}
-        />
-
-        {/* Danger zone */}
-        <View style={styles.dangerSection}>
+          {/* Save */}
           <Button
-            label="Delete Account"
-            onPress={() => undefined}
-            variant="danger"
+            label="Save Changes"
+            onPress={handleSave}
+            variant="primary"
+            loading={saving}
+            style={styles.saveButton}
           />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+          {/* Danger zone */}
+          <View style={styles.dangerSection}>
+            <Button
+              label="Delete Account"
+              onPress={() => undefined}
+              variant="danger"
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }

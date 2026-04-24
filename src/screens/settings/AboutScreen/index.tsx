@@ -16,7 +16,7 @@ export function AboutScreen() {
   const { goBack } = useNavigation();
 
   return (
-    <SafeAreaView style={styles.root} edges={['bottom']}>
+    <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
       <ScreenHeader title="About" onBack={goBack} />
 
       <ScrollView
