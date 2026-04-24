@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
 import Icon, { IconName } from '../../../../components/atoms/Icon';
 import { AmountDisplay } from '../../../../components/molecules/AmountDisplay';
 import { colors } from '../../../../theme/colors';
@@ -14,6 +14,7 @@ interface ActivityEventRowProps {
   amount: number;
   date: Date;
   iconName: IconName;
+  onPress: () => void;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -24,6 +25,7 @@ export function ActivityEventRow({
   amount,
   date,
   iconName,
+  onPress,
   style,
 }: ActivityEventRowProps) {
   const isSettlement = type === 'settlement';
@@ -31,7 +33,16 @@ export function ActivityEventRow({
   const relativeTime = formatRelativeDate(date);
 
   return (
-    <View style={[styles.rowContainer, style]}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.rowContainer,
+        pressed && styles.rowPressed,
+        style,
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={description}
+    >
       {/* Icon circle */}
       <View
         style={[
@@ -68,6 +79,6 @@ export function ActivityEventRow({
           style={isSettlement ? undefined : { alignItems: 'flex-end' }}
         />
       </View>
-    </View>
+    </Pressable>
   );
 }

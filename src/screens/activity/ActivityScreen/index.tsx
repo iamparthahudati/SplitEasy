@@ -1,3 +1,4 @@
+import { useNavigation } from '@navigation/NavigationContext';
 import React, { useMemo, useState } from 'react';
 import { SectionList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -143,6 +144,7 @@ function groupByDate(events: ActivityEvent[]): ActivitySection[] {
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export function ActivityScreen() {
+  const { navigate } = useNavigation();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
   const filteredEvents = useMemo<ActivityEvent[]>(() => {
@@ -193,6 +195,11 @@ export function ActivityScreen() {
               amount={item.amount}
               date={item.date}
               iconName={item.iconName}
+              onPress={() =>
+                item.type === 'expense'
+                  ? navigate('ExpenseDetail', { expenseId: item.id })
+                  : navigate('SettleUp', { memberId: item.id })
+              }
             />
           )}
         />

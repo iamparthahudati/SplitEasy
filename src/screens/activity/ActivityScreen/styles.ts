@@ -68,6 +68,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
   },
+  rowPressed: {
+    backgroundColor: colors.bg,
+  },
   rowIconCircle: {
     width: sizes.avatarMd,
     height: sizes.avatarMd,
