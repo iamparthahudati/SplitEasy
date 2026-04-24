@@ -20,7 +20,8 @@ export type GroupRoute =
   | 'ActivityFeed'
   | 'GroupSettings'
   | 'AddMember'
-  | 'ExportPDF';
+  | 'ExportPDF'
+  | 'BalanceDetail';
 
 export type PremiumRoute = 'Paywall' | 'FreeLimits' | 'PremiumFeatures';
 
@@ -42,6 +43,7 @@ export interface NavParams {
   groupId?: string;
   expenseId?: string;
   memberId?: string;
+  personId?: string;
 }
 
 interface NavEntry {

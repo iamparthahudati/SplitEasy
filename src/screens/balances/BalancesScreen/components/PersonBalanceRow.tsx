@@ -20,6 +20,7 @@ interface PersonBalanceRowProps {
   groupCount: number;
   balance: number;
   currency?: string;
+  onPress: () => void;
   onSettle: () => void;
   style?: StyleProp<ViewStyle>;
 }
@@ -31,13 +32,19 @@ export function PersonBalanceRow({
   groupCount,
   balance,
   currency = 'USD',
+  onPress,
   onSettle,
   style,
 }: PersonBalanceRowProps) {
   const groupLabel = groupCount === 1 ? '1 group' : `${groupCount} groups`;
 
   return (
-    <View style={[styles.row, style]}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.row, pressed && styles.rowPressed, style]}
+      accessibilityRole="button"
+      accessibilityLabel={`View balance details for ${name}`}
+    >
       {/* Avatar */}
       <Avatar name={name} size="md" style={styles.avatar} />
 
@@ -76,7 +83,7 @@ export function PersonBalanceRow({
 
       {/* Hairline separator */}
       <View style={styles.separator} />
-    </View>
+    </Pressable>
   );
 }
 
@@ -89,6 +96,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
     backgroundColor: colors.white,
+  },
+  rowPressed: {
+    backgroundColor: colors.bg,
   },
   avatar: {
     marginRight: spacing[3],

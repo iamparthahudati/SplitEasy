@@ -138,3 +138,89 @@ export const MOCK_EXPENSES: MockExpense[] = [
 export function getMockGroup(id: string): MockGroup {
   return MOCK_GROUPS.find(g => g.id === id) ?? MOCK_GROUPS[0];
 }
+
+// ─── Person detail (balance breakdown per group) ───────────────────────────────
+
+export interface MockGroupBalance {
+  groupId: string;
+  groupName: string;
+  groupEmoji: string;
+  balance: number;
+}
+
+export interface MockPersonDetail {
+  id: string;
+  name: string;
+  email: string;
+  totalBalance: number;
+  groups: MockGroupBalance[];
+}
+
+export const MOCK_PERSON_DETAILS: MockPersonDetail[] = [
+  {
+    id: '1',
+    name: 'Alex Chen',
+    email: 'alex@example.com',
+    totalBalance: 48.0,
+    groups: [
+      {
+        groupId: '1',
+        groupName: 'Spain Trip 2024',
+        groupEmoji: '✈️',
+        balance: 28.0,
+      },
+      {
+        groupId: '3',
+        groupName: 'Pizza Fridays',
+        groupEmoji: '🍕',
+        balance: 20.0,
+      },
+    ],
+  },
+  {
+    id: '2',
+    name: 'Jordan Mills',
+    email: 'jordan@example.com',
+    totalBalance: 36.5,
+    groups: [
+      {
+        groupId: '1',
+        groupName: 'Spain Trip 2024',
+        groupEmoji: '✈️',
+        balance: 36.5,
+      },
+    ],
+  },
+  {
+    id: '3',
+    name: 'Sara Park',
+    email: 'sara@example.com',
+    totalBalance: -22.0,
+    groups: [
+      {
+        groupId: '2',
+        groupName: 'Flat Bills',
+        groupEmoji: '🏠',
+        balance: -22.0,
+      },
+    ],
+  },
+  {
+    id: '4',
+    name: 'Raj Kumar',
+    email: 'raj@example.com',
+    totalBalance: 0,
+    groups: [
+      {
+        groupId: '3',
+        groupName: 'Pizza Fridays',
+        groupEmoji: '🍕',
+        balance: 0,
+      },
+    ],
+  },
+];
+
+export function getMockPersonDetail(id: string): MockPersonDetail {
+  return MOCK_PERSON_DETAILS.find(p => p.id === id) ?? MOCK_PERSON_DETAILS[0];
+}

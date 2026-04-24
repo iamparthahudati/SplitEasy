@@ -102,6 +102,7 @@ export function BalancesScreen() {
                 groupCount={1}
                 balance={item.balance}
                 currency="USD"
+                onPress={() => navigate('BalanceDetail', { personId: item.id })}
                 onSettle={() => navigate('SettleUp', { memberId: item.id })}
               />
             ))}

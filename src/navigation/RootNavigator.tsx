@@ -12,6 +12,9 @@ import { WelcomeScreen } from '../screens/onboarding/welcome';
 // Main tabs
 import { MainTabs } from './MainTabs';
 
+// Balances stack
+import { BalanceDetailScreen } from '../screens/balances/BalanceDetailScreen';
+
 // Group stack
 import { ActivityFeedScreen } from '../screens/groups/ActivityFeedScreen';
 import { AddExpenseScreen } from '../screens/groups/AddExpenseScreen';
@@ -57,6 +60,10 @@ export function RootNavigator() {
     case 'Activity':
     case 'Settings':
       return <MainTabs />;
+
+    // ── Balances stack ─────────────────────────────────────────────────
+    case 'BalanceDetail':
+      return <BalanceDetailScreen />;
 
     // ── Group stack ────────────────────────────────────────────────────
     case 'GroupDetail':
