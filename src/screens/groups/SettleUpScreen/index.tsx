@@ -49,7 +49,7 @@ export function SettleUpScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['bottom']}>
+    <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
       <ScreenHeader title="Settle Up" onBack={goBack} />
 
       <KeyboardAvoidingView

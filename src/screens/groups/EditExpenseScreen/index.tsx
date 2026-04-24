@@ -136,7 +136,7 @@ export function EditExpenseScreen() {
   const todayFormatted = formatDate(new Date());
 
   return (
-    <SafeAreaView style={styles.screen} edges={['bottom']}>
+    <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
       <ScreenHeader
         title="Edit Expense"
         onBack={goBack}

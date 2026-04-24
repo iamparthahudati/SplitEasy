@@ -52,7 +52,7 @@ export function ExpenseDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.root} edges={['bottom']}>
+    <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
       <ScreenHeader
         title="Expense Detail"
         onBack={goBack}

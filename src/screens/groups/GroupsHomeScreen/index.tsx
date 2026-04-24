@@ -151,7 +151,7 @@ export function GroupsHomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
       <Header
         groupCount={sourceGroups.length}
         onBellPress={() => navigate('Notifications')}
