@@ -7,7 +7,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../../theme/colors';
 import { sizes } from '../../../theme/spacing';
 import Icon, { IconName } from '../../atoms/Icon';
@@ -121,7 +120,6 @@ export function ScreenHeader({
   leftAlign = false,
   style,
 }: ScreenHeaderProps): JSX.Element {
-  const insets = useSafeAreaInsets();
   const tokens = getTokens(variant);
   const hasRight = rightActions && rightActions.length > 0;
 
@@ -129,7 +127,7 @@ export function ScreenHeader({
     <View
       style={[
         styles.container,
-        { backgroundColor: tokens.bg, paddingTop: insets.top },
+        { backgroundColor: tokens.bg },
         tokens.borderColor
           ? {
               borderBottomWidth: StyleSheet.hairlineWidth,
