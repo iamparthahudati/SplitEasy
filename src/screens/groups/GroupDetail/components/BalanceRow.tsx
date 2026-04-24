@@ -6,11 +6,6 @@ import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 import { formatBalance } from '../../../../utils/formatters';
 
-// Phase 1 color tokens (fallback to hex until colors.ts is updated)
-const COLOR_POS_ALT = colors.posAlt ?? '#16A34A';
-const COLOR_POS_BG_ALT = colors.posBgAlt ?? '#DCFCE7';
-const COLOR_SETTLE_GREEN = colors.settleGreen ?? '#2D9B6F';
-
 interface BalanceRowProps {
   initials: string;
   avatarColor: string;
@@ -148,10 +143,10 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semibold,
   },
   badgePositive: {
-    backgroundColor: COLOR_POS_BG_ALT,
+    backgroundColor: colors.posBgAlt,
   },
   badgeTextPositive: {
-    color: COLOR_POS_ALT,
+    color: colors.posAlt,
   },
   badgeNegative: {
     backgroundColor: colors.negBg,
@@ -166,7 +161,7 @@ const styles = StyleSheet.create({
     color: colors.text3,
   },
   settleButton: {
-    backgroundColor: COLOR_SETTLE_GREEN,
+    backgroundColor: colors.settleGreen,
     borderRadius: radius.pill,
     paddingHorizontal: spacing[3] + 2,
     paddingVertical: spacing[2],

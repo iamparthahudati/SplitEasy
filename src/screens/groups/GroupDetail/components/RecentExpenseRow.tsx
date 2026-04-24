@@ -6,10 +6,6 @@ import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 import { formatBalance } from '../../../../utils/formatters';
 
-// Phase 1 color tokens (fallback to hex until colors.ts is updated)
-const HERO_INDIGO_BRIGHT = colors.heroIndigoBright ?? '#4F46E5';
-const COLOR_POS_ALT = colors.posAlt ?? '#16A34A';
-
 interface RecentExpenseRowProps {
   icon: string;
   name: string;
@@ -28,7 +24,7 @@ export function RecentExpenseRow({
   onPress,
 }: RecentExpenseRowProps) {
   const isPositive = amount >= 0;
-  const amountColor = isPositive ? COLOR_POS_ALT : colors.neg;
+  const amountColor = isPositive ? colors.posAlt : colors.neg;
 
   return (
     <>
@@ -75,7 +71,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.md,
-    backgroundColor: HERO_INDIGO_BRIGHT,
+    backgroundColor: colors.heroIndigoBright,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing[3],

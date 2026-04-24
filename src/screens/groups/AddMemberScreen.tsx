@@ -1,3 +1,1 @@
-import React from 'react';
-import { PlaceholderScreen } from '../../components/ui/PlaceholderScreen';
-export function AddMemberScreen() { return <PlaceholderScreen name="Add Member" />; }
+export { AddMemberScreen } from './AddMemberScreen/index';

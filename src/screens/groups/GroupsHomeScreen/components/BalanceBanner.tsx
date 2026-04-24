@@ -5,10 +5,6 @@ import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
-// Settle-green tokens (Phase 1 additions, fallback to hex until colors.ts is updated)
-const BANNER_TOP = colors.settleGreen ?? '#2D9B6F';
-const BANNER_BOTTOM = colors.settleGreenDark ?? '#1A7A52';
-
 interface BalanceBannerProps {
   amount: string;
   onSettleAll: () => void;
@@ -46,11 +42,11 @@ const styles = StyleSheet.create({
   },
   gradientTop: {
     borderRadius: radius.lg,
-    backgroundColor: BANNER_TOP,
+    backgroundColor: colors.settleGreen,
   },
   gradientOverlay: {
     borderRadius: radius.lg,
-    backgroundColor: BANNER_BOTTOM,
+    backgroundColor: colors.settleGreenDark,
     opacity: 0.55,
     top: '40%',
   },

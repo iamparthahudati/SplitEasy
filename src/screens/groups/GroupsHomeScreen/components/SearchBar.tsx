@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
+import Icon from '../../../../components/atoms/Icon';
+import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
 import { fontSizes } from '../../../../theme/typography';
 
@@ -12,15 +14,14 @@ export const SearchBar = ({ value, onChangeText }: SearchBarProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.iconWrapper}>
-        <View style={styles.iconCircle} />
-        <View style={styles.iconHandle} />
+        <Icon name="search" size={18} stroke={colors.text3} fill="none" />
       </View>
       <TextInput
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
         placeholder="Search groups..."
-        placeholderTextColor="#94A3B8"
+        placeholderTextColor={colors.text4}
         returnKeyType="search"
         autoCorrect={false}
         autoCapitalize="none"
@@ -35,10 +36,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 44,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.borderMid,
     paddingHorizontal: 14,
   },
   iconWrapper: {
@@ -48,31 +49,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconCircle: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#94A3B8',
-    backgroundColor: 'transparent',
-  },
-  iconHandle: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 2,
-    height: 7,
-    borderRadius: 1,
-    backgroundColor: '#94A3B8',
-    transform: [{ rotate: '-45deg' }],
-  },
   input: {
     flex: 1,
     fontSize: fontSizes.base,
-    color: '#1E293B',
+    color: colors.text1,
     paddingVertical: 0,
   },
 });

@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
 import { radius, spacing } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 type BadgeVariant = 'free' | 'premium' | 'pending' | 'positive' | 'negative';
 
 interface Props {
   label: string;
   variant?: BadgeVariant;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 const BG: Record<BadgeVariant, string> = {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },

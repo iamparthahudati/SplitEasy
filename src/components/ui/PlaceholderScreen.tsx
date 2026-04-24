@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: fontSizes.xl,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
     color: colors.text1,
     marginBottom: 4,
   },

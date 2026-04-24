@@ -1,14 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
 import { sizes } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 import { getInitials } from '../../utils/formatters';
 
 // Deterministic color from name so the same member always gets the same color
 const AVATAR_COLORS = [
-  '#6366F1', '#059669', '#D97706', '#DC2626',
-  '#7C3AED', '#0891B2', '#BE185D', '#16A34A',
+  '#6366F1',
+  '#059669',
+  '#D97706',
+  '#DC2626',
+  '#7C3AED',
+  '#0891B2',
+  '#BE185D',
+  '#16A34A',
 ];
 
 function avatarColor(name: string): string {
@@ -24,7 +30,7 @@ type AvatarSize = 'sm' | 'md' | 'lg';
 interface Props {
   name: string;
   size?: AvatarSize;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 const SIZES: Record<AvatarSize, number> = {
@@ -45,7 +51,12 @@ export function Avatar({ name, size = 'md', style }: Props) {
     <View
       style={[
         styles.circle,
-        { width: dim, height: dim, borderRadius: dim / 2, backgroundColor: avatarColor(name) },
+        {
+          width: dim,
+          height: dim,
+          borderRadius: dim / 2,
+          backgroundColor: avatarColor(name),
+        },
         style,
       ]}
     >
@@ -63,6 +74,6 @@ const styles = StyleSheet.create({
   },
   initials: {
     color: colors.white,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
   },
 });

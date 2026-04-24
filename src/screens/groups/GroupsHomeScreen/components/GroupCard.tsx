@@ -6,10 +6,6 @@ import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 import { formatBalance } from '../../../../utils/formatters';
 
-// Phase 1 color tokens (fallback to hex until colors.ts is updated)
-const COLOR_POS_ALT = colors.posAlt ?? '#16A34A';
-const COLOR_POS_BG_ALT = colors.posBgAlt ?? '#DCFCE7';
-
 interface GroupCardProps {
   emoji: string;
   color: string;
@@ -120,7 +116,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   badgePositive: {
-    backgroundColor: COLOR_POS_BG_ALT,
+    backgroundColor: colors.posBgAlt,
     borderRadius: radius.pill,
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2] / 2,
@@ -128,7 +124,7 @@ const styles = StyleSheet.create({
   badgeTextPositive: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.semibold,
-    color: COLOR_POS_ALT,
+    color: colors.posAlt,
   },
   badgeNegative: {
     backgroundColor: colors.negBg,

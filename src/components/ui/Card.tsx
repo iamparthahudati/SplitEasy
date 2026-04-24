@@ -1,17 +1,23 @@
 import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 import { radius, spacing } from '../../theme/spacing';
 
 interface Props {
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   variant?: 'default' | 'hero';
 }
 
 export function Card({ children, style, variant = 'default' }: Props) {
   return (
-    <View style={[styles.base, variant === 'hero' ? styles.hero : styles.default, style]}>
+    <View
+      style={[
+        styles.base,
+        variant === 'hero' ? styles.hero : styles.default,
+        style,
+      ]}
+    >
       {children}
     </View>
   );

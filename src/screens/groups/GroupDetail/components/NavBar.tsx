@@ -1,12 +1,11 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import Icon from '@components/atoms/Icon';
 import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
-// Hero indigo token (Phase 1 addition, fallback until colors.ts is updated)
-const HERO_INDIGO = colors.heroIndigo ?? '#3730A3';
 const COG_COLOR = colors.text3;
 
 const COG_OUTER_SIZE = 24;
@@ -14,7 +13,6 @@ const COG_INNER_SIZE = 8;
 const COG_BORDER = 2;
 const TOOTH_WIDTH = 4;
 const TOOTH_HEIGHT = 7;
-const BACK_ARROW_SIZE = 22;
 
 /** 8 evenly-spaced rectangular teeth rotated around the cog center */
 const COG_TEETH = Array.from({ length: 8 }, (_, i) => ({
@@ -29,7 +27,6 @@ interface NavBarProps {
 }
 
 // ─── Split-circle logo (View-based, no SVG) ───────────────────────────────────
-const LOGO_BLUE = '#3B5BDB';
 const LR = 12;
 const LD = LR * 2;
 
@@ -56,7 +53,7 @@ const logoStyles = StyleSheet.create({
     height: LD,
     borderRadius: LR,
     borderWidth: 1.5,
-    borderColor: LOGO_BLUE,
+    borderColor: colors.logoBlueBrand,
     backgroundColor: 'transparent',
   },
   leftClip: {
@@ -79,7 +76,7 @@ const logoStyles = StyleSheet.create({
     top: 0,
     width: 1.5,
     height: LD,
-    backgroundColor: LOGO_BLUE,
+    backgroundColor: colors.logoBlueBrand,
   },
 });
 
@@ -92,7 +89,12 @@ export function NavBar({ title, onBack, onSettings }: NavBarProps) {
         style={styles.sideSlot}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
-        <Text style={styles.backArrow}>{'<'}</Text>
+        <Icon
+          name="chevron-left"
+          size={22}
+          stroke={colors.heroIndigo}
+          fill="none"
+        />
       </Pressable>
 
       {/* Center: Logo + Title */}
@@ -143,12 +145,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing[2],
     paddingHorizontal: spacing[1],
-  },
-  backArrow: {
-    fontSize: BACK_ARROW_SIZE,
-    color: HERO_INDIGO,
-    fontWeight: fontWeights.semibold,
-    lineHeight: 26,
   },
   title: {
     fontSize: fontSizes.lg,

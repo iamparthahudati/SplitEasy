@@ -3,13 +3,15 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
+import Icon from '../../../../components/atoms/Icon';
+import { colors } from '../../../../theme/colors';
 import { styles } from '../styles';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -47,15 +49,14 @@ export const ForgotPasswordView = ({
         showsVerticalScrollIndicator={false}
       >
         {/* Back button */}
-        <TouchableOpacity
-          style={styles.backRow}
+        <Pressable
+          style={({ pressed }) => [styles.backRow, pressed && { opacity: 0.7 }]}
           onPress={onBack}
-          activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text style={styles.backText}>{'← Back'}</Text>
-        </TouchableOpacity>
+          <Icon name="arrow-back" size={18} stroke={colors.white} fill="none" />
+        </Pressable>
 
         {/* Heading */}
         <Text style={styles.subHeading}>Reset password</Text>
@@ -85,20 +86,23 @@ export const ForgotPasswordView = ({
         {!!error && <Text style={styles.errorText}>{error}</Text>}
 
         {/* Submit button */}
-        <TouchableOpacity
-          style={[styles.btnPrimary, loading && styles.btnDisabled]}
+        <Pressable
+          style={({ pressed }) => [
+            styles.btnPrimary,
+            loading && styles.btnDisabled,
+            pressed && { opacity: 0.8 },
+          ]}
           onPress={onSubmit}
           disabled={loading}
-          activeOpacity={0.8}
           accessibilityRole="button"
           accessibilityLabel="Send reset link"
         >
           {loading ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <Text style={styles.btnPrimaryText}>Send reset link</Text>
           )}
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Success banner */}
         {resetSent && (

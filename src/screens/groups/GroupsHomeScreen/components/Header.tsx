@@ -5,7 +5,6 @@ import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
-const LOGO_BLUE = '#3B5BDB';
 const LR = 14; // left semicircle radius → 28px total
 const D = LR * 2;
 
@@ -36,7 +35,7 @@ const logoStyles = StyleSheet.create({
     height: D,
     borderRadius: LR,
     borderWidth: 1.5,
-    borderColor: LOGO_BLUE,
+    borderColor: colors.logoBlueBrand,
     backgroundColor: 'transparent',
   },
   leftClip: {
@@ -59,7 +58,7 @@ const logoStyles = StyleSheet.create({
     top: 0,
     width: 1.5,
     height: D,
-    backgroundColor: LOGO_BLUE,
+    backgroundColor: colors.logoBlueBrand,
   },
 });
 
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: fontSizes.lg,
     fontWeight: fontWeights.bold,
-    color: LOGO_BLUE,
+    color: colors.logoBlueBrand,
     lineHeight: 22,
   },
   subtitle: {

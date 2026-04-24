@@ -15,6 +15,7 @@ import { colors } from '../../../theme/colors';
 import { radius, sizes, spacing } from '../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../theme/typography';
 
+import Icon from '@components/atoms/Icon';
 import { BalanceBanner } from './components/BalanceBanner';
 import { GroupCard } from './components/GroupCard';
 import { Header } from './components/Header';
@@ -34,7 +35,7 @@ function EmptyState({ onCreateGroup, onJoinGroup }: EmptyStateProps) {
     <View style={emptyStyles.root}>
       {/* Illustration */}
       <View style={emptyStyles.illustration}>
-        <Text style={emptyStyles.illustrationPlus}>+</Text>
+        <Icon name="plus" size={36} stroke={colors.white} fill="none" />
       </View>
 
       {/* Copy */}
@@ -78,14 +79,6 @@ const emptyStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing[6],
-  },
-  illustrationPlus: {
-    fontSize: 36,
-    color: colors.white,
-    fontWeight: fontWeights.regular,
-    lineHeight: 42,
-    textAlign: 'center',
-    includeFontPadding: false,
   },
   title: {
     fontSize: 22,
@@ -213,7 +206,7 @@ export function GroupsHomeScreen() {
         style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}
         onPress={handleAddGroup}
       >
-        <Text style={styles.fabText}>+</Text>
+        <Icon name="plus" size={24} stroke={colors.white} fill="none" />
       </Pressable>
     </SafeAreaView>
   );
@@ -268,13 +261,5 @@ const styles = StyleSheet.create({
   },
   fabPressed: {
     opacity: 0.85,
-  },
-  fabText: {
-    fontSize: fontSizes['2xl'],
-    color: colors.white,
-    fontWeight: fontWeights.regular,
-    lineHeight: sizes.fabSize,
-    textAlign: 'center',
-    includeFontPadding: false,
   },
 });

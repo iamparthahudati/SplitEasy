@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { colors } from '../../../../theme/colors';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
 interface AuthButtonProps {
@@ -25,15 +21,18 @@ export const AuthButton = ({
   const isEmail = variant === 'email';
 
   return (
-    <TouchableOpacity
-      style={[styles.base, isEmail ? styles.emailButton : styles.guestButton]}
+    <Pressable
+      style={({ pressed }) => [
+        styles.base,
+        isEmail ? styles.emailButton : styles.guestButton,
+        pressed && { opacity: 0.85 },
+      ]}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.75}
     >
       {loading ? (
         <ActivityIndicator
-          color={isEmail ? '#FFFFFF' : 'rgba(255,255,255,0.35)'}
+          color={isEmail ? colors.white : 'rgba(255,255,255,0.35)'}
           size="small"
         />
       ) : (
@@ -46,7 +45,7 @@ export const AuthButton = ({
           {label}
         </Text>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
   emailLabel: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: fontSizes.md,
     fontWeight: fontWeights.semibold,
   },

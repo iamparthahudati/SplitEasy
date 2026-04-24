@@ -5,9 +5,6 @@ import { colors } from '../../../../theme/colors';
 import { radius, sizes, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
-// Phase 1 color token (fallback to hex until colors.ts is updated)
-const HERO_INDIGO_BRIGHT = colors.heroIndigoBright ?? '#4F46E5';
-
 interface AddExpenseBarProps {
   onPress: () => void;
 }
@@ -40,11 +37,11 @@ const styles = StyleSheet.create({
   button: {
     height: sizes.btnHeight,
     borderRadius: radius.pill,
-    backgroundColor: HERO_INDIGO_BRIGHT,
+    backgroundColor: colors.heroIndigoBright,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    shadowColor: HERO_INDIGO_BRIGHT,
+    shadowColor: colors.heroIndigoBright,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

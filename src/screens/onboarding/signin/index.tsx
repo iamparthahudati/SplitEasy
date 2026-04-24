@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import Icon from '../../../components/atoms/Icon';
 import { useNavigation } from '../../../navigation/NavigationContext';
+import { colors } from '../../../theme/colors';
 import { AuthButton } from './components/AuthButton';
 import { EmailSignInView } from './components/EmailSignInView';
 import { ForgotPasswordView } from './components/ForgotPasswordView';
@@ -158,7 +160,7 @@ export function SignInScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Logo */}
-        <View style={{ alignSelf: 'center', marginBottom: 40 }}>
+        <View style={styles.logoWrapper}>
           <LogoMark />
         </View>
 
@@ -201,9 +203,10 @@ export function SignInScreen() {
         />
 
         {/* Footer */}
-        <Text style={styles.footer}>
-          {'\uD83D\uDD12'} Encrypted and private
-        </Text>
+        <View style={styles.footer}>
+          <Icon name="lock" size={16} stroke={colors.white} fill="none" />
+          <Text style={styles.footerText}>Encrypted and private</Text>
+        </View>
       </ScrollView>
     </View>
   );
@@ -220,11 +223,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 72,
     paddingBottom: 40,
+    justifyContent: 'flex-end',
+  },
+  logoWrapper: {
+    alignSelf: 'center',
+    marginBottom: 40,
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   heading: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: colors.white,
     textAlign: 'center',
     marginBottom: 10,
     alignSelf: 'center',
@@ -239,17 +249,20 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 13,
-    color: '#F87171',
+    color: colors.neg,
     marginBottom: 12,
     textAlign: 'center',
     alignSelf: 'center',
   },
   footer: {
-    marginTop: 'auto' as any,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
     paddingTop: 32,
+  },
+  footerText: {
     fontSize: 13,
     color: 'rgba(255,255,255,0.3)',
-    textAlign: 'center',
-    alignSelf: 'center',
   },
 });

@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
   // Error
   errorText: {
     fontSize: 13,
-    color: '#F87171',
+    color: colors.neg,
     marginBottom: spacing[3],
     paddingHorizontal: spacing[1],
   },

@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
+import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 
@@ -16,9 +17,9 @@ interface SocialButtonProps {
   disabled?: boolean;
 }
 
-const APPLE_BG = '#000000';
-const GOOGLE_BG = '#FFFFFF';
-const APPLE_TEXT = '#FFFFFF';
+const APPLE_BG = colors.black;
+const GOOGLE_BG = colors.white;
+const APPLE_TEXT = colors.white;
 const GOOGLE_TEXT = '#1A1A1A';
 const GOOGLE_G_COLOR = '#4285F4';
 
@@ -30,23 +31,21 @@ export const SocialButton = ({
 }: SocialButtonProps) => {
   const isApple = variant === 'apple';
 
-  const containerStyle = [
-    styles.base,
-    isApple ? styles.appleContainer : styles.googleContainer,
-    disabled && styles.disabled,
-  ];
-
   const labelStyle = [
     styles.label,
     isApple ? styles.appleLabel : styles.googleLabel,
   ];
 
   return (
-    <TouchableOpacity
-      style={containerStyle}
+    <Pressable
+      style={({ pressed }) => [
+        styles.base,
+        isApple ? styles.appleContainer : styles.googleContainer,
+        disabled && styles.disabled,
+        pressed && { opacity: 0.8 },
+      ]}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.8}
     >
       {loading ? (
         <ActivityIndicator
@@ -65,7 +64,7 @@ export const SocialButton = ({
           </Text>
         </View>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

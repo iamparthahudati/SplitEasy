@@ -1,14 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import Icon from '@components/atoms/Icon';
 import { colors } from '../../../../theme/colors';
 import { radius, spacing } from '../../../../theme/spacing';
 import { fontSizes, fontWeights } from '../../../../theme/typography';
 import { formatCurrency } from '../../../../utils/formatters';
-
-// Phase 1 color tokens (fallback to hex until colors.ts is updated)
-const HERO_INDIGO = colors.heroIndigo ?? '#3730A3';
-const HERO_INDIGO_BRIGHT = colors.heroIndigoBright ?? '#4F46E5';
 
 interface HeroBannerProps {
   name: string;
@@ -23,7 +20,7 @@ export function HeroBanner({
   balance,
   totalSpent,
 }: HeroBannerProps) {
-  const balanceColor = balance > 0 ? colors.posAlt ?? '#16A34A' : colors.white;
+  const balanceColor = balance > 0 ? colors.posAlt : colors.white;
 
   return (
     <View style={styles.container}>
@@ -37,7 +34,12 @@ export function HeroBanner({
       {/* Top section */}
       <View style={styles.topSection}>
         <View style={styles.titleRow}>
-          <Text style={styles.starIcon}>★</Text>
+          <Icon
+            name="star-filled"
+            size={14}
+            stroke={colors.white}
+            fill={colors.white}
+          />
           <Text style={styles.groupName} numberOfLines={1}>
             {name}
           </Text>
@@ -82,11 +84,11 @@ const styles = StyleSheet.create({
     paddingBottom: spacing[4],
   },
   gradientTop: {
-    backgroundColor: HERO_INDIGO,
+    backgroundColor: colors.heroIndigo,
     bottom: '50%',
   },
   gradientBottom: {
-    backgroundColor: HERO_INDIGO_BRIGHT,
+    backgroundColor: colors.heroIndigoBright,
     top: '50%',
   },
   decorativeCircle: {
@@ -106,11 +108,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing[2],
     marginBottom: spacing[2],
-  },
-  starIcon: {
-    fontSize: fontSizes.lg,
-    color: colors.white,
-    lineHeight: fontSizes.lg * 1.3,
   },
   groupName: {
     fontSize: fontSizes.xl,

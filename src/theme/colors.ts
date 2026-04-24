@@ -41,6 +41,7 @@ export const colors = {
   heroIndigoBright: '#4F46E5', // Hero section bright indigo
   posAlt: '#16A34A', // Green 600 — balance positive alt
   posBgAlt: '#DCFCE7', // Green 100 — balance positive bg alt
+  logoBlueBrand: '#3B5BDB', // Split-circle logo blue
 } as const;
 
 export type Color = keyof typeof colors;

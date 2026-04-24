@@ -2,13 +2,14 @@ import React from 'react';
 import {
   ActivityIndicator,
   Pressable,
+  StyleProp,
   StyleSheet,
   Text,
   ViewStyle,
 } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fontSizes, fontWeights } from '../../theme/typography';
 import { radius, sizes } from '../../theme/spacing';
+import { fontSizes, fontWeights } from '../../theme/typography';
 
 type Variant = 'primary' | 'outline' | 'ghost' | 'danger' | 'apple' | 'google';
 type Size = 'lg' | 'sm';
@@ -20,8 +21,8 @@ interface Props {
   size?: Size;
   loading?: boolean;
   disabled?: boolean;
-  style?: ViewStyle;
-  leftIcon?: string;
+  style?: StyleProp<ViewStyle>;
+  leftIcon?: React.ReactNode;
 }
 
 export function Button({
@@ -52,12 +53,22 @@ export function Button({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'outline' || variant === 'ghost' ? colors.brand : colors.white}
+          color={
+            variant === 'outline' || variant === 'ghost'
+              ? colors.brand
+              : colors.white
+          }
         />
       ) : (
         <>
-          {leftIcon ? <Text style={styles.icon}>{leftIcon}</Text> : null}
-          <Text style={[styles.label, labelStyles[variant], size === 'sm' && styles.labelSm]}>
+          {leftIcon ?? null}
+          <Text
+            style={[
+              styles.label,
+              labelStyles[variant],
+              size === 'sm' && styles.labelSm,
+            ]}
+          >
             {label}
           </Text>
         </>
@@ -68,11 +79,24 @@ export function Button({
 
 const variantStyles = StyleSheet.create({
   primary: { backgroundColor: colors.brand },
-  outline: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: colors.brand },
-  ghost: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: colors.borderMid, borderStyle: 'dashed' },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: colors.brand,
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: colors.borderMid,
+    borderStyle: 'dashed',
+  },
   danger: { backgroundColor: colors.neg },
   apple: { backgroundColor: '#000000' },
-  google: { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.borderMid },
+  google: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.borderMid,
+  },
 });
 
 const labelStyles = StyleSheet.create({
@@ -97,8 +121,7 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.55 },
   label: {
     fontSize: fontSizes.md,
-    fontWeight: fontWeights.semibold as any,
+    fontWeight: fontWeights.semibold,
   },
   labelSm: { fontSize: fontSizes.sm },
-  icon: { fontSize: fontSizes.lg },
 });

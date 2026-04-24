@@ -1,3 +1,1 @@
-import React from 'react';
-import { PlaceholderScreen } from '../../components/ui/PlaceholderScreen';
-export function SettleUpScreen() { return <PlaceholderScreen name="Settle Up" />; }
+export { SettleUpScreen } from './SettleUpScreen/index';

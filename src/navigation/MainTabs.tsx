@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import Icon, { IconName } from '../components/atoms/Icon/index';
 import { colors } from '../theme/colors';
 import { sizes, spacing } from '../theme/spacing';
 import { fontSizes, fontWeights } from '../theme/typography';
@@ -12,11 +13,33 @@ import { BalancesScreen } from '../screens/balances/BalancesScreen';
 import { GroupsHomeScreen } from '../screens/groups/GroupsHomeScreen/index';
 import { SettingsHomeScreen } from '../screens/settings/SettingsHomeScreen';
 
-const TABS: Array<{ route: MainTabRoute; label: string; icon: string }> = [
-  { route: 'Groups', label: 'Groups', icon: '⊞' },
-  { route: 'Balances', label: 'Balances', icon: '⚖' },
-  { route: 'Activity', label: 'Activity', icon: '◷' },
-  { route: 'Settings', label: 'Settings', icon: '⚙' },
+type TabDef = {
+  route: MainTabRoute;
+  label: string;
+  icon: IconName;
+  activeIcon: IconName;
+};
+
+const TABS: TabDef[] = [
+  { route: 'Groups', label: 'Groups', icon: 'home', activeIcon: 'home' },
+  {
+    route: 'Balances',
+    label: 'Balances',
+    icon: 'bar-chart',
+    activeIcon: 'bar-chart',
+  },
+  {
+    route: 'Activity',
+    label: 'Activity',
+    icon: 'activity',
+    activeIcon: 'activity',
+  },
+  {
+    route: 'Settings',
+    label: 'Settings',
+    icon: 'settings',
+    activeIcon: 'settings',
+  },
 ];
 
 function TabScreen({ route }: { route: MainTabRoute }): React.ReactElement {
@@ -58,11 +81,16 @@ export function MainTabs() {
               accessibilityState={{ selected: active }}
               accessibilityLabel={tab.label}
             >
-              <Text style={styles.tabIcon}>{tab.icon}</Text>
+              {active && <View style={styles.activeIndicator} />}
+              <Icon
+                name={active ? tab.activeIcon : tab.icon}
+                size={22}
+                stroke={active ? colors.brand : colors.text4}
+                fill="none"
+              />
               <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>
                 {tab.label}
               </Text>
-              {active && <View style={styles.activeIndicator} />}
             </Pressable>
           );
         })}
@@ -86,6 +114,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     paddingBottom: spacing[1],
+    // iOS shadow
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    // Android elevation
+    elevation: 8,
   },
   tabItem: {
     flex: 1,
@@ -94,11 +129,8 @@ const styles = StyleSheet.create({
     paddingTop: spacing[1],
     position: 'relative',
   },
-  tabIcon: {
-    fontSize: fontSizes.lg,
-    marginBottom: 2,
-  },
   tabLabel: {
+    marginTop: 2,
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.medium,
     color: colors.text4,

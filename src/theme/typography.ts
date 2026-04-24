@@ -1,5 +1,3 @@
-import { TextStyle } from 'react-native';
-
 export const fontSizes = {
   xs: 10,
   sm: 12,
@@ -12,13 +10,13 @@ export const fontSizes = {
   '4xl': 36,
 } as const;
 
-export const fontWeights: Record<string, TextStyle['fontWeight']> = {
+export const fontWeights = {
   regular: '400',
   medium: '500',
   semibold: '600',
   bold: '700',
   extrabold: '800',
-};
+} as const;
 
 export const lineHeights = {
   tight: 1.2,
